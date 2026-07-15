@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@theme {
+  --color-graphite: #111111;
+  --color-accent: #8B864E;
+
+  --color-stone: #8c8c8c;
+  --color-clay: #b08d6a;
+  --color-brass: #b5a642;
+  --color-copper: #b87333;
+  --color-walnut: #773f1a;
+  --color-slate: #708090;
+  --color-sage: #9dc183;
+  --color-ivory: #fffff0;
+  --color-sand: #c2b280;
+  --color-ink: #0f0f0f;
+  --color-ash: #b2beb5;
+  --color-forest: #228b22;
+  --color-ocean: #00008b;
+  --color-burnt-orange: #cc5500;
+  --color-cream: #fffdd0;
+  --color-charcoal: #36454f;
+
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Fira Code", "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+:root {
+  --background: var(--color-graphite);
+  --foreground: #f4f4f5;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  /* Engineering grid background */
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-attachment: fixed;
+}
+
+/* Base element styles for text */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 1.2;
+}
+
+p {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: #a1a1aa;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* Hide scrollbar for standard elements */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  cursor: none; /* We will use a custom cursor */
+}
+
+/* Glass Surface utility class */
+.glass-surface {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
