@@ -11,7 +11,7 @@ export const ScrollManager = () => {
     
     const handleWheel = (e: WheelEvent) => {
       // Normalize wheel delta and adjust sensitivity
-      const delta = e.deltaY * 0.0003; 
+      const delta = e.deltaY * 0.00015;
       targetProgress = Math.max(0, Math.min(1, targetProgress + delta));
     };
 

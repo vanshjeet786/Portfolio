@@ -265,7 +265,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
       onClick={handleGlobalClick}
       style={{ display: 'none' }}
       // ADDED pointer-events-auto so it intercepts clicks
-      className="absolute inset-0 w-full h-full z-20 items-center justify-center overflow-hidden pointer-events-auto"
+      className={`absolute inset-0 w-full h-full z-20 items-center justify-center overflow-hidden ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}
     >
       {/* Click Ripple Container */}
       <div ref={rippleContainerRef} className="absolute inset-0 pointer-events-none z-50 overflow-hidden" />
@@ -323,7 +323,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
             onMouseEnter={() => SoundEngine.playHover()}
             onClick={(e) => { e.stopPropagation(); SoundEngine.playClick(); setActiveProject('exiles'); }}
             // Shifted towards center: using left-[5%] instead of left-0
-            className="absolute left-[5%] top-1/2 -translate-y-1/2 group cursor-none pointer-events-auto transition-all duration-700"
+            className={`absolute left-[5%] top-1/2 -translate-y-1/2 group cursor-none ${isActive ? 'pointer-events-auto' : 'pointer-events-none'} transition-all duration-700`}
             style={{ opacity: activeProject === 'leaderboard' ? 0 : 1 }} 
           >
             {/* Magnetic Hover Zone */}
@@ -344,7 +344,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
             onMouseEnter={() => SoundEngine.playHover()}
             onClick={(e) => { e.stopPropagation(); SoundEngine.playClick(); setActiveProject('leaderboard'); }}
             // Shifted towards center: using right-[5%] instead of right-0 translate-x-1/2
-            className="absolute right-[5%] top-1/2 -translate-y-1/2 group cursor-none pointer-events-auto transition-all duration-700"
+            className={`absolute right-[5%] top-1/2 -translate-y-1/2 group cursor-none ${isActive ? 'pointer-events-auto' : 'pointer-events-none'} transition-all duration-700`}
             style={{ opacity: activeProject === 'exiles' ? 0 : 1 }}
           >
             {/* Magnetic Hover Zone */}
