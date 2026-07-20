@@ -3,6 +3,7 @@ import { useStore } from '@/stores/useStore';
 import gsap from 'gsap';
 import { TrueFocus } from './ui/TrueFocus';
 import { EtherealNetwork } from './ui/EtherealNetwork';
+import { SVGNoise } from './ui/SVGNoise';
 import { SoundEngine } from '@/utils/SoundEngine';
 
 const NARRATIVE_TEXTS_1 = [
@@ -122,12 +123,12 @@ export const UIOverlay = () => {
     if (isCompassOpen) {
       gsap.to(triggerRef.current, { opacity: 0, x: -20, duration: 0.4, ease: "power2.in" });
       gsap.fromTo(modalRef.current, 
-        { opacity: 0, x: 40, clipPath: 'inset(0 100% 0 0)' },
-        { opacity: 1, x: 0, clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: "expo.out", display: 'block' }
+        { opacity: 0, x: 40, clipPath: 'circle(0% at center)' },
+        { opacity: 1, x: 0, clipPath: 'circle(150% at center)', duration: 1.2, ease: "expo.out", display: 'block' }
       );
     } else {
       gsap.to(modalRef.current, { 
-        opacity: 0, x: 40, clipPath: 'inset(0 100% 0 0)', duration: 0.6, ease: "power3.inOut",
+        opacity: 0, x: 40, clipPath: 'circle(0% at center)', duration: 0.6, ease: "power3.inOut",
         onComplete: () => {
           if (modalRef.current) modalRef.current.style.display = 'none';
         }
@@ -145,12 +146,12 @@ export const UIOverlay = () => {
     if (isSkillometerOpen) {
       gsap.to(skillometerTriggerRef.current, { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" });
       gsap.fromTo(skillometerModalRef.current, 
-        { opacity: 0, y: 40, clipPath: 'inset(100% 0 0 0)' },
-        { opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)', duration: 1.2, ease: "expo.out", display: 'block' }
+        { opacity: 0, y: 40, clipPath: 'circle(0% at center)' },
+        { opacity: 1, y: 0, clipPath: 'circle(150% at center)', duration: 1.2, ease: "expo.out", display: 'block' }
       );
     } else {
       gsap.to(skillometerModalRef.current, { 
-        opacity: 0, y: 40, clipPath: 'inset(100% 0 0 0)', duration: 0.6, ease: "power3.inOut",
+        opacity: 0, y: 40, clipPath: 'circle(0% at center)', duration: 0.6, ease: "power3.inOut",
         onComplete: () => {
           if (skillometerModalRef.current) skillometerModalRef.current.style.display = 'none';
         }
@@ -168,12 +169,12 @@ export const UIOverlay = () => {
     if (isStanceOpen) {
       gsap.to(stanceTriggerRef.current, { opacity: 0, scale: 0.8, duration: 0.4, ease: "power2.in" });
       gsap.fromTo(stanceModalRef.current, 
-        { opacity: 0, y: -40, clipPath: 'inset(0 0 100% 0)' },
-        { opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)', duration: 1.2, ease: "expo.out", display: 'block' }
+        { opacity: 0, y: -40, clipPath: 'circle(0% at center)' },
+        { opacity: 1, y: 0, clipPath: 'circle(150% at center)', duration: 1.2, ease: "expo.out", display: 'block' }
       );
     } else {
       gsap.to(stanceModalRef.current, { 
-        opacity: 0, y: -40, clipPath: 'inset(0 0 100% 0)', duration: 0.6, ease: "power3.inOut",
+        opacity: 0, y: -40, clipPath: 'circle(0% at center)', duration: 0.6, ease: "power3.inOut",
         onComplete: () => {
           if (stanceModalRef.current) stanceModalRef.current.style.display = 'none';
         }
@@ -295,7 +296,8 @@ export const UIOverlay = () => {
               </div>
             </button>
 
-            <div ref={modalRef} style={{ display: 'none' }} className="w-full max-w-2xl bg-black/40 backdrop-blur-xl border-t border-white/20 p-12">
+            <div ref={modalRef} style={{ display: 'none' }} className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-[#050505]/80 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-2xl">
+              <SVGNoise />
               <div className="flex justify-between items-start mb-16">
                 <div>
                   <span className="text-[10px] uppercase tracking-[0.4em] text-[#00f0ff] font-mono">Project 01</span>
@@ -355,7 +357,8 @@ export const UIOverlay = () => {
               </span>
             </button>
 
-            <div ref={skillometerModalRef} style={{ display: 'none' }} className="w-full max-w-5xl bg-[#111111]/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-10 overflow-hidden relative shadow-2xl">
+            <div ref={skillometerModalRef} style={{ display: 'none' }} className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-[#050505]/80 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-[0_30px_100px_rgba(245,158,11,0.1)]">
+              <SVGNoise />
               <div className="absolute -top-10 -left-10 text-[180px] font-bold text-white/5 pointer-events-none select-none tracking-tighter">02</div>
               <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-12">
                 <div className="flex-1">
@@ -422,7 +425,8 @@ export const UIOverlay = () => {
             </button>
 
             {/* Monolithic Data Slate Modal (Similar to Skillometer but matching the Monolith design) */}
-            <div ref={stanceModalRef} style={{ display: 'none' }} className="absolute top-12 left-12 right-12 md:left-24 md:right-24 max-w-6xl mx-auto bg-[#050505]/90 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-[0_30px_100px_rgba(225,29,72,0.1)]">
+            <div ref={stanceModalRef} style={{ display: 'none' }} className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-[#050505]/80 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-[0_30px_100px_rgba(225,29,72,0.1)]">
+              <SVGNoise />
               {/* Massive background typography matching the monolith vibe */}
               <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#e11d48]/5 pointer-events-none select-none tracking-tighter">05</div>
               
