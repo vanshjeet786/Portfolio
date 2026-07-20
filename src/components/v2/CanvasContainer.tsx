@@ -6,7 +6,9 @@ import { Skillometer } from './scenes/Skillometer';
 import { StanceScene } from './scenes/StanceScene';
 import { OutroScene } from './scenes/OutroScene';
 import { CinematicCamera } from './CinematicCamera';
-import { EffectComposer, Bloom } from '@react-three/postprocessing';
+import { CursorRefraction } from './CursorRefraction';
+import { ScrollEffects } from './ScrollEffects';
+import { CullableScene } from './CullableScene';
 
 export const SCENE_SPACING = 30; // Distance between scenes on Z axis
 
@@ -19,18 +21,31 @@ export const CanvasContainer = () => {
         
         <Suspense fallback={null}>
           <CinematicCamera />
+          <CursorRefraction />
           
-          <IntroScene position={[0, 0, 0]} />
-          <CareerCompass position={[0, 0, -SCENE_SPACING]} />
-          <Skillometer position={[0, 0, -SCENE_SPACING * 3]} />
-          <StanceScene position={[0, 0, -SCENE_SPACING * 7]} />
-          <OutroScene position={[0, 0, -SCENE_SPACING * 9]} />
+          <CullableScene position={[0, 0, 0]}>
+            <IntroScene position={[0, 0, 0]} />
+          </CullableScene>
+          
+          <CullableScene position={[0, 0, -SCENE_SPACING]}>
+            <CareerCompass position={[0, 0, 0]} />
+          </CullableScene>
+          
+          <CullableScene position={[0, 0, -SCENE_SPACING * 3]}>
+            <Skillometer position={[0, 0, 0]} />
+          </CullableScene>
+          
+          <CullableScene position={[0, 0, -SCENE_SPACING * 7]}>
+            <StanceScene position={[0, 0, 0]} />
+          </CullableScene>
+          
+          <CullableScene position={[0, 0, -SCENE_SPACING * 9]}>
+            <OutroScene position={[0, 0, 0]} />
+          </CullableScene>
           
           {/* Scene 5 (Exiles/Leaderboard) is entirely DOM-based, so no 3D mesh here */}
           
-          <EffectComposer>
-            <Bloom luminanceThreshold={0.2} luminanceSmoothing={0.9} height={300} />
-          </EffectComposer>
+          <ScrollEffects />
         </Suspense>
       </Canvas>
     </div>
