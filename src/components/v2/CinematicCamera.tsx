@@ -15,6 +15,7 @@ export const CinematicCamera = () => {
   });
 
   const currentLookAt = useRef(new THREE.Vector3(0, 0, 0));
+  const currentPosition = useRef(new THREE.Vector3(0, 0, 10));
 
   // We import SCENE_COUNT from useStore to dynamically scale the camera track
   const totalScenes = SCENE_COUNT; 
@@ -41,12 +42,36 @@ export const CinematicCamera = () => {
     setActiveScene(sceneIndex);
   }, [progress, setActiveScene, totalScenes]);
 
-  useFrame(() => {
-    // Smoothly interpolate current camera position to target position
-    camera.position.lerp(targetCamera.current.position, 0.05);
+  useFrame((state) => {
+    // Calculate gaze-driven parallax offset based on pointer position
+    // state.pointer gives normalized device coordinates (-1 to +1)
+    const parallaxIntensity = 0.5; // Adjust the intensity of the parallax
+    const lookAtParallaxIntensity = 1.0;
+    
+    const targetX = targetCamera.current.position.x + state.pointer.x * parallaxIntensity;
+    const targetY = targetCamera.current.position.y + state.pointer.y * parallaxIntensity;
+    
+    const finalTargetPosition = new THREE.Vector3(
+      targetX,
+      targetY,
+      targetCamera.current.position.z
+    );
+
+    const lookAtTargetX = targetCamera.current.lookAt.x + state.pointer.x * lookAtParallaxIntensity;
+    const lookAtTargetY = targetCamera.current.lookAt.y + state.pointer.y * lookAtParallaxIntensity;
+
+    const finalLookAtPosition = new THREE.Vector3(
+      lookAtTargetX,
+      lookAtTargetY,
+      targetCamera.current.lookAt.z
+    );
+
+    // Smoothly interpolate current camera position to final target position
+    currentPosition.current.lerp(finalTargetPosition, 0.05);
+    camera.position.copy(currentPosition.current);
     
     // Smoothly interpolate lookAt
-    currentLookAt.current.lerp(targetCamera.current.lookAt, 0.05);
+    currentLookAt.current.lerp(finalLookAtPosition, 0.05);
     camera.lookAt(currentLookAt.current);
   });
 
