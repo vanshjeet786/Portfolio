@@ -425,7 +425,7 @@ export const UIOverlay = () => {
             </button>
 
             {/* Monolithic Data Slate Modal (Similar to Skillometer but matching the Monolith design) */}
-            <div ref={stanceModalRef} style={{ display: 'none' }} className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-[#050505]/80 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-[0_30px_100px_rgba(225,29,72,0.1)]">
+            <div ref={stanceModalRef} style={{ display: 'none' }} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-7xl h-[80vh] flex flex-col items-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(225,29,72,0.1)]">
               <SVGNoise />
               {/* Massive background typography matching the monolith vibe */}
               <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#e11d48]/5 pointer-events-none select-none tracking-tighter">05</div>
@@ -493,7 +493,7 @@ export const UIOverlay = () => {
             <div 
               ref={terminalModalRef} 
               style={{ display: 'none' }} 
-              className="absolute inset-0 z-30 flex-col items-center justify-center bg-[#050505]/95 backdrop-blur-3xl border border-white/5 p-12"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-7xl h-[80vh] z-30 flex-col items-center justify-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(0,240,255,0.1)]"
             >
               <button 
                 onMouseEnter={() => SoundEngine.playHover()}

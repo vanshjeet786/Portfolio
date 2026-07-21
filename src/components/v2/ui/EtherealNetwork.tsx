@@ -16,8 +16,8 @@ interface TransformBase {
   opacity: number;
 }
 
-const EXILES_BASE: TransformBase = { x: -180, y: 0, z: -100, rotateY: 15, scale: 0.9, opacity: 0.7 };
-const LEADERBOARD_BASE: TransformBase = { x: 180, y: 0, z: -100, rotateY: -15, scale: 0.9, opacity: 0.7 };
+const EXILES_BASE: TransformBase = { x: 0, y: 0, z: 20, rotateY: 0, scale: 0.9, opacity: 0.8 };
+const LEADERBOARD_BASE: TransformBase = { x: 0, y: 0, z: -20, rotateY: 0, scale: 0.9, opacity: 0.8 };
 
 interface ProjectPaneProps {
   type: 'exiles' | 'leaderboard';
@@ -50,12 +50,12 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
 
       // Unfurl the glass surface - First widen, then heighten
       gsap.to(surfaceRef.current, {
-        width: 440,
+        width: typeof window !== 'undefined' && window.innerWidth < 768 ? '95vw' : '90vw',
         duration: 0.6,
         ease: 'power3.out',
       });
       gsap.to(surfaceRef.current, {
-        height: 520,
+        height: '80vh',
         duration: 0.8,
         ease: 'expo.out',
         delay: 0.3
@@ -103,7 +103,7 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
         className="overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-700"
         style={{ width: 340, height: 460 }}
       >
-        <GlassCard className="w-full h-full bg-[#050505]/70 border-white/10 backdrop-blur-3xl rounded-2xl relative">
+        <GlassCard className={`w-full h-full border-white/10 rounded-2xl relative transition-all duration-1000 ${isActive ? 'bg-[#050505]/95 backdrop-blur-[64px] shadow-[0_30px_100px_rgba(0,0,0,0.8)]' : 'bg-[#050505]/70 backdrop-blur-3xl'}`}>
 
           {/* Node Marker Text (Base State) */}
           <div
@@ -114,7 +114,7 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
           </div>
 
           {/* Detailed Content (Active State) */}
-          <div ref={contentRef} className="absolute inset-0 p-10 flex flex-col pointer-events-auto opacity-0" style={{ pointerEvents: isActive ? 'auto' : 'none' }}>
+          <div ref={contentRef} className={`absolute inset-0 p-10 flex flex-col overflow-y-auto custom-scrollbar ${isActive ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`} style={{ transition: 'opacity 0.5s ease', transitionDelay: isActive ? '0.3s' : '0s' }}>
             {/* Header & Close */}
             <div className="flex justify-between items-start mb-8 w-full opacity-0">
               <div>
