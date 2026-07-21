@@ -5,6 +5,8 @@ interface StoreState {
   setProgress: (progress: number) => void;
   activeScene: number;
   setActiveScene: (index: number) => void;
+  isModalOpen: boolean;
+  setModalOpen: (isOpen: boolean) => void;
 }
 
 // Defines the total number of sequential scenes
@@ -16,4 +18,6 @@ export const useStore = create<StoreState>((set) => ({
   setProgress: (progress) => set({ progress: Math.max(0, Math.min(1, progress)) }),
   activeScene: 0,
   setActiveScene: (activeScene) => set({ activeScene }),
+  isModalOpen: false,
+  setModalOpen: (isModalOpen) => set({ isModalOpen }),
 }));

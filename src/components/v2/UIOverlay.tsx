@@ -48,6 +48,7 @@ const NARRATIVE_TEXTS_5 = [
 
 export const UIOverlay = () => {
   const activeScene = useStore((state) => state.activeScene);
+  const setModalOpen = useStore((state) => state.setModalOpen);
   const progress = useStore((state) => state.progress);
   
   const containerRef = useRef<HTMLDivElement>(null);
@@ -75,19 +76,19 @@ export const UIOverlay = () => {
     if (!containerRef.current || displayedScene === activeScene) return;
 
     if (activeScene !== 1 && isCompassOpen) {
-      setTimeout(() => setIsCompassOpen(false), 0);
+      setTimeout(() => { setIsCompassOpen(false); setModalOpen(false); }, 0);
     }
     
     if (activeScene !== 3 && isSkillometerOpen) {
-      setTimeout(() => setIsSkillometerOpen(false), 0);
+      setTimeout(() => { setIsSkillometerOpen(false); setModalOpen(false); }, 0);
     }
     
     if (activeScene !== 7 && isStanceOpen) {
-      setTimeout(() => setIsStanceOpen(false), 0);
+      setTimeout(() => { setIsStanceOpen(false); setModalOpen(false); }, 0);
     }
     
     if (activeScene !== 9 && isTerminalOpen) {
-      setTimeout(() => setIsTerminalOpen(false), 0);
+      setTimeout(() => { setIsTerminalOpen(false); setModalOpen(false); }, 0);
     }
 
     // Play Deep Sub-bass Transition Sound
@@ -280,7 +281,7 @@ export const UIOverlay = () => {
             <button
               ref={triggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); setIsCompassOpen(true); }}
+              onClick={() => { SoundEngine.playClick(); { setIsCompassOpen(true); setModalOpen(true); }; }}
               className="absolute left-16 top-1/2 -translate-y-1/2 group flex items-center gap-6 cursor-none"
             >
               <div className="relative w-12 h-12 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity duration-500">
@@ -305,7 +306,7 @@ export const UIOverlay = () => {
                 </div>
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => { SoundEngine.playClick(); setIsCompassOpen(false); }}
+                  onClick={() => { SoundEngine.playClick(); { setIsCompassOpen(false); setModalOpen(false); }; }}
                   className="w-10 h-10 flex items-center justify-center border border-white/20 hover:border-[#00f0ff] rounded-none transition-colors cursor-none group relative overflow-hidden"
                 >
                   <div className="w-full h-full bg-[#00f0ff]/10 absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
@@ -345,7 +346,7 @@ export const UIOverlay = () => {
             <button
               ref={skillometerTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); setIsSkillometerOpen(true); }}
+              onClick={() => { SoundEngine.playClick(); { setIsSkillometerOpen(true); setModalOpen(true); }; }}
               className="absolute right-16 top-16 group flex flex-col items-center gap-4 cursor-none"
             >
               <div className="w-[1px] h-16 bg-gradient-to-b from-transparent to-white/50 group-hover:h-24 transition-all duration-500" />
@@ -383,7 +384,7 @@ export const UIOverlay = () => {
                 </div>
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => { SoundEngine.playClick(); setIsSkillometerOpen(false); }}
+                  onClick={() => { SoundEngine.playClick(); { setIsSkillometerOpen(false); setModalOpen(false); }; }}
                   className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors cursor-none group ml-auto"
                 >
                   <div className="w-4 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
@@ -412,7 +413,7 @@ export const UIOverlay = () => {
             <button
               ref={stanceTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); setIsStanceOpen(true); }}
+              onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(true); setModalOpen(true); }; }}
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-none w-24 h-24 flex items-center justify-center"
             >
               <div className="absolute w-[1px] h-12 bg-white/30 group-hover:h-24 transition-all duration-500" />
@@ -425,7 +426,7 @@ export const UIOverlay = () => {
             </button>
 
             {/* Monolithic Data Slate Modal (Similar to Skillometer but matching the Monolith design) */}
-            <div ref={stanceModalRef} style={{ display: 'none' }} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-7xl h-[80vh] flex flex-col items-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(225,29,72,0.1)]">
+            <div ref={stanceModalRef} style={{ display: 'none' }} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-4xl h-[80vh] flex flex-col items-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(225,29,72,0.1)]">
               <SVGNoise />
               {/* Massive background typography matching the monolith vibe */}
               <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#e11d48]/5 pointer-events-none select-none tracking-tighter">05</div>
@@ -457,7 +458,7 @@ export const UIOverlay = () => {
 
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => { SoundEngine.playClick(); setIsStanceOpen(false); }}
+                  onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(false); setModalOpen(false); }; }}
                   className="w-12 h-12 flex items-center justify-center border border-white/20 hover:bg-[#e11d48]/10 hover:border-[#e11d48] transition-all cursor-none group ml-auto"
                 >
                   <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
@@ -478,7 +479,7 @@ export const UIOverlay = () => {
             <button
               ref={terminalTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); setIsTerminalOpen(true); }}
+              onClick={() => { SoundEngine.playClick(); { setIsTerminalOpen(true); setModalOpen(true); }; }}
               className="group cursor-none flex flex-col items-center justify-center relative z-20"
             >
               <div className="relative w-32 h-32 rounded-full border border-white/20 flex items-center justify-center overflow-hidden group-hover:border-[#00f0ff]/50 transition-colors duration-700">
@@ -493,11 +494,11 @@ export const UIOverlay = () => {
             <div 
               ref={terminalModalRef} 
               style={{ display: 'none' }} 
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-7xl h-[80vh] z-30 flex-col items-center justify-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(0,240,255,0.1)]"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-4xl h-[80vh] z-30 flex-col items-center justify-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(0,240,255,0.1)]"
             >
               <button 
                 onMouseEnter={() => SoundEngine.playHover()}
-                onClick={() => { SoundEngine.playClick(); setIsTerminalOpen(false); }}
+                onClick={() => { SoundEngine.playClick(); { setIsTerminalOpen(false); setModalOpen(false); }; }}
                 className="absolute top-12 right-12 w-12 h-12 flex items-center justify-center hover:bg-white/5 transition-colors cursor-none group"
               >
                 <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
@@ -546,7 +547,7 @@ export const UIOverlay = () => {
       {/* Global Narrative Overlay (Fades in editor text based on scroll) */}
       <div 
         ref={narrativeRef}
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none text-center w-full max-w-4xl px-8 z-10"
+        className="absolute top-[75%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none text-center w-full max-w-4xl px-8 z-10"
       >
         <h2 
           className="text-4xl md:text-6xl font-light text-white tracking-tight"
