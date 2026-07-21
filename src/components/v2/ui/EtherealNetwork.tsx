@@ -11,13 +11,14 @@ interface TransformBase {
   x: number;
   y: number;
   z: number;
+  rotateX?: number;
   rotateY: number;
   scale: number;
   opacity: number;
 }
 
-const EXILES_BASE: TransformBase = { x: 0, y: 0, z: 20, rotateY: 0, scale: 0.9, opacity: 0.8 };
-const LEADERBOARD_BASE: TransformBase = { x: 0, y: 0, z: -20, rotateY: 0, scale: 0.9, opacity: 0.8 };
+const EXILES_BASE: TransformBase = { x: -20, y: -20, z: 30, rotateX: 15, rotateY: -25, scale: 0.9, opacity: 0.9 };
+const LEADERBOARD_BASE: TransformBase = { x: 20, y: 20, z: -30, rotateX: 15, rotateY: -25, scale: 0.9, opacity: 0.6 };
 
 interface ProjectPaneProps {
   type: 'exiles' | 'leaderboard';
@@ -50,12 +51,12 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
 
       // Unfurl the glass surface - First widen, then heighten
       gsap.to(surfaceRef.current, {
-        width: typeof window !== 'undefined' && window.innerWidth < 768 ? '95vw' : '90vw',
+        width: typeof window !== 'undefined' && window.innerWidth < 768 ? window.innerWidth * 0.95 : 800,
         duration: 0.6,
         ease: 'power3.out',
       });
       gsap.to(surfaceRef.current, {
-        height: '80vh',
+        height: typeof window !== 'undefined' && window.innerHeight < 700 ? window.innerHeight * 0.85 : 600,
         duration: 0.8,
         ease: 'expo.out',
         delay: 0.3
@@ -110,7 +111,7 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
             ref={textRef}
             className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
           >
-              <TrueFocus text={isExiles ? 'EXILES' : 'LEADERBOARD'} className="text-3xl font-light tracking-[0.25em] text-white/80 uppercase" splitBy="letter" animationSpeed={1.5} />
+              <TrueFocus text={isExiles ? 'EXILES' : 'LEADERBOARD'} className="text-3xl font-light tracking-[0.25em] text-white/80 uppercase" splitBy="word" animationSpeed={1.5} />
           </div>
 
           {/* Detailed Content (Active State) */}
@@ -142,8 +143,8 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
             </h3>
             <p className="text-[15px] text-white/60 leading-relaxed font-light mb-10 opacity-0 tracking-wide">
               {isExiles
-                ? 'A purely chronological, highly-available messaging fabric. Built to ensure absolute idempotency across distributed nodes. Distance is eliminated. Before words, there is only the persistent signal.'
-                : 'A high-throughput ranking engine capable of sorting thousands of dynamic mutations per second. It treats every score change as an immutable event, allowing perfect chronological reconstruction of the arena.'}
+                ? 'Exiles is a highly-available, realtime messaging fabric built for strict idempotency and guaranteed delivery. It eliminates race conditions across distributed nodes by establishing a single source of chronological truth. The architecture ensures that no matter the latency or distance, the signal remains persistent and properly ordered.'
+                : 'The Leaderboard module is a high-throughput ranking engine engineered to ingest and sort thousands of concurrent score mutations per second. Built on event-sourcing principles, it treats every change as an immutable record, providing near-instantaneous global rankings while maintaining perfect chronological reconstruction capabilities.'}
             </p>
 
             {/* Specs Grid */}
@@ -278,7 +279,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
       <div className="relative w-full max-w-5xl h-[600px] flex items-center justify-center transform-style-3d">
 
         {/* EXILES PANE */}
-        <div ref={exilesRef} className="absolute" style={{ transformStyle: 'preserve-3d' }}>
+        <div ref={exilesRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ transformStyle: 'preserve-3d' }}>
            <ProjectPane
              type="exiles"
              isActive={activeProject === 'exiles'}
@@ -295,7 +296,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
         </div>
 
         {/* LEADERBOARD PANE */}
-        <div ref={leaderboardRef} className="absolute" style={{ transformStyle: 'preserve-3d' }}>
+        <div ref={leaderboardRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ transformStyle: 'preserve-3d' }}>
            <ProjectPane
              type="leaderboard"
              isActive={activeProject === 'leaderboard'}
