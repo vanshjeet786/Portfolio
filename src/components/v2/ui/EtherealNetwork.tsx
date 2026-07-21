@@ -2,39 +2,55 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { SoundEngine } from '@/utils/SoundEngine';
-import { TrueFocus } from './TrueFocus';
 import { GlassCard } from './GlassCard';
+import { TrueFocus } from './TrueFocus';
 
 type ProjectType = 'exiles' | 'leaderboard' | null;
 
-interface ProjectNodeProps {
+interface TransformBase {
+  x: number;
+  y: number;
+  z: number;
+  rotateY: number;
+  scale: number;
+  opacity: number;
+}
+
+const EXILES_BASE: TransformBase = { x: -180, y: 0, z: -100, rotateY: 15, scale: 0.9, opacity: 0.7 };
+const LEADERBOARD_BASE: TransformBase = { x: 180, y: 0, z: -100, rotateY: -15, scale: 0.9, opacity: 0.7 };
+
+interface ProjectPaneProps {
   type: 'exiles' | 'leaderboard';
   isActive: boolean;
   onActivate: () => void;
   onClose: () => void;
+  isHovered: boolean;
+  onHover: () => void;
+  onLeave: () => void;
+  baseTransform: TransformBase;
+  mouseRotX: number;
+  mouseRotY: number;
+  hasActiveProject: boolean;
 }
 
-const ProjectNode = ({ type, isActive, onActivate, onClose }: ProjectNodeProps) => {
+const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
   const isExiles = type === 'exiles';
-  const nodeRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const paneRef = useRef<HTMLDivElement>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Unfurl Animation
   useEffect(() => {
-    if (!surfaceRef.current || !contentRef.current || !textRef.current || !glowRef.current) return;
+    if (!surfaceRef.current || !contentRef.current || !textRef.current) return;
 
     if (isActive) {
-      // Hide the default text and glow
+      // Hide the default text
       gsap.to(textRef.current, { opacity: 0, duration: 0.4, ease: 'power2.out' });
-      gsap.to(glowRef.current, { opacity: 0, scale: 0.5, duration: 0.4 });
 
       // Unfurl the glass surface - First widen, then heighten
       gsap.to(surfaceRef.current, {
         width: 440,
-        opacity: 1,
         duration: 0.6,
         ease: 'power3.out',
       });
@@ -56,57 +72,49 @@ const ProjectNode = ({ type, isActive, onActivate, onClose }: ProjectNodeProps) 
 
       // Roll up the surface - Height then width
       gsap.to(surfaceRef.current, {
-        height: 2,
+        height: 460, // Return to base card height
         duration: 0.5,
         ease: 'power3.in',
         delay: 0.2
       });
       gsap.to(surfaceRef.current, {
-        width: 140,
-        opacity: 0,
+        width: 340, // Return to base card width
         duration: 0.5,
         ease: 'power3.inOut',
         delay: 0.6
       });
 
-      // Restore text and glow
+      // Restore text
       gsap.to(textRef.current, { opacity: 1, duration: 0.8, delay: 1, ease: 'power2.out' });
-      gsap.to(glowRef.current, { clearProps: 'all', duration: 1, delay: 1 });
     }
   }, [isActive]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center group" ref={nodeRef}>
-
-      {/* Node Ambient Glow (Blueprint Style) */}
-      <div
-        ref={glowRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white rounded-full blur-[100px] pointer-events-none opacity-0 transition-opacity duration-1000 group-hover:opacity-[0.15]"
-      />
-
-      {/* Node Marker Text (Blueprint Style) */}
-      <div
-        ref={textRef}
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-700 ${isActive ? 'pointer-events-none scale-90' : 'cursor-pointer scale-100 group-hover:scale-105'}`}
-        onClick={(e) => { e.stopPropagation(); SoundEngine.playClick(); onActivate(); }}
-        onMouseEnter={() => { SoundEngine.playHover(); }}
-      >
-        <div className="flex flex-col items-center">
-            {/* Minimalist marker dot */}
-            <div className="w-1.5 h-1.5 bg-white/40 rounded-full mb-6 group-hover:bg-white/80 transition-colors duration-500 shadow-[0_0_10px_rgba(255,255,255,0.3)]" />
-            <span className="text-[10px] uppercase tracking-[0.5em] text-white/30 font-mono block mb-3 group-hover:text-white/60 transition-colors duration-500">Module {isExiles ? '03' : '04'}</span>
-            <TrueFocus text={isExiles ? 'EXILES' : 'LEADERBOARD'} className="text-3xl font-light tracking-[0.25em] text-white/80" splitBy="letter" animationSpeed={1.5} />
-        </div>
-      </div>
-
-      {/* The Unfurling Glass Surface */}
+    <div
+      ref={paneRef}
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      onClick={(e) => { e.stopPropagation(); if(!isActive) { SoundEngine.playClick(); onActivate(); } }}
+      className={`absolute cursor-pointer flex items-center justify-center ${isActive ? 'pointer-events-auto cursor-default' : 'pointer-events-auto'} ${hasActiveProject && !isActive ? 'pointer-events-none' : ''}`}
+      style={{ transformStyle: 'preserve-3d' }}
+    >
       <div
         ref={surfaceRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden pointer-events-auto shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-        style={{ width: 140, height: 2, opacity: 0 }}
+        className="overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all duration-700"
+        style={{ width: 340, height: 460 }}
       >
-        <GlassCard className="w-full h-full bg-[#050505]/70 border-white/5 backdrop-blur-3xl rounded-2xl">
-          <div ref={contentRef} className="absolute inset-0 p-10 flex flex-col pointer-events-auto">
+        <GlassCard className="w-full h-full bg-[#050505]/70 border-white/10 backdrop-blur-3xl rounded-2xl relative">
+
+          {/* Node Marker Text (Base State) */}
+          <div
+            ref={textRef}
+            className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+          >
+              <TrueFocus text={isExiles ? 'EXILES' : 'LEADERBOARD'} className="text-3xl font-light tracking-[0.25em] text-white/80 uppercase" splitBy="letter" animationSpeed={1.5} />
+          </div>
+
+          {/* Detailed Content (Active State) */}
+          <div ref={contentRef} className="absolute inset-0 p-10 flex flex-col pointer-events-auto opacity-0" style={{ pointerEvents: isActive ? 'auto' : 'none' }}>
             {/* Header & Close */}
             <div className="flex justify-between items-start mb-8 w-full opacity-0">
               <div>
@@ -169,74 +177,138 @@ const ProjectNode = ({ type, isActive, onActivate, onClose }: ProjectNodeProps) 
       </div>
     </div>
   );
-};
+}
 
 export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
-  const [activeProject, setActiveProject] = useState<ProjectType>(null);
 
-  // Mount/Unmount base structure
+  const [activeProject, setActiveProject] = useState<ProjectType>(null);
+  const [hoveredProject, setHoveredProject] = useState<ProjectType>(null);
+
+  const [mouseRotX, setMouseRotX] = useState(0);
+  const [mouseRotY, setMouseRotY] = useState(0);
+
+  const exilesRef = useRef<HTMLDivElement>(null);
+  const leaderboardRef = useRef<HTMLDivElement>(null);
+
+  // Mount/Unmount
   useEffect(() => {
-    if (!containerRef.current || !lineRef.current) return;
+    if (!containerRef.current || !exilesRef.current || !leaderboardRef.current) return;
     
     if (isActive) {
-      gsap.to(containerRef.current, { opacity: 1, duration: 2, ease: 'power2.out', display: 'flex' });
+      gsap.to(containerRef.current, { opacity: 1, duration: 1.5, ease: 'power2.out', display: 'flex' });
+
+      gsap.fromTo(exilesRef.current,
+        { ...EXILES_BASE, y: 100, opacity: 0 },
+        { ...EXILES_BASE, duration: 1.5, ease: 'power3.out', delay: 0.2 }
+      );
       
-      // Draw the blueprint connecting line
-      gsap.fromTo(lineRef.current,
-        { scaleX: 0, opacity: 0 },
-        { scaleX: 1, opacity: 1, duration: 2, ease: 'expo.inOut', delay: 0.5 }
+      gsap.fromTo(leaderboardRef.current,
+        { ...LEADERBOARD_BASE, y: 100, opacity: 0 },
+        { ...LEADERBOARD_BASE, duration: 1.5, ease: 'power3.out', delay: 0.3 }
       );
     } else {
       gsap.to(containerRef.current, {
-        opacity: 0, duration: 1, ease: 'power2.inOut',
+        opacity: 0, duration: 0.8, ease: 'power2.inOut',
         onComplete: () => {
           if (containerRef.current) containerRef.current.style.display = 'none';
           setActiveProject(null);
+          setHoveredProject(null);
         }
       });
     }
   }, [isActive]);
 
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isActive || activeProject) return;
+    if (!containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    setMouseRotX(y * -15);
+    setMouseRotY(x * 15);
+  };
+
+  // Parallax & Hover orchestrator
+  useEffect(() => {
+     if (activeProject || !exilesRef.current || !leaderboardRef.current) return;
+
+     if (hoveredProject === 'exiles') {
+        gsap.to(exilesRef.current, { rotateX: mouseRotX, rotateY: EXILES_BASE.rotateY + mouseRotY, z: 50, scale: 1, opacity: 1, duration: 0.6, ease: 'power3.out' });
+        gsap.to(leaderboardRef.current, { rotateX: mouseRotX, rotateY: LEADERBOARD_BASE.rotateY + mouseRotY, z: -200, scale: 0.8, opacity: 0.3, filter: 'blur(8px)', duration: 0.6, ease: 'power3.out' });
+     } else if (hoveredProject === 'leaderboard') {
+        gsap.to(leaderboardRef.current, { rotateX: mouseRotX, rotateY: LEADERBOARD_BASE.rotateY + mouseRotY, z: 50, scale: 1, opacity: 1, duration: 0.6, ease: 'power3.out' });
+        gsap.to(exilesRef.current, { rotateX: mouseRotX, rotateY: EXILES_BASE.rotateY + mouseRotY, z: -200, scale: 0.8, opacity: 0.3, filter: 'blur(8px)', duration: 0.6, ease: 'power3.out' });
+     } else {
+        gsap.to(exilesRef.current, { rotateX: mouseRotX, rotateY: EXILES_BASE.rotateY + mouseRotY, x: EXILES_BASE.x, y: EXILES_BASE.y, z: EXILES_BASE.z, scale: EXILES_BASE.scale, opacity: EXILES_BASE.opacity, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' });
+        gsap.to(leaderboardRef.current, { rotateX: mouseRotX, rotateY: LEADERBOARD_BASE.rotateY + mouseRotY, x: LEADERBOARD_BASE.x, y: LEADERBOARD_BASE.y, z: LEADERBOARD_BASE.z, scale: LEADERBOARD_BASE.scale, opacity: LEADERBOARD_BASE.opacity, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' });
+     }
+  }, [mouseRotX, mouseRotY, hoveredProject, activeProject]);
+
+  // Click orchestrator
+  useEffect(() => {
+    if (!exilesRef.current || !leaderboardRef.current) return;
+
+    if (activeProject === 'exiles') {
+      gsap.to(exilesRef.current, { x: 0, y: 0, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(leaderboardRef.current, { x: 300, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
+    } else if (activeProject === 'leaderboard') {
+      gsap.to(leaderboardRef.current, { x: 0, y: 0, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(exilesRef.current, { x: -300, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
+    } else if (isActive) {
+      // return to base
+      gsap.to(exilesRef.current, { ...EXILES_BASE, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(leaderboardRef.current, { ...LEADERBOARD_BASE, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+    }
+  }, [activeProject, isActive]);
+
+
   return (
     <div 
       ref={containerRef}
-      style={{ display: 'none' }}
+      onMouseMove={handleMouseMove}
+      onClick={() => activeProject && setActiveProject(null)}
+      style={{ display: 'none', perspective: '1200px' }}
       className={`absolute inset-0 w-full h-full z-20 items-center justify-center overflow-hidden ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}
     >
-      {/* Dimmer overlay when a project is open */}
-      <div 
-        className={`absolute inset-0 bg-[#020202] transition-opacity duration-1000 pointer-events-none ${activeProject ? 'opacity-90' : 'opacity-0'}`}
-      />
+      <div className={`absolute inset-0 bg-[#020202] transition-opacity duration-1000 pointer-events-none ${activeProject ? 'opacity-90' : 'opacity-0'}`} />
 
-      {/* Center Layout Container */}
-      <div className="relative w-full max-w-6xl h-full flex items-center justify-between px-24">
+      <div className="relative w-full max-w-5xl h-[600px] flex items-center justify-center transform-style-3d">
 
-        {/* The Delicate Slate Connecting Line */}
-        <div className="absolute left-[20%] right-[20%] h-[1px] top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
-            <div ref={lineRef} className="w-full h-full bg-white/10 origin-center" />
-            {/* Subtle center geometric marker */}
-            <div className={`absolute w-1.5 h-1.5 border border-white/30 rotate-45 transition-opacity duration-1000 ${activeProject ? 'opacity-0' : 'opacity-100'}`} />
+        {/* EXILES PANE */}
+        <div ref={exilesRef} className="absolute" style={{ transformStyle: 'preserve-3d' }}>
+           <ProjectPane
+             type="exiles"
+             isActive={activeProject === 'exiles'}
+             hasActiveProject={activeProject !== null}
+             onActivate={() => setActiveProject('exiles')}
+             onClose={() => setActiveProject(null)}
+             isHovered={hoveredProject === 'exiles'}
+             onHover={() => { SoundEngine.playHover(); setHoveredProject('exiles'); }}
+             onLeave={() => setHoveredProject(null)}
+             baseTransform={EXILES_BASE}
+             mouseRotX={mouseRotX}
+             mouseRotY={mouseRotY}
+           />
         </div>
 
-        {/* Nodes */}
-        <div className={`relative z-20 w-1/3 transition-all duration-1000 ease-in-out ${activeProject === 'leaderboard' ? '-translate-x-20 opacity-0 blur-md pointer-events-none' : activeProject === 'exiles' ? 'translate-x-[50%] scale-110' : 'translate-x-0 opacity-100 scale-100'}`}>
-            <ProjectNode
-                type="exiles"
-                isActive={activeProject === 'exiles'}
-                onActivate={() => setActiveProject('exiles')}
-                onClose={() => setActiveProject(null)}
-            />
-        </div>
-
-        <div className={`relative z-20 w-1/3 transition-all duration-1000 ease-in-out ${activeProject === 'exiles' ? 'translate-x-20 opacity-0 blur-md pointer-events-none' : activeProject === 'leaderboard' ? '-translate-x-[50%] scale-110' : 'translate-x-0 opacity-100 scale-100'}`}>
-            <ProjectNode
-                type="leaderboard"
-                isActive={activeProject === 'leaderboard'}
-                onActivate={() => setActiveProject('leaderboard')}
-                onClose={() => setActiveProject(null)}
-            />
+        {/* LEADERBOARD PANE */}
+        <div ref={leaderboardRef} className="absolute" style={{ transformStyle: 'preserve-3d' }}>
+           <ProjectPane
+             type="leaderboard"
+             isActive={activeProject === 'leaderboard'}
+             hasActiveProject={activeProject !== null}
+             onActivate={() => setActiveProject('leaderboard')}
+             onClose={() => setActiveProject(null)}
+             isHovered={hoveredProject === 'leaderboard'}
+             onHover={() => { SoundEngine.playHover(); setHoveredProject('leaderboard'); }}
+             onLeave={() => setHoveredProject(null)}
+             baseTransform={LEADERBOARD_BASE}
+             mouseRotX={mouseRotX}
+             mouseRotY={mouseRotY}
+           />
         </div>
 
       </div>
