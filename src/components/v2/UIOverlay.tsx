@@ -7,27 +7,27 @@ import { SVGNoise } from './ui/SVGNoise';
 import { SoundEngine } from '@/utils/SoundEngine';
 
 const NARRATIVE_TEXTS_1 = [
-  "You're lost.",
-  "We all are.",
-  "Personality tests are horoscopes for LinkedIn.",
-  "The Compass doesn't ask what you want to be.",
-  "It calculates what you already are."
+  "You're lost. MAYBE",
+  "I DEVELOPED a 6-LAYER AI Career Counsellor",
+  "The priority was to ensure it doesn't assess",
+  "Using RIASEC, Big 5, MBTI, Multiple Presonality",
+  "And a few open ended questions to undertsnad someone better"
 ];
 
 const NARRATIVE_TEXTS_2 = [
-  "Paper tells a flat story.",
-  "We built a system that reads between the lines.",
-  "A living graph of human potential.",
-  "Not just what they did.",
-  "How they think."
+  "This is one Judges",
+  "I built a 4-layer soft skills assessment test",
+  "The priority here was tho ensure the accuracy",
+  "Most of the questions do not have an incorrect answer",
+  "It just evaluates the thinking of a person"
 ];
 
 const NARRATIVE_TEXTS_3 = [
-  "Most apps just send text.",
-  "They forget the most important part of talking.",
-  "Knowing the other person is actually there.",
-  "We didn't build a chat app.",
-  "We built a place."
+  "I designed a chat app and a Leaderboard Platform",
+  "As a project  for a company.",
+  "Priority was Database design, idempotency and api functions",
+  "Idempotency",
+  "And API functions calls using CURL"
 ];
 
 const NARRATIVE_TEXTS_4 = [
@@ -39,24 +39,22 @@ const NARRATIVE_TEXTS_4 = [
 ];
 
 const NARRATIVE_TEXTS_5 = [
-  "Structure is nothing without signal.",
-  "Data is useless without intent.",
-  "The network is open.",
-  "Initiate protocol.",
-  "Make contact."
+  "Hello!!!",
+  "I am Vansh",
+  "Would love to connect!",
 ];
 
 const SCENE_LABELS = [
   'Home',
   'Compass',
-  'Drift 01',
+  'WHERE AM I?',
   'Skillometer',
-  'Drift 02',
+  'WHERE AM I NOW?',
   'Network',
-  'Drift 03',
+  'WHERE AM I AGAIN?',
   'Stance',
-  'Drift 04',
-  'Contact'
+  'I THINK THIS IS THE END',
+  'VANSH'
 ];
 
 const MODAL_FRAME_CLASS =
@@ -188,7 +186,7 @@ export const UIOverlay = () => {
   useEffect(() => {
     if (displayedScene !== 7) return;
     if (isStanceOpen) {
-      gsap.to(stanceTriggerRef.current, { opacity: 0, scale: 0.8, duration: 0.4, ease: "power2.in" });
+      gsap.to(stanceTriggerRef.current, { opacity: 0, scale: 0.8, duration: 0.7, ease: "power2.in" });
       gsap.fromTo(stanceModalRef.current, 
         { opacity: 0, y: -40, clipPath: 'circle(0% at center)' },
         { opacity: 1, y: 0, clipPath: 'circle(150% at center)', duration: 1.2, ease: "expo.out", display: 'block' }
@@ -291,7 +289,7 @@ export const UIOverlay = () => {
                 text="VANSHJEET" 
                 splitBy="letter" 
                 animationSpeed={0.8}
-                className="text-5xl md:text-8xl font-light tracking-[0.25em] text-white z-0"
+                className="text-5xl md:text-8xl font-jost tracking-[0.25em] text-white z-0"
               />
               <div 
                 className="absolute inset-0 rounded-2xl pointer-events-none z-10 shadow-2xl"
@@ -325,9 +323,9 @@ export const UIOverlay = () => {
                 <div className="w-2 h-2 bg-[#00f0ff] rounded-full shadow-[0_0_15px_#00f0ff] group-hover:scale-150 transition-transform duration-500" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-mono mb-1">Target Acquired</span>
+                <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-mono mb-1">ABOUT PROJECT</span>
                 <span className="text-xs tracking-[0.2em] uppercase text-white group-hover:text-[#00f0ff] transition-colors duration-500">
-                  Access Data
+                  CAREER COMPASS
                 </span>
               </div>
             </button>
@@ -336,7 +334,7 @@ export const UIOverlay = () => {
               <SVGNoise />
               <div className="flex justify-between items-start mb-16">
                 <div>
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#00f0ff] font-mono">Project 01</span>
+                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#00f0ff] font-lato">Project 01</span>
                   <h2 className="text-4xl md:text-6xl font-light mt-4 text-white tracking-tight">Career Compass</h2>
                 </div>
                 <button 
@@ -351,12 +349,12 @@ export const UIOverlay = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-white/10 pt-8">
                 <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-mono mb-4">Classification</h3>
+                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">Classification</h3>
                   <p className="text-sm text-white font-light tracking-wide">Decision Support System</p>
                 </div>
                 <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-mono mb-4">Synopsis</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed font-light">
+                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">Synopsis</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed font-jost">
                     Conventional guidance relies on static questionnaires. Career Compass normalizes cognitive traits to establish true direction. A deeply integrated neural matrix mapping the psyche.
                   </p>
                   <button 
@@ -388,7 +386,7 @@ export const UIOverlay = () => {
               <div className="w-8 h-8 rounded-full border border-[#f59e0b]/50 flex items-center justify-center group-hover:border-[#f59e0b] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
                 <div className="w-1.5 h-1.5 bg-[#f59e0b] rounded-full group-hover:scale-150 transition-transform duration-300" />
               </div>
-              <span className="text-[9px] tracking-[0.4em] uppercase text-white/50 font-mono mt-2 group-hover:text-[#f59e0b] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
+              <span className="text-[9px] tracking-[0.4em] uppercase text-white/50 font-lato mt-2 group-hover:text-[#f59e0b] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
                 Initiate Scan
               </span>
             </button>
@@ -398,13 +396,13 @@ export const UIOverlay = () => {
               <div className="absolute -top-10 -left-10 text-[180px] font-bold text-white/5 pointer-events-none select-none tracking-tighter">02</div>
               <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-12">
                 <div className="flex-1">
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#f59e0b] font-mono">Project 02</span>
-                  <h2 className="text-4xl md:text-5xl font-light mt-4 text-white tracking-tight">Skillometer</h2>
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mono mt-2">The Living System</h3>
+                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#f59e0b] font-lato">Welcome again!</span>
+                  <h2 className="text-4xl md:text-5xl font-jost mt-4 text-white tracking-tight">Skillometer</h2>
+                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-lato mt-2">The Living System</h3>
                   <div className="mt-12 w-12 h-[1px] bg-[#f59e0b]/50" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm text-gray-300 leading-relaxed font-light mt-2">
+                  <p className="text-sm text-gray-300 leading-relaxed font-jost mt-2">
                     An architectural graph modeling candidate signals, capability matrices, and alignment scores dynamically. True alignment emerges not from scores, but from relationships within the ecosystem.
                   </p>
                   <div className="mt-10 flex items-center gap-6">
@@ -455,8 +453,8 @@ export const UIOverlay = () => {
               <div className="absolute w-12 h-[1px] bg-white/30 group-hover:w-24 transition-all duration-500" />
               <div className="absolute w-6 h-6 border border-white/50 rotate-45 group-hover:rotate-90 group-hover:scale-150 transition-all duration-700" />
               <div className="absolute top-full mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center">
-                <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-white/80">Analyze</span>
-                <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-white/50">Structure</span>
+                <span className="text-[9px] uppercase tracking-[0.4em] font- text-white/80">Analyze</span>
+                <span className="text-[9px] uppercase tracking-[0.4em] font-mulish text-white/50">Structure</span>
               </div>
             </button>
 
@@ -468,25 +466,25 @@ export const UIOverlay = () => {
               
               <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-16">
                 <div className="flex-1">
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#e11d48] font-mono">Project 05 // Structural Engine</span>
-                  <h2 className="text-5xl md:text-7xl font-light mt-6 text-white tracking-tight uppercase">Stance</h2>
+                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#e11d48] font-mulish">Project 05 STANCE FRONTEND</span>
+                  <h2 className="text-5xl md:text-7xl font-jost mt-6 text-white tracking-tight uppercase">Stance</h2>
                   <div className="mt-12 w-24 h-[2px] bg-gradient-to-r from-[#e11d48] to-transparent" />
                 </div>
                 
                 <div className="flex-1 pt-4">
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mono mb-4">Integrity Matrix</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed font-light mb-8">
+                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mulish mb-4">Integrity Matrix</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed font-jost mb-8">
                     Stance was built to ensure perfect alignment in highly rigid, structured data pipelines. It operates like a glass monolith: completely transparent, incredibly dense, and unbreakable under immense load.
                   </p>
                   
                   <div className="grid grid-cols-2 gap-6">
                     <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mono block mb-2">Protocol</span>
-                      <span className="text-xs text-white/80 font-light">GraphQL Over WS</span>
+                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mulish block mb-2">Protocol</span>
+                      <span className="text-xs text-white/80 font-jost">A 3D SPINE MODEL</span>
                     </div>
                     <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mono block mb-2">Resilience</span>
-                      <span className="text-xs text-white/80 font-light">99.999% Uptime</span>
+                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mulish block mb-2">SUPPORT</span>
+                      <span className="text-xs text-white/80 font-jost">Uptime</span>
                     </div>
                   </div>
                 </div>
@@ -520,7 +518,7 @@ export const UIOverlay = () => {
               <div className="relative w-32 h-32 rounded-full border border-white/20 flex items-center justify-center overflow-hidden group-hover:border-[#00f0ff]/50 transition-colors duration-700">
                 <div className="absolute inset-0 bg-[#00f0ff]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <div className="w-2 h-2 bg-white rounded-full group-hover:scale-[20] transition-transform duration-700 ease-in-out group-hover:bg-[#00f0ff]/20" />
-                <span className="absolute text-[8px] uppercase tracking-[0.4em] font-mono text-white/50 group-hover:text-white transition-colors duration-300">
+                <span className="absolute text-[8px] uppercase tracking-[0.4em] font-mulish text-white/50 group-hover:text-white transition-colors duration-300">
                   Connect
                 </span>
               </div>
@@ -541,17 +539,17 @@ export const UIOverlay = () => {
               </button>
 
               <div className="text-center mb-16">
-                <h2 className="text-6xl md:text-8xl font-light text-white tracking-tighter uppercase mb-4">
-                  End of Transmission
+                <h2 className="text-6xl md:text-8xl font-jost text-white tracking-tighter uppercase mb-4">
+                  That's it. For Now....
                 </h2>
                 <div className="w-24 h-[1px] bg-[#00f0ff]/50 mx-auto" />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-15 w-full max-w-8xl">
                 {[
-                  { name: 'GitHub', label: 'github.com/vanshjeet', href: 'https://github.com/vanshjeet', color: '#ffffff' },
-                  { name: 'LinkedIn', label: 'linkedin.com/in/vanshjeet', href: 'https://www.linkedin.com/in/vanshjeet', color: '#0a66c2' },
-                  { name: 'Email', label: 'send email', href: 'mailto:connect@vanshjeet.dev', color: '#00f0ff' }
+                  { name: 'GitHub', label: 'github.com/vanshjeet786', href: 'https://github.com/vanshjeet786', color: '#ffffff' },
+                  { name: 'LinkedIn', label: 'linkedin.com/in/vanshjeetsingh', href: 'https://www.linkedin.com/in/vanshjeet', color: '#0a66c2' },
+                  { name: 'Mail', label: 'Mail', href: 'mailto:singhvanshjeet@gmail.com', color: '#00f0ff' }
                 ].map((link, i) => (
                   <a 
                     key={i}
@@ -567,7 +565,7 @@ export const UIOverlay = () => {
                       {link.name}
                     </span>
                     <span 
-                      className="relative z-10 text-sm md:text-base font-light tracking-widest transition-colors duration-300"
+                      className="relative z-10 text-sm md:text-base font-jost tracking-widest transition-colors duration-300"
                       style={{ color: link.color }}
                     >
                       {link.label}
@@ -655,7 +653,7 @@ const SceneProgress = ({ activeScene, progress, isHidden, onJump }: SceneProgres
               isActive ? 'w-10 bg-[#00f0ff] shadow-[0_0_10px_#00f0ff]' : 'w-4 bg-white/25 group-hover:w-8 group-hover:bg-white/60'
             }`}
           />
-          <span className={`text-[9px] uppercase tracking-[0.28em] font-mono transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/30 group-hover:text-white/70'}`}>
+          <span className={`text-[9px] uppercase tracking-[0.28em] font-lato transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/30 group-hover:text-white/70'}`}>
             {label}
           </span>
         </button>
