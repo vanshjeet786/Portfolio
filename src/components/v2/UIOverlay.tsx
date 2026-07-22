@@ -7,7 +7,7 @@ import { SVGNoise } from './ui/SVGNoise';
 import { SoundEngine } from '@/utils/SoundEngine';
 
 const NARRATIVE_TEXTS_1 = [
-  "You're lost. MAYBE",
+  "You're lost. Maybe?",
   "I DEVELOPED a 6-LAYER AI Career Counsellor",
   "The priority was to ensure it doesn't assess",
   "Using RIASEC, Big 5, MBTI, Multiple Presonality",
@@ -15,9 +15,9 @@ const NARRATIVE_TEXTS_1 = [
 ];
 
 const NARRATIVE_TEXTS_2 = [
-  "This is one Judges",
+  "This one Judges",
   "I built a 4-layer soft skills assessment test",
-  "The priority here was tho ensure the accuracy",
+  "The priority here was to ensure the accuracy",
   "Most of the questions do not have an incorrect answer",
   "It just evaluates the thinking of a person"
 ];
@@ -31,7 +31,7 @@ const NARRATIVE_TEXTS_3 = [
 ];
 
 const NARRATIVE_TEXTS_4 = [
-  "Designed a set of web pages",
+  "Designed set of web pages",
   "",
   "Priority was SEO",
 ];
@@ -48,11 +48,11 @@ const SCENE_LABELS = [
   'WHERE AM I?',
   'Skillometer',
   'WHERE AM I NOW?',
-  'Network',
+  'Mini Projects',
   'WHERE AM I AGAIN?',
   'Stance',
   'I THINK THIS IS THE END',
-  'VANSH'
+  'Vansh'
 ];
 
 const MODAL_FRAME_CLASS =
