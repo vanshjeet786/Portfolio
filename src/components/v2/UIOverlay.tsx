@@ -46,10 +46,30 @@ const NARRATIVE_TEXTS_5 = [
   "Make contact."
 ];
 
+const SCENE_LABELS = [
+  'Home',
+  'Compass',
+  'Drift 01',
+  'Skillometer',
+  'Drift 02',
+  'Network',
+  'Drift 03',
+  'Stance',
+  'Drift 04',
+  'Contact'
+];
+
+const MODAL_FRAME_CLASS =
+  'fixed inset-4 md:inset-8 z-30 flex flex-col bg-[#050505]/92 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-12 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(0,0,0,0.65)]';
+
+const CLOSE_BUTTON_CLASS =
+  'absolute top-6 right-6 md:top-8 md:right-8 w-11 h-11 flex items-center justify-center border border-white/15 hover:border-white/40 hover:bg-white/5 transition-all cursor-none group rounded-full';
+
 export const UIOverlay = () => {
   const activeScene = useStore((state) => state.activeScene);
   const setModalOpen = useStore((state) => state.setModalOpen);
   const progress = useStore((state) => state.progress);
+  const jumpToScene = useStore((state) => state.jumpToScene);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const [displayedScene, setDisplayedScene] = useState(activeScene);
@@ -116,7 +136,7 @@ export const UIOverlay = () => {
         }
       });
     }
-  }, [activeScene, displayedScene, isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen]);
+  }, [activeScene, displayedScene, isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen, setModalOpen]);
 
   // Compass Modal Animation Effect
   useEffect(() => {
@@ -210,6 +230,21 @@ export const UIOverlay = () => {
     }
   }, [isTerminalOpen, displayedScene]);
 
+
+  useEffect(() => {
+    const closeActiveModal = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      if (isCompassOpen) setIsCompassOpen(false);
+      if (isSkillometerOpen) setIsSkillometerOpen(false);
+      if (isStanceOpen) setIsStanceOpen(false);
+      if (isTerminalOpen) setIsTerminalOpen(false);
+      setModalOpen(false);
+    };
+
+    window.addEventListener('keydown', closeActiveModal);
+    return () => window.removeEventListener('keydown', closeActiveModal);
+  }, [isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen, setModalOpen]);
+
   // Scroll-driven Narrative Text Engine
   const [activeNarrativeText, setActiveNarrativeText] = useState("");
   useEffect(() => {
@@ -297,7 +332,7 @@ export const UIOverlay = () => {
               </div>
             </button>
 
-            <div ref={modalRef} style={{ display: 'none' }} className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-[#050505]/80 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-2xl">
+            <div ref={modalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} justify-center items-center`}>
               <SVGNoise />
               <div className="flex justify-between items-start mb-16">
                 <div>
@@ -307,7 +342,7 @@ export const UIOverlay = () => {
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
                   onClick={() => { SoundEngine.playClick(); { setIsCompassOpen(false); setModalOpen(false); }; }}
-                  className="w-10 h-10 flex items-center justify-center border border-white/20 hover:border-[#00f0ff] rounded-none transition-colors cursor-none group relative overflow-hidden"
+                  className={CLOSE_BUTTON_CLASS}
                 >
                   <div className="w-full h-full bg-[#00f0ff]/10 absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                   <div className="w-4 h-[1px] bg-white rotate-45 absolute" />
@@ -358,7 +393,7 @@ export const UIOverlay = () => {
               </span>
             </button>
 
-            <div ref={skillometerModalRef} style={{ display: 'none' }} className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-[#050505]/80 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-[0_30px_100px_rgba(245,158,11,0.1)]">
+            <div ref={skillometerModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} justify-center items-center shadow-[0_30px_100px_rgba(245,158,11,0.12)]`}>
               <SVGNoise />
               <div className="absolute -top-10 -left-10 text-[180px] font-bold text-white/5 pointer-events-none select-none tracking-tighter">02</div>
               <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-12">
@@ -385,7 +420,7 @@ export const UIOverlay = () => {
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
                   onClick={() => { SoundEngine.playClick(); { setIsSkillometerOpen(false); setModalOpen(false); }; }}
-                  className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors cursor-none group ml-auto"
+                  className={`${CLOSE_BUTTON_CLASS} static ml-auto`}
                 >
                   <div className="w-4 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
                   <div className="w-4 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
@@ -426,7 +461,7 @@ export const UIOverlay = () => {
             </button>
 
             {/* Monolithic Data Slate Modal (Similar to Skillometer but matching the Monolith design) */}
-            <div ref={stanceModalRef} style={{ display: 'none' }} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-4xl h-[80vh] flex flex-col items-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(225,29,72,0.1)]">
+            <div ref={stanceModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} items-center shadow-[0_30px_100px_rgba(225,29,72,0.12)]`}>
               <SVGNoise />
               {/* Massive background typography matching the monolith vibe */}
               <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#e11d48]/5 pointer-events-none select-none tracking-tighter">05</div>
@@ -459,7 +494,7 @@ export const UIOverlay = () => {
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
                   onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(false); setModalOpen(false); }; }}
-                  className="w-12 h-12 flex items-center justify-center border border-white/20 hover:bg-[#e11d48]/10 hover:border-[#e11d48] transition-all cursor-none group ml-auto"
+                  className={`${CLOSE_BUTTON_CLASS} static ml-auto hover:border-[#e11d48] hover:bg-[#e11d48]/10`}
                 >
                   <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
                   <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
@@ -494,12 +529,12 @@ export const UIOverlay = () => {
             <div 
               ref={terminalModalRef} 
               style={{ display: 'none' }} 
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-4xl h-[80vh] z-30 flex-col items-center justify-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(0,240,255,0.1)]"
+              className={`${MODAL_FRAME_CLASS} items-center justify-center shadow-[0_30px_100px_rgba(0,240,255,0.12)]`}
             >
               <button 
                 onMouseEnter={() => SoundEngine.playHover()}
                 onClick={() => { SoundEngine.playClick(); { setIsTerminalOpen(false); setModalOpen(false); }; }}
-                className="absolute top-12 right-12 w-12 h-12 flex items-center justify-center hover:bg-white/5 transition-colors cursor-none group"
+                className={CLOSE_BUTTON_CLASS}
               >
                 <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
                 <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
@@ -514,15 +549,17 @@ export const UIOverlay = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
                 {[
-                  { name: 'GitHub', label: 'git://vanshjeet', color: '#ffffff' },
-                  { name: 'LinkedIn', label: 'net://vanshjeet', color: '#0a66c2' },
-                  { name: 'Email', label: 'mailto://connect', color: '#00f0ff' }
+                  { name: 'GitHub', label: 'github.com/vanshjeet', href: 'https://github.com/vanshjeet', color: '#ffffff' },
+                  { name: 'LinkedIn', label: 'linkedin.com/in/vanshjeet', href: 'https://www.linkedin.com/in/vanshjeet', color: '#0a66c2' },
+                  { name: 'Email', label: 'send email', href: 'mailto:connect@vanshjeet.dev', color: '#00f0ff' }
                 ].map((link, i) => (
                   <a 
                     key={i}
-                    href="#"
+                    href={link.href}
+                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                    rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
                     onMouseEnter={() => SoundEngine.playHover()}
-                    onClick={(e) => { e.preventDefault(); SoundEngine.playClick(); }}
+                    onClick={() => SoundEngine.playClick()}
                     className="group relative border border-white/10 p-8 hover:border-white/30 transition-all duration-500 cursor-none overflow-hidden"
                   >
                     <div className="absolute inset-0 bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
@@ -562,6 +599,17 @@ export const UIOverlay = () => {
         </h2>
       </div>
       
+
+      <SceneProgress
+        activeScene={activeScene}
+        progress={progress}
+        isHidden={isCompassOpen || isSkillometerOpen || isStanceOpen || isTerminalOpen}
+        onJump={(index) => {
+          SoundEngine.playClick();
+          jumpToScene(index);
+        }}
+      />
+
       {/* Global Scroll Indicator */}
       <div 
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-opacity duration-500 z-10"
@@ -573,3 +621,46 @@ export const UIOverlay = () => {
     </div>
   );
 };
+
+interface SceneProgressProps {
+  activeScene: number;
+  progress: number;
+  isHidden: boolean;
+  onJump: (index: number) => void;
+}
+
+const SceneProgress = ({ activeScene, progress, isHidden, onJump }: SceneProgressProps) => (
+  <nav
+    aria-label="Scene progress"
+    className="absolute left-6 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-3 pointer-events-auto md:flex"
+    style={{ opacity: isHidden ? 0 : 1, transition: 'opacity 0.5s ease' }}
+  >
+    <div className="mb-2 text-[9px] uppercase tracking-[0.35em] text-white/35 font-mono">
+      {Math.round(progress * 100).toString().padStart(2, '0')}%
+    </div>
+    {SCENE_LABELS.map((label, index) => {
+      const isActive = activeScene === index;
+      return (
+        <button
+          key={label}
+          type="button"
+          aria-label={`Jump to ${label}`}
+          aria-current={isActive ? 'step' : undefined}
+          onMouseEnter={() => SoundEngine.playHover()}
+          onClick={() => onJump(index)}
+          className="group flex items-center gap-3 cursor-none text-left"
+        >
+          <span
+            className={`block h-[1px] transition-all duration-300 ${
+              isActive ? 'w-10 bg-[#00f0ff] shadow-[0_0_10px_#00f0ff]' : 'w-4 bg-white/25 group-hover:w-8 group-hover:bg-white/60'
+            }`}
+          />
+          <span className={`text-[9px] uppercase tracking-[0.28em] font-mono transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/30 group-hover:text-white/70'}`}>
+            {label}
+          </span>
+        </button>
+      );
+    })}
+  </nav>
+);
+

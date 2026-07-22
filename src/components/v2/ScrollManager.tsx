@@ -18,7 +18,7 @@ export const ScrollManager = () => {
       if (useStore.getState().isModalOpen) return;
 
       // Normalize wheel delta and adjust sensitivity (reduced by 30% from 0.00015 to 0.000105)
-      let baseDelta = e.deltaY * 0.000105;
+      const baseDelta = e.deltaY * 0.000105;
 
       // Calculate dynamic friction based on proximity to nearest scene center
       const totalScenes = SCENE_COUNT;
@@ -51,7 +51,16 @@ export const ScrollManager = () => {
       }
     };
 
+    const handleSceneJump = (event: Event) => {
+      const { progress } = (event as CustomEvent<{ progress: number }>).detail;
+      targetProgress = Math.max(0, Math.min(1, progress));
+      currentProgress = targetProgress;
+      isScrolling = false;
+      setProgress(targetProgress);
+    };
+
     window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener('portfolio:jump-to-scene', handleSceneJump);
     
     // Also try to start on click just in case
     const handleClick = () => {
@@ -110,6 +119,7 @@ export const ScrollManager = () => {
 
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('portfolio:jump-to-scene', handleSceneJump);
       window.removeEventListener('click', handleClick);
       cancelAnimationFrame(animationFrameId);
     };
