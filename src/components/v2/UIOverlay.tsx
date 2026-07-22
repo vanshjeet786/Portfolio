@@ -31,9 +31,10 @@ const NARRATIVE_TEXTS_3 = [
 ];
 
 const NARRATIVE_TEXTS_4 = [
-  "Designed set of web pages",
-  "",
-  "Priority was SEO",
+  "Then the clinical work leaves the stage.",
+  "The site still has to guide patients gently.",
+  "Stance became fast, readable, and search-ready.",
+  "Care, movement, and recovery — translated into pages.",
 ];
 
 const NARRATIVE_TEXTS_5 = [
@@ -258,12 +259,12 @@ export const UIOverlay = () => {
       const p = (progress - 0.58) / 0.1;
       const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_3.length - 1, Math.floor(p * NARRATIVE_TEXTS_3.length)));
       currentText = NARRATIVE_TEXTS_3[idx];
-    } else if (progress > 0.70 && progress < 0.81) {
-      const p = (progress - 0.70) / 0.1;
+    } else if (progress > 0.81 && progress < 0.89) {
+      const p = (progress - 0.81) / 0.08;
       const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_4.length - 1, Math.floor(p * NARRATIVE_TEXTS_4.length)));
       currentText = NARRATIVE_TEXTS_4[idx];
-    } else if (progress > 0.85 && progress < 0.95) {
-      const p = (progress - 0.85) / 0.1;
+    } else if (progress > 0.91 && progress < 0.99) {
+      const p = (progress - 0.91) / 0.08;
       const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_5.length - 1, Math.floor(p * NARRATIVE_TEXTS_5.length)));
       currentText = NARRATIVE_TEXTS_5[idx];
     }
@@ -424,51 +425,63 @@ export const UIOverlay = () => {
 
         {/* SCENE 7: STANCE */}
         {displayedScene === 7 && (
-          <div className="w-full h-full flex justify-center items-end relative pointer-events-auto pb-12">
+          <div className="w-full h-full flex justify-center items-end relative overflow-hidden pointer-events-auto pb-12">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(245,158,11,0.16),transparent_28%),radial-gradient(circle_at_62%_56%,rgba(20,241,217,0.08),transparent_24%)]" />
+            <div className="absolute left-12 top-14 hidden max-w-[18rem] md:block">
+              <span className="text-[10px] uppercase tracking-[0.45em] text-[#f59e0b] font-mono">STANCE HEALTH</span>
+              <p className="mt-4 text-sm leading-relaxed text-white/55 font-jost">
+                A patient-facing web experience tuned for clarity, speed, and trust.
+              </p>
+            </div>
             
-            {/* Minimalist Floating Crosshair Trigger */}
+            {/* Anatomical locator trigger */}
             <button
               ref={stanceTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
               onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(true); setModalOpen(true); }; }}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-none w-24 h-24 flex items-center justify-center"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-none w-36 h-36 flex items-center justify-center rounded-full"
             >
-              <div className="absolute w-[1px] h-12 bg-white/30 group-hover:h-24 transition-all duration-500" />
-              <div className="absolute w-12 h-[1px] bg-white/30 group-hover:w-24 transition-all duration-500" />
-              <div className="absolute w-6 h-6 border border-white/50 rotate-45 group-hover:rotate-90 group-hover:scale-150 transition-all duration-700" />
-              <div className="absolute top-full mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center">
-                <span className="text-[9px] uppercase tracking-[0.4em] font- text-white/80">Analyze</span>
-                <span className="text-[9px] uppercase tracking-[0.4em] font-mulish text-white/50">Structure</span>
+              <div className="absolute inset-0 rounded-full border border-[#f59e0b]/25 bg-black/10 backdrop-blur-[2px] group-hover:border-[#f59e0b]/70 group-hover:shadow-[0_0_35px_rgba(245,158,11,0.2)] transition-all duration-700" />
+              <div className="absolute w-[1px] h-20 bg-gradient-to-b from-transparent via-[#f4dfc6]/70 to-transparent group-hover:h-32 transition-all duration-500" />
+              <div className="absolute w-20 h-[1px] bg-gradient-to-r from-transparent via-[#f4dfc6]/70 to-transparent group-hover:w-32 transition-all duration-500" />
+              <div className="absolute w-10 h-10 rounded-full border border-[#14f1d9]/50 group-hover:scale-125 group-hover:border-[#14f1d9] transition-all duration-700" />
+              <div className="absolute w-2.5 h-2.5 rounded-full bg-[#fb3f7f] shadow-[0_0_18px_rgba(251,63,127,0.9)] group-hover:scale-150 transition-transform duration-500" />
+              <div className="absolute top-full mt-5 flex flex-col items-center opacity-80 transition-opacity duration-500 group-hover:opacity-100">
+                <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-[#f4dfc6]">Examine</span>
+                <span className="mt-1 text-[9px] uppercase tracking-[0.4em] font-mulish text-white/50">Patient Journey</span>
               </div>
             </button>
 
-            {/* Monolithic Data Slate Modal (Similar to Skillometer but matching the Monolith design) */}
-            <div ref={stanceModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} items-center shadow-[0_30px_100px_rgba(225,29,72,0.12)]`}>
+            {/* Warm clinical project slate */}
+            <div ref={stanceModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} items-center shadow-[0_30px_100px_rgba(245,158,11,0.14)]`}>
               <SVGNoise />
-              {/* Massive background typography matching the monolith vibe */}
-              <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#e11d48]/5 pointer-events-none select-none tracking-tighter">05</div>
+              <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#f59e0b]/5 pointer-events-none select-none tracking-tighter">04</div>
+              <div className="absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(circle_at_70%_40%,rgba(20,241,217,0.08),transparent_35%)] pointer-events-none" />
               
               <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-16">
                 <div className="flex-1">
-                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#e11d48] font-mulish">Project 05 STANCE FRONTEND</span>
-                  <h2 className="text-5xl md:text-7xl font-jost mt-6 text-white tracking-tight uppercase">Stance</h2>
-                  <div className="mt-12 w-24 h-[2px] bg-gradient-to-r from-[#e11d48] to-transparent" />
+                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#f59e0b] font-mulish">Project 04 · STANCE HEALTH</span>
+                  <h2 className="text-5xl md:text-7xl font-jost mt-6 text-[#f4dfc6] tracking-tight uppercase">Stance</h2>
+                  <p className="mt-6 max-w-md text-sm text-white/55 leading-relaxed font-jost">
+                    Website pages for a health and movement brand, designed to make service discovery feel calm, trustworthy, and immediate.
+                  </p>
+                  <div className="mt-12 w-24 h-[2px] bg-gradient-to-r from-[#f59e0b] via-[#14f1d9]/70 to-transparent" />
                 </div>
                 
                 <div className="flex-1 pt-4">
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mulish mb-4">Integrity Matrix</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed font-jost mb-8">
-                    Stance was built to ensure perfect alignment in highly rigid, structured data pipelines. It operates like a glass monolith: completely transparent, incredibly dense, and unbreakable under immense load.
+                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mulish mb-4">Experience Priorities</h3>
+                  <p className="text-sm text-gray-300 leading-relaxed font-jost mb-8">
+                    The Stance section now presents the project as a care pathway: a brighter anatomical model, a visible locator, and an after-scene narrative that lets the 3D reveal land before the SEO context appears.
                   </p>
                   
                   <div className="grid grid-cols-2 gap-6">
                     <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mulish block mb-2">Protocol</span>
-                      <span className="text-xs text-white/80 font-jost">A 3D SPINE MODEL</span>
+                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#f59e0b] font-mulish block mb-2">Visibility</span>
+                      <span className="text-xs text-white/80 font-jost">Warm clinical contrast</span>
                     </div>
                     <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mulish block mb-2">SUPPORT</span>
-                      <span className="text-xs text-white/80 font-jost">Uptime</span>
+                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#14f1d9] font-mulish block mb-2">Focus</span>
+                      <span className="text-xs text-white/80 font-jost">SEO + patient pages</span>
                     </div>
                   </div>
                 </div>
@@ -476,7 +489,7 @@ export const UIOverlay = () => {
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
                   onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(false); setModalOpen(false); }; }}
-                  className={`${CLOSE_BUTTON_CLASS} static ml-auto hover:border-[#e11d48] hover:bg-[#e11d48]/10`}
+                  className={`${CLOSE_BUTTON_CLASS} static ml-auto hover:border-[#f59e0b] hover:bg-[#f59e0b]/10`}
                 >
                   <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
                   <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
@@ -645,4 +658,3 @@ const SceneProgress = ({ activeScene, progress, isHidden, onJump }: SceneProgres
     })}
   </nav>
 );
-
