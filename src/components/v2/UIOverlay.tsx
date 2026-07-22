@@ -31,11 +31,9 @@ const NARRATIVE_TEXTS_3 = [
 ];
 
 const NARRATIVE_TEXTS_4 = [
-  "Scale breaks everything.",
-  "Unless it's built to bend.",
-  "Data must flow without friction.",
-  "A solid stance.",
-  "An unbreakable structure."
+  "Designed a set of web pages",
+  "",
+  "Priority was SEO",
 ];
 
 const NARRATIVE_TEXTS_5 = [
@@ -256,12 +254,12 @@ export const UIOverlay = () => {
       const p = (progress - 0.35) / 0.1;
       const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_2.length - 1, Math.floor(p * NARRATIVE_TEXTS_2.length)));
       currentText = NARRATIVE_TEXTS_2[idx];
-    } else if (progress > 0.55 && progress < 0.65) {
-      const p = (progress - 0.55) / 0.1;
+    } else if (progress > 0.58 && progress < 0.68) {
+      const p = (progress - 0.58) / 0.1;
       const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_3.length - 1, Math.floor(p * NARRATIVE_TEXTS_3.length)));
       currentText = NARRATIVE_TEXTS_3[idx];
-    } else if (progress > 0.70 && progress < 0.78) {
-      const p = (progress - 0.70) / 0.08;
+    } else if (progress > 0.70 && progress < 0.81) {
+      const p = (progress - 0.70) / 0.1;
       const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_4.length - 1, Math.floor(p * NARRATIVE_TEXTS_4.length)));
       currentText = NARRATIVE_TEXTS_4[idx];
     } else if (progress > 0.85 && progress < 0.95) {
@@ -286,7 +284,7 @@ export const UIOverlay = () => {
           <div className="w-full flex justify-center items-center pointer-events-auto h-full">
             <div className="relative inline-flex items-center justify-center p-12">
               <TrueFocus 
-                text="VANSHJEET" 
+                text="VANSHJEET " 
                 splitBy="letter" 
                 animationSpeed={0.8}
                 className="text-5xl md:text-8xl font-jost tracking-[0.25em] text-white z-0"
@@ -295,11 +293,11 @@ export const UIOverlay = () => {
                 className="absolute inset-0 rounded-2xl pointer-events-none z-10 shadow-2xl"
                 style={{
                   background: 'rgba(255, 255, 255, 0.01)',
-                  backdropFilter: 'blur(4px)',
-                  WebkitBackdropFilter: 'blur(4px)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(3px)',
+                  WebkitBackdropFilter: 'blur(3px)',
+                  border: '1px solid rgba(255, 255, 255, 0.01)',
                   boxShadow: 'inset 0 0 30px rgba(255,255,255,0.02)',
-                  transform: 'scale(1.15)'
+                  transform: 'scale(1.2)'
                 }}
               >
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -334,7 +332,7 @@ export const UIOverlay = () => {
               <SVGNoise />
               <div className="flex justify-between items-start mb-16">
                 <div>
-                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#00f0ff] font-lato">Project 01</span>
+                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#ef8532] font-lato">Welcome!</span>
                   <h2 className="text-4xl md:text-6xl font-light mt-4 text-white tracking-tight">Career Compass</h2>
                 </div>
                 <button 
@@ -342,28 +340,21 @@ export const UIOverlay = () => {
                   onClick={() => { SoundEngine.playClick(); { setIsCompassOpen(false); setModalOpen(false); }; }}
                   className={CLOSE_BUTTON_CLASS}
                 >
-                  <div className="w-full h-full bg-[#00f0ff]/10 absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                  <div className="w-full h-full bg-[#ef8532]/10 absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                   <div className="w-4 h-[1px] bg-white rotate-45 absolute" />
                   <div className="w-4 h-[1px] bg-white -rotate-45 absolute" />
                 </button>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-white/10 pt-8">
                 <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">Classification</h3>
-                  <p className="text-sm text-white font-light tracking-wide">Decision Support System</p>
+                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">About</h3>
+                  <p className="text-sm text-white font-light tracking-wide">An AI Powered Career Counsellor I built for Skitre.AI.</p>
                 </div>
                 <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">Synopsis</h3>
+                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">Stack</h3>
                   <p className="text-sm text-gray-400 leading-relaxed font-jost">
-                    Conventional guidance relies on static questionnaires. Career Compass normalizes cognitive traits to establish true direction. A deeply integrated neural matrix mapping the psyche.
+                    React, Supabase, CSS
                   </p>
-                  <button 
-                    onMouseEnter={() => SoundEngine.playHover()}
-                    onClick={() => SoundEngine.playClick()}
-                    className="mt-8 px-6 py-3 text-[10px] tracking-[0.3em] uppercase text-[#00f0ff] border border-[#00f0ff]/30 hover:bg-[#00f0ff]/10 transition-colors duration-300 cursor-none"
-                  >
-                    Initialize Matrix
-                  </button>
                 </div>
               </div>
             </div>
@@ -383,11 +374,11 @@ export const UIOverlay = () => {
               className="absolute right-16 top-16 group flex flex-col items-center gap-4 cursor-none"
             >
               <div className="w-[1px] h-16 bg-gradient-to-b from-transparent to-white/50 group-hover:h-24 transition-all duration-500" />
-              <div className="w-8 h-8 rounded-full border border-[#f59e0b]/50 flex items-center justify-center group-hover:border-[#f59e0b] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
-                <div className="w-1.5 h-1.5 bg-[#f59e0b] rounded-full group-hover:scale-150 transition-transform duration-300" />
+              <div className="w-8 h-8 rounded-full border border-[#f8f7da]/50 flex items-center justify-center group-hover:border-[#f8f7da] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
+                <div className="w-1.5 h-1.5 bg-[#f8f7da] rounded-full group-hover:scale-150 transition-transform duration-300" />
               </div>
-              <span className="text-[9px] tracking-[0.4em] uppercase text-white/50 font-lato mt-2 group-hover:text-[#f59e0b] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
-                Initiate Scan
+              <span className="text-[12px] tracking-[0.4em] uppercase text-white/50 font-lato mt-2 group-hover:text-[#f8f7da] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
+                MORE
               </span>
             </button>
 
@@ -398,7 +389,7 @@ export const UIOverlay = () => {
                 <div className="flex-1">
                   <span className="text-[10px] uppercase tracking-[0.4em] text-[#f59e0b] font-lato">Welcome again!</span>
                   <h2 className="text-4xl md:text-5xl font-jost mt-4 text-white tracking-tight">Skillometer</h2>
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-lato mt-2">The Living System</h3>
+                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-lato mt-2">soft-Skill assessment test</h3>
                   <div className="mt-12 w-12 h-[1px] bg-[#f59e0b]/50" />
                 </div>
                 <div className="flex-1">
@@ -406,13 +397,6 @@ export const UIOverlay = () => {
                     An architectural graph modeling candidate signals, capability matrices, and alignment scores dynamically. True alignment emerges not from scores, but from relationships within the ecosystem.
                   </p>
                   <div className="mt-10 flex items-center gap-6">
-                    <button 
-                      onMouseEnter={() => SoundEngine.playHover()}
-                      onClick={() => SoundEngine.playClick()}
-                      className="px-8 py-3 text-[10px] tracking-[0.3em] uppercase text-[#f59e0b] border border-[#f59e0b]/30 hover:bg-[#f59e0b]/10 transition-colors duration-300 cursor-none"
-                    >
-                      View Architecture
-                    </button>
                   </div>
                 </div>
                 <button 
