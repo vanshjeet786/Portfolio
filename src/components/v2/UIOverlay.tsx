@@ -7,27 +7,27 @@ import { SVGNoise } from './ui/SVGNoise';
 import { SoundEngine } from '@/utils/SoundEngine';
 
 const NARRATIVE_TEXTS_1 = [
-  "You're lost.",
-  "We all are.",
-  "Personality tests are horoscopes for LinkedIn.",
-  "The Compass doesn't ask what you want to be.",
-  "It calculates what you already are."
+  "You're lost. MAYBE",
+  "I DEVELOPED a 6-LAYER AI Career Counsellor",
+  "The priority was to ensure it doesn't assess",
+  "Using RIASEC, Big 5, MBTI, Multiple Presonality",
+  "And a few open ended questions to undertsnad someone better"
 ];
 
 const NARRATIVE_TEXTS_2 = [
-  "Paper tells a flat story.",
-  "We built a system that reads between the lines.",
-  "A living graph of human potential.",
-  "Not just what they did.",
-  "How they think."
+  "This is one Judges",
+  "I built a 4-layer soft skills assessment test",
+  "The priority here was tho ensure the accuracy",
+  "Most of the questions do not have an incorrect answer",
+  "It just evaluates the thinking of a person"
 ];
 
 const NARRATIVE_TEXTS_3 = [
-  "Most apps just send text.",
-  "They forget the most important part of talking.",
-  "Knowing the other person is actually there.",
-  "We didn't build a chat app.",
-  "We built a place."
+  "I designed a chat app and a Leaderboard Platform",
+  "As a project  for a company.",
+  "Priority was Database design, idempotency and api functions",
+  "Idempotency",
+  "And API functions calls using CURL"
 ];
 
 const NARRATIVE_TEXTS_4 = [
@@ -39,17 +39,35 @@ const NARRATIVE_TEXTS_4 = [
 ];
 
 const NARRATIVE_TEXTS_5 = [
-  "Structure is nothing without signal.",
-  "Data is useless without intent.",
-  "The network is open.",
-  "Initiate protocol.",
-  "Make contact."
+  "Hello!!!",
+  "I am Vansh",
+  "Would love to connect!",
 ];
+
+const SCENE_LABELS = [
+  'Home',
+  'Compass',
+  'WHERE AM I?',
+  'Skillometer',
+  'WHERE AM I NOW?',
+  'Network',
+  'WHERE AM I AGAIN?',
+  'Stance',
+  'I THINK THIS IS THE END',
+  'VANSH'
+];
+
+const MODAL_FRAME_CLASS =
+  'fixed inset-4 md:inset-8 z-30 flex flex-col bg-[#050505]/92 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-12 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(0,0,0,0.65)]';
+
+const CLOSE_BUTTON_CLASS =
+  'absolute top-6 right-6 md:top-8 md:right-8 w-11 h-11 flex items-center justify-center border border-white/15 hover:border-white/40 hover:bg-white/5 transition-all cursor-none group rounded-full';
 
 export const UIOverlay = () => {
   const activeScene = useStore((state) => state.activeScene);
   const setModalOpen = useStore((state) => state.setModalOpen);
   const progress = useStore((state) => state.progress);
+  const jumpToScene = useStore((state) => state.jumpToScene);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const [displayedScene, setDisplayedScene] = useState(activeScene);
@@ -116,7 +134,7 @@ export const UIOverlay = () => {
         }
       });
     }
-  }, [activeScene, displayedScene, isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen]);
+  }, [activeScene, displayedScene, isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen, setModalOpen]);
 
   // Compass Modal Animation Effect
   useEffect(() => {
@@ -168,7 +186,7 @@ export const UIOverlay = () => {
   useEffect(() => {
     if (displayedScene !== 7) return;
     if (isStanceOpen) {
-      gsap.to(stanceTriggerRef.current, { opacity: 0, scale: 0.8, duration: 0.4, ease: "power2.in" });
+      gsap.to(stanceTriggerRef.current, { opacity: 0, scale: 0.8, duration: 0.7, ease: "power2.in" });
       gsap.fromTo(stanceModalRef.current, 
         { opacity: 0, y: -40, clipPath: 'circle(0% at center)' },
         { opacity: 1, y: 0, clipPath: 'circle(150% at center)', duration: 1.2, ease: "expo.out", display: 'block' }
@@ -209,6 +227,21 @@ export const UIOverlay = () => {
       );
     }
   }, [isTerminalOpen, displayedScene]);
+
+
+  useEffect(() => {
+    const closeActiveModal = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      if (isCompassOpen) setIsCompassOpen(false);
+      if (isSkillometerOpen) setIsSkillometerOpen(false);
+      if (isStanceOpen) setIsStanceOpen(false);
+      if (isTerminalOpen) setIsTerminalOpen(false);
+      setModalOpen(false);
+    };
+
+    window.addEventListener('keydown', closeActiveModal);
+    return () => window.removeEventListener('keydown', closeActiveModal);
+  }, [isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen, setModalOpen]);
 
   // Scroll-driven Narrative Text Engine
   const [activeNarrativeText, setActiveNarrativeText] = useState("");
@@ -256,7 +289,7 @@ export const UIOverlay = () => {
                 text="VANSHJEET" 
                 splitBy="letter" 
                 animationSpeed={0.8}
-                className="text-5xl md:text-8xl font-light tracking-[0.25em] text-white z-0"
+                className="text-5xl md:text-8xl font-jost tracking-[0.25em] text-white z-0"
               />
               <div 
                 className="absolute inset-0 rounded-2xl pointer-events-none z-10 shadow-2xl"
@@ -290,24 +323,24 @@ export const UIOverlay = () => {
                 <div className="w-2 h-2 bg-[#00f0ff] rounded-full shadow-[0_0_15px_#00f0ff] group-hover:scale-150 transition-transform duration-500" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-mono mb-1">Target Acquired</span>
+                <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-mono mb-1">ABOUT PROJECT</span>
                 <span className="text-xs tracking-[0.2em] uppercase text-white group-hover:text-[#00f0ff] transition-colors duration-500">
-                  Access Data
+                  CAREER COMPASS
                 </span>
               </div>
             </button>
 
-            <div ref={modalRef} style={{ display: 'none' }} className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-[#050505]/80 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-2xl">
+            <div ref={modalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} justify-center items-center`}>
               <SVGNoise />
               <div className="flex justify-between items-start mb-16">
                 <div>
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#00f0ff] font-mono">Project 01</span>
+                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#00f0ff] font-lato">Project 01</span>
                   <h2 className="text-4xl md:text-6xl font-light mt-4 text-white tracking-tight">Career Compass</h2>
                 </div>
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
                   onClick={() => { SoundEngine.playClick(); { setIsCompassOpen(false); setModalOpen(false); }; }}
-                  className="w-10 h-10 flex items-center justify-center border border-white/20 hover:border-[#00f0ff] rounded-none transition-colors cursor-none group relative overflow-hidden"
+                  className={CLOSE_BUTTON_CLASS}
                 >
                   <div className="w-full h-full bg-[#00f0ff]/10 absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                   <div className="w-4 h-[1px] bg-white rotate-45 absolute" />
@@ -316,12 +349,12 @@ export const UIOverlay = () => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-white/10 pt-8">
                 <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-mono mb-4">Classification</h3>
+                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">Classification</h3>
                   <p className="text-sm text-white font-light tracking-wide">Decision Support System</p>
                 </div>
                 <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-mono mb-4">Synopsis</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed font-light">
+                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">Synopsis</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed font-jost">
                     Conventional guidance relies on static questionnaires. Career Compass normalizes cognitive traits to establish true direction. A deeply integrated neural matrix mapping the psyche.
                   </p>
                   <button 
@@ -353,23 +386,23 @@ export const UIOverlay = () => {
               <div className="w-8 h-8 rounded-full border border-[#f59e0b]/50 flex items-center justify-center group-hover:border-[#f59e0b] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
                 <div className="w-1.5 h-1.5 bg-[#f59e0b] rounded-full group-hover:scale-150 transition-transform duration-300" />
               </div>
-              <span className="text-[9px] tracking-[0.4em] uppercase text-white/50 font-mono mt-2 group-hover:text-[#f59e0b] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
+              <span className="text-[9px] tracking-[0.4em] uppercase text-white/50 font-lato mt-2 group-hover:text-[#f59e0b] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
                 Initiate Scan
               </span>
             </button>
 
-            <div ref={skillometerModalRef} style={{ display: 'none' }} className="fixed inset-0 w-full h-full flex flex-col justify-center items-center bg-[#050505]/80 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-[0_30px_100px_rgba(245,158,11,0.1)]">
+            <div ref={skillometerModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} justify-center items-center shadow-[0_30px_100px_rgba(245,158,11,0.12)]`}>
               <SVGNoise />
               <div className="absolute -top-10 -left-10 text-[180px] font-bold text-white/5 pointer-events-none select-none tracking-tighter">02</div>
               <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-12">
                 <div className="flex-1">
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#f59e0b] font-mono">Project 02</span>
-                  <h2 className="text-4xl md:text-5xl font-light mt-4 text-white tracking-tight">Skillometer</h2>
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mono mt-2">The Living System</h3>
+                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#f59e0b] font-lato">Welcome again!</span>
+                  <h2 className="text-4xl md:text-5xl font-jost mt-4 text-white tracking-tight">Skillometer</h2>
+                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-lato mt-2">The Living System</h3>
                   <div className="mt-12 w-12 h-[1px] bg-[#f59e0b]/50" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm text-gray-300 leading-relaxed font-light mt-2">
+                  <p className="text-sm text-gray-300 leading-relaxed font-jost mt-2">
                     An architectural graph modeling candidate signals, capability matrices, and alignment scores dynamically. True alignment emerges not from scores, but from relationships within the ecosystem.
                   </p>
                   <div className="mt-10 flex items-center gap-6">
@@ -385,7 +418,7 @@ export const UIOverlay = () => {
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
                   onClick={() => { SoundEngine.playClick(); { setIsSkillometerOpen(false); setModalOpen(false); }; }}
-                  className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors cursor-none group ml-auto"
+                  className={`${CLOSE_BUTTON_CLASS} static ml-auto`}
                 >
                   <div className="w-4 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
                   <div className="w-4 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
@@ -420,38 +453,38 @@ export const UIOverlay = () => {
               <div className="absolute w-12 h-[1px] bg-white/30 group-hover:w-24 transition-all duration-500" />
               <div className="absolute w-6 h-6 border border-white/50 rotate-45 group-hover:rotate-90 group-hover:scale-150 transition-all duration-700" />
               <div className="absolute top-full mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center">
-                <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-white/80">Analyze</span>
-                <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-white/50">Structure</span>
+                <span className="text-[9px] uppercase tracking-[0.4em] font- text-white/80">Analyze</span>
+                <span className="text-[9px] uppercase tracking-[0.4em] font-mulish text-white/50">Structure</span>
               </div>
             </button>
 
             {/* Monolithic Data Slate Modal (Similar to Skillometer but matching the Monolith design) */}
-            <div ref={stanceModalRef} style={{ display: 'none' }} className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-4xl h-[80vh] flex flex-col items-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(225,29,72,0.1)]">
+            <div ref={stanceModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} items-center shadow-[0_30px_100px_rgba(225,29,72,0.12)]`}>
               <SVGNoise />
               {/* Massive background typography matching the monolith vibe */}
               <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#e11d48]/5 pointer-events-none select-none tracking-tighter">05</div>
               
               <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-16">
                 <div className="flex-1">
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#e11d48] font-mono">Project 05 // Structural Engine</span>
-                  <h2 className="text-5xl md:text-7xl font-light mt-6 text-white tracking-tight uppercase">Stance</h2>
+                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#e11d48] font-mulish">Project 05 STANCE FRONTEND</span>
+                  <h2 className="text-5xl md:text-7xl font-jost mt-6 text-white tracking-tight uppercase">Stance</h2>
                   <div className="mt-12 w-24 h-[2px] bg-gradient-to-r from-[#e11d48] to-transparent" />
                 </div>
                 
                 <div className="flex-1 pt-4">
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mono mb-4">Integrity Matrix</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed font-light mb-8">
+                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mulish mb-4">Integrity Matrix</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed font-jost mb-8">
                     Stance was built to ensure perfect alignment in highly rigid, structured data pipelines. It operates like a glass monolith: completely transparent, incredibly dense, and unbreakable under immense load.
                   </p>
                   
                   <div className="grid grid-cols-2 gap-6">
                     <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mono block mb-2">Protocol</span>
-                      <span className="text-xs text-white/80 font-light">GraphQL Over WS</span>
+                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mulish block mb-2">Protocol</span>
+                      <span className="text-xs text-white/80 font-jost">A 3D SPINE MODEL</span>
                     </div>
                     <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mono block mb-2">Resilience</span>
-                      <span className="text-xs text-white/80 font-light">99.999% Uptime</span>
+                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mulish block mb-2">SUPPORT</span>
+                      <span className="text-xs text-white/80 font-jost">Uptime</span>
                     </div>
                   </div>
                 </div>
@@ -459,7 +492,7 @@ export const UIOverlay = () => {
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
                   onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(false); setModalOpen(false); }; }}
-                  className="w-12 h-12 flex items-center justify-center border border-white/20 hover:bg-[#e11d48]/10 hover:border-[#e11d48] transition-all cursor-none group ml-auto"
+                  className={`${CLOSE_BUTTON_CLASS} static ml-auto hover:border-[#e11d48] hover:bg-[#e11d48]/10`}
                 >
                   <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
                   <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
@@ -485,7 +518,7 @@ export const UIOverlay = () => {
               <div className="relative w-32 h-32 rounded-full border border-white/20 flex items-center justify-center overflow-hidden group-hover:border-[#00f0ff]/50 transition-colors duration-700">
                 <div className="absolute inset-0 bg-[#00f0ff]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <div className="w-2 h-2 bg-white rounded-full group-hover:scale-[20] transition-transform duration-700 ease-in-out group-hover:bg-[#00f0ff]/20" />
-                <span className="absolute text-[8px] uppercase tracking-[0.4em] font-mono text-white/50 group-hover:text-white transition-colors duration-300">
+                <span className="absolute text-[8px] uppercase tracking-[0.4em] font-mulish text-white/50 group-hover:text-white transition-colors duration-300">
                   Connect
                 </span>
               </div>
@@ -494,35 +527,37 @@ export const UIOverlay = () => {
             <div 
               ref={terminalModalRef} 
               style={{ display: 'none' }} 
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90vw] md:w-[80vw] max-w-4xl h-[80vh] z-30 flex-col items-center justify-center bg-[#050505]/95 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-16 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(0,240,255,0.1)]"
+              className={`${MODAL_FRAME_CLASS} items-center justify-center shadow-[0_30px_100px_rgba(0,240,255,0.12)]`}
             >
               <button 
                 onMouseEnter={() => SoundEngine.playHover()}
                 onClick={() => { SoundEngine.playClick(); { setIsTerminalOpen(false); setModalOpen(false); }; }}
-                className="absolute top-12 right-12 w-12 h-12 flex items-center justify-center hover:bg-white/5 transition-colors cursor-none group"
+                className={CLOSE_BUTTON_CLASS}
               >
                 <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
                 <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
               </button>
 
               <div className="text-center mb-16">
-                <h2 className="text-6xl md:text-8xl font-light text-white tracking-tighter uppercase mb-4">
-                  End of Transmission
+                <h2 className="text-6xl md:text-8xl font-jost text-white tracking-tighter uppercase mb-4">
+                  That's it. For Now....
                 </h2>
                 <div className="w-24 h-[1px] bg-[#00f0ff]/50 mx-auto" />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-15 w-full max-w-8xl">
                 {[
-                  { name: 'GitHub', label: 'git://vanshjeet', color: '#ffffff' },
-                  { name: 'LinkedIn', label: 'net://vanshjeet', color: '#0a66c2' },
-                  { name: 'Email', label: 'mailto://connect', color: '#00f0ff' }
+                  { name: 'GitHub', label: 'github.com/vanshjeet786', href: 'https://github.com/vanshjeet786', color: '#ffffff' },
+                  { name: 'LinkedIn', label: 'linkedin.com/in/vanshjeetsingh', href: 'https://www.linkedin.com/in/vanshjeet', color: '#0a66c2' },
+                  { name: 'Mail', label: 'Mail', href: 'mailto:singhvanshjeet@gmail.com', color: '#00f0ff' }
                 ].map((link, i) => (
                   <a 
                     key={i}
-                    href="#"
+                    href={link.href}
+                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                    rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
                     onMouseEnter={() => SoundEngine.playHover()}
-                    onClick={(e) => { e.preventDefault(); SoundEngine.playClick(); }}
+                    onClick={() => SoundEngine.playClick()}
                     className="group relative border border-white/10 p-8 hover:border-white/30 transition-all duration-500 cursor-none overflow-hidden"
                   >
                     <div className="absolute inset-0 bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
@@ -530,7 +565,7 @@ export const UIOverlay = () => {
                       {link.name}
                     </span>
                     <span 
-                      className="relative z-10 text-sm md:text-base font-light tracking-widest transition-colors duration-300"
+                      className="relative z-10 text-sm md:text-base font-jost tracking-widest transition-colors duration-300"
                       style={{ color: link.color }}
                     >
                       {link.label}
@@ -562,6 +597,17 @@ export const UIOverlay = () => {
         </h2>
       </div>
       
+
+      <SceneProgress
+        activeScene={activeScene}
+        progress={progress}
+        isHidden={isCompassOpen || isSkillometerOpen || isStanceOpen || isTerminalOpen}
+        onJump={(index) => {
+          SoundEngine.playClick();
+          jumpToScene(index);
+        }}
+      />
+
       {/* Global Scroll Indicator */}
       <div 
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-opacity duration-500 z-10"
@@ -573,3 +619,46 @@ export const UIOverlay = () => {
     </div>
   );
 };
+
+interface SceneProgressProps {
+  activeScene: number;
+  progress: number;
+  isHidden: boolean;
+  onJump: (index: number) => void;
+}
+
+const SceneProgress = ({ activeScene, progress, isHidden, onJump }: SceneProgressProps) => (
+  <nav
+    aria-label="Scene progress"
+    className="absolute left-6 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-3 pointer-events-auto md:flex"
+    style={{ opacity: isHidden ? 0 : 1, transition: 'opacity 0.5s ease' }}
+  >
+    <div className="mb-2 text-[9px] uppercase tracking-[0.35em] text-white/35 font-mono">
+      {Math.round(progress * 100).toString().padStart(2, '0')}%
+    </div>
+    {SCENE_LABELS.map((label, index) => {
+      const isActive = activeScene === index;
+      return (
+        <button
+          key={label}
+          type="button"
+          aria-label={`Jump to ${label}`}
+          aria-current={isActive ? 'step' : undefined}
+          onMouseEnter={() => SoundEngine.playHover()}
+          onClick={() => onJump(index)}
+          className="group flex items-center gap-3 cursor-none text-left"
+        >
+          <span
+            className={`block h-[1px] transition-all duration-300 ${
+              isActive ? 'w-10 bg-[#00f0ff] shadow-[0_0_10px_#00f0ff]' : 'w-4 bg-white/25 group-hover:w-8 group-hover:bg-white/60'
+            }`}
+          />
+          <span className={`text-[9px] uppercase tracking-[0.28em] font-lato transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/30 group-hover:text-white/70'}`}>
+            {label}
+          </span>
+        </button>
+      );
+    })}
+  </nav>
+);
+

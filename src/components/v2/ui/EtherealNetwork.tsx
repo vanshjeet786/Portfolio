@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { SoundEngine } from '@/utils/SoundEngine';
+import { useStore } from '@/stores/useStore';
 import { GlassCard } from './GlassCard';
 import { TrueFocus } from './TrueFocus';
 
@@ -34,8 +35,24 @@ interface ProjectPaneProps {
   hasActiveProject: boolean;
 }
 
+const PROJECT_PROOF = {
+  exiles: {
+    outcome: 'Realtime room presence, ordered delivery, and resilient reconnects for distributed chat surfaces.',
+    role: 'Realtime architecture, idempotent message flow, delivery guarantees',
+    stack: ['WebSockets', 'Redis Pub/Sub', 'Node.js'],
+    signal: 'Built for low-latency conversations without duplicate or out-of-order events.',
+  },
+  leaderboard: {
+    outcome: 'High-throughput score ingestion with reconstructable ranking history.',
+    role: 'Ranking engine design, event stream modeling, data contracts',
+    stack: ['PostgreSQL', 'GraphQL', 'Prisma'],
+    signal: 'Optimized for clear ranking state under concurrent score mutations.',
+  },
+};
+
 const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
   const isExiles = type === 'exiles';
+  const proof = PROJECT_PROOF[type];
   const paneRef = useRef<HTMLDivElement>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -96,7 +113,7 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       onClick={(e) => { e.stopPropagation(); if(!isActive) { SoundEngine.playClick(); onActivate(); } }}
-      className={`absolute cursor-pointer flex items-center justify-center ${isActive ? 'pointer-events-auto cursor-default' : 'pointer-events-auto'} ${hasActiveProject && !isActive ? 'pointer-events-none' : ''}`}
+      className={`group absolute cursor-pointer flex items-center justify-center ${isActive ? 'pointer-events-auto cursor-default' : 'pointer-events-auto'} ${hasActiveProject && !isActive ? 'pointer-events-none' : ''}`}
       style={{ transformStyle: 'preserve-3d' }}
     >
       <div
@@ -112,6 +129,7 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
             className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
           >
               <TrueFocus text={isExiles ? 'EXILES' : 'LEADERBOARD'} className="text-3xl font-light tracking-[0.25em] text-white/80 uppercase" splitBy="word" animationSpeed={1.5} />
+              <span className="mt-8 text-[9px] uppercase tracking-[0.4em] text-white/35 font-mono group-hover:text-white/70">Click to expand</span>
           </div>
 
           {/* Detailed Content (Active State) */}
@@ -147,6 +165,21 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
                 : 'The Leaderboard module is a high-throughput ranking engine engineered to ingest and sort thousands of concurrent score mutations per second. Built on event-sourcing principles, it treats every change as an immutable record, providing near-instantaneous global rankings while maintaining perfect chronological reconstruction capabilities.'}
             </p>
 
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8 opacity-0">
+              <div className="border border-white/[0.06] bg-white/[0.025] p-4 rounded-xl">
+                <span className="block text-[9px] uppercase tracking-[0.35em] text-white/35 font-mono mb-2">Outcome</span>
+                <p className="text-xs text-white/70 leading-relaxed">{proof.outcome}</p>
+              </div>
+              <div className="border border-white/[0.06] bg-white/[0.025] p-4 rounded-xl">
+                <span className="block text-[9px] uppercase tracking-[0.35em] text-white/35 font-mono mb-2">My Role</span>
+                <p className="text-xs text-white/70 leading-relaxed">{proof.role}</p>
+              </div>
+              <div className="border border-white/[0.06] bg-white/[0.025] p-4 rounded-xl">
+                <span className="block text-[9px] uppercase tracking-[0.35em] text-white/35 font-mono mb-2">Signal</span>
+                <p className="text-xs text-white/70 leading-relaxed">{proof.signal}</p>
+              </div>
+            </div>
+
             {/* Specs Grid */}
             <div className="grid grid-cols-1 gap-4 w-full mt-auto opacity-0">
               <div className="bg-white/[0.02] border border-white/[0.05] p-5 rounded-xl transition-colors hover:bg-white/[0.04]">
@@ -155,9 +188,9 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
                     <span className="text-[10px] uppercase tracking-[0.4em] text-white/50 font-mono">Stack Environment</span>
                 </div>
                 <div className="flex gap-4">
-                    <span className="text-xs text-white/70 font-light tracking-wide py-1 px-3 bg-white/5 rounded-full">{isExiles ? 'WebSockets' : 'PostgreSQL'}</span>
-                    <span className="text-xs text-white/70 font-light tracking-wide py-1 px-3 bg-white/5 rounded-full">{isExiles ? 'Redis Pub/Sub' : 'GraphQL'}</span>
-                    <span className="text-xs text-white/70 font-light tracking-wide py-1 px-3 bg-white/5 rounded-full">{isExiles ? 'Node.js' : 'Prisma'}</span>
+                    {proof.stack.map((item) => (
+                      <span key={item} className="text-xs text-white/70 font-light tracking-wide py-1 px-3 bg-white/5 rounded-full">{item}</span>
+                    ))}
                 </div>
               </div>
               <div className="bg-white/[0.02] border border-white/[0.05] p-5 rounded-xl transition-colors hover:bg-white/[0.04]">
@@ -181,6 +214,7 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
 }
 
 export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
+  const setModalOpen = useStore((state) => state.setModalOpen);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [activeProject, setActiveProject] = useState<ProjectType>(null);
@@ -191,6 +225,19 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
 
   const exilesRef = useRef<HTMLDivElement>(null);
   const leaderboardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setModalOpen(activeProject !== null);
+  }, [activeProject, setModalOpen]);
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setActiveProject(null);
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, []);
 
   // Mount/Unmount
   useEffect(() => {
@@ -215,10 +262,11 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
           if (containerRef.current) containerRef.current.style.display = 'none';
           setActiveProject(null);
           setHoveredProject(null);
+          setModalOpen(false);
         }
       });
     }
-  }, [isActive]);
+  }, [isActive, setModalOpen]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isActive || activeProject) return;
@@ -277,6 +325,10 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
       <div className={`absolute inset-0 bg-[#020202] transition-opacity duration-1000 pointer-events-none ${activeProject ? 'opacity-90' : 'opacity-0'}`} />
 
       <div className="relative w-full max-w-5xl h-[600px] flex items-center justify-center transform-style-3d">
+        <div className="absolute -top-14 left-1/2 -translate-x-1/2 text-center pointer-events-none">
+          <div className="text-[10px] uppercase tracking-[0.45em] text-white/35 font-mono">Network Projects</div>
+          <div className="mt-2 text-xs text-white/50 font-light tracking-wide">Choose a module. Expanded cards include proof, role, stack, and close affordances.</div>
+        </div>
 
         {/* EXILES PANE */}
         <div ref={exilesRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ transformStyle: 'preserve-3d' }}>
