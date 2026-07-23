@@ -2,6 +2,10 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
+const CLINICAL_CLAY = '#c8a68a';
+const DEEP_BRONZE = '#7a4f3a';
+const MUTED_PLUM = '#8f5162';
+
 export const StanceScene = ({ position }: { position: [number, number, number] }) => {
   const spineGroupRef = useRef<THREE.Group>(null);
   const coreRef = useRef<THREE.Mesh>(null);
@@ -23,28 +27,29 @@ export const StanceScene = ({ position }: { position: [number, number, number] }
     const time = state.clock.getElapsedTime();
 
     if (spineGroupRef.current) {
-      // Gentle floating and spinning animation matching the original monolith's vibe
-      spineGroupRef.current.rotation.y = time * 0.1;
-      spineGroupRef.current.position.y = Math.sin(time * 0.5) * 0.1;
+      // Slow observational drift: less "alarm", more clinical showcase.
+      spineGroupRef.current.rotation.y = Math.sin(time * 0.18) * 0.24;
+      spineGroupRef.current.rotation.x = Math.sin(time * 0.12) * 0.06;
+      spineGroupRef.current.position.y = Math.sin(time * 0.28) * 0.08;
     }
 
     if (coreRef.current) {
       const material = coreRef.current.material as THREE.MeshStandardMaterial;
-      material.emissiveIntensity = 2 + Math.sin(time * 3) * 1.5;
+      material.emissiveIntensity = 1.05 + Math.sin(time * 1.1) * 0.22;
     }
 
     // Dynamic animation for individual vertebrae
     vertebraeRefs.current.forEach((mesh, i) => {
       if (!mesh) return;
 
-      // Add a slight breathing expansion
-      const breathe = Math.sin(time * 2 + i * 0.2) * 0.02;
+      // Barely perceptible breathing keeps the model alive without feeling frantic.
+      const breathe = Math.sin(time * 0.9 + i * 0.22) * 0.012;
       mesh.scale.set(1 + breathe, 1 + breathe, 1 + breathe);
       
-      // Injured index pulses more aggressively
+      // The focal vertebra signals softly instead of flashing.
       if (i === injuredIndex) {
-        const pulse = Math.sin(time * 8) * 0.1;
-        mesh.scale.set(1.1 + pulse, 1.1 + pulse, 1.1 + pulse);
+        const pulse = Math.sin(time * 1.8) * 0.035;
+        mesh.scale.set(1.06 + pulse, 1.06 + pulse, 1.06 + pulse);
       }
     });
   });
@@ -59,14 +64,14 @@ export const StanceScene = ({ position }: { position: [number, number, number] }
         <mesh ref={coreRef} position={[0, -0.2, 0]}>
           <cylinderGeometry args={[0.05, 0.05, 5.0, 16]} />
           <meshStandardMaterial
-            color="#e11d48"
-            emissive="#e11d48"
-            emissiveIntensity={2}
+            color={DEEP_BRONZE}
+            emissive={DEEP_BRONZE}
+            emissiveIntensity={1.05}
             toneMapped={false}
             transparent
-            opacity={0.8}
+            opacity={0.64}
           />
-          <pointLight color="#e11d48" intensity={5} distance={10} />
+          <pointLight color={DEEP_BRONZE} intensity={2.2} distance={8} />
         </mesh>
 
         {/* Procedural Vertebrae Nodes */}
@@ -81,14 +86,14 @@ export const StanceScene = ({ position }: { position: [number, number, number] }
             <cylinderGeometry args={[0.25, 0.28, 0.3, 16]} />
             
             <meshPhysicalMaterial
-              color={i === injuredIndex ? "#e11d48" : "#050505"}
-              metalness={0.9}
-              roughness={0.1}
-              transmission={0.95}
+              color={i === injuredIndex ? MUTED_PLUM : "#0b0908"}
+              metalness={0.72}
+              roughness={0.22}
+              transmission={0.78}
               thickness={1.5}
               ior={1.5}
               clearcoat={1}
-              clearcoatRoughness={0.1}
+              clearcoatRoughness={0.16}
               wireframe={false}
             />
 
@@ -97,13 +102,13 @@ export const StanceScene = ({ position }: { position: [number, number, number] }
               <mesh position={[0.16, -0.12, 0.16]} scale={[1.5, 1.2, 1.5]}>
                 <sphereGeometry args={[0.13, 16, 16]} />
                 <meshStandardMaterial 
-                  color="#e11d48"
-                  emissive="#e11d48"
-                  emissiveIntensity={3}
-                  roughness={0.15}
-                  metalness={0.8}
+                  color={MUTED_PLUM}
+                  emissive={MUTED_PLUM}
+                  emissiveIntensity={1.6}
+                  roughness={0.28}
+                  metalness={0.45}
                   transparent 
-                  opacity={0.9} 
+                  opacity={0.72} 
                   wireframe={true}
                 />
               </mesh>
@@ -117,16 +122,16 @@ export const StanceScene = ({ position }: { position: [number, number, number] }
         position={[10, 10, 10]}
         angle={0.15}
         penumbra={1}
-        intensity={2}
-        color="#ffffff"
+        intensity={2.8}
+        color={CLINICAL_CLAY}
         castShadow
       />
       <spotLight
         position={[-10, -10, -10]}
         angle={0.2}
         penumbra={1}
-        intensity={1}
-        color="#e11d48"
+        intensity={0.8}
+        color={MUTED_PLUM}
       />
     </group>
   );
