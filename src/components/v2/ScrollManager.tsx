@@ -17,9 +17,6 @@ export const ScrollManager = () => {
     const handleWheel = (e: WheelEvent) => {
       if (useStore.getState().isModalOpen) return;
 
-      // Normalize wheel delta and adjust sensitivity (reduced by 30% from 0.00015 to 0.000105)
-      const baseDelta = e.deltaY * 0.000105;
-
       // Calculate dynamic friction based on proximity to nearest scene center
       const totalScenes = SCENE_COUNT;
       const segmentSize = 1 / (totalScenes - 1);
@@ -27,6 +24,15 @@ export const ScrollManager = () => {
       const nearestProgress = nearestIndex * segmentSize;
 
       const distanceToNearest = Math.abs(targetProgress - nearestProgress);
+      const stanceProgress = 7 / (totalScenes - 1);
+      const distanceToStance = Math.abs(targetProgress - stanceProgress);
+      const stanceRange = segmentSize * 0.72;
+      const stanceSlowdown = distanceToStance < stanceRange
+        ? 0.52 + 0.48 * (distanceToStance / stanceRange)
+        : 1;
+
+      // Normalize wheel delta and slow down near Stance so the model has room to settle.
+      const baseDelta = e.deltaY * 0.000105 * stanceSlowdown;
 
       // If we are within 20% of a segment to the center, apply friction
       const frictionThreshold = segmentSize * 0.2;

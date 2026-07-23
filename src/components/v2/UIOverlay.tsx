@@ -388,10 +388,10 @@ export const UIOverlay = () => {
               <div className="absolute -top-10 -left-10 text-[180px] font-bold text-white/5 pointer-events-none select-none tracking-tighter">02</div>
               <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-12">
                 <div className="flex-1">
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#f59e0b] font-lato">Welcome again!</span>
+                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#c8a68a] font-lato">Welcome again!</span>
                   <h2 className="text-4xl md:text-5xl font-jost mt-4 text-white tracking-tight">Skillometer</h2>
                   <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-lato mt-2">soft-Skill assessment test</h3>
-                  <div className="mt-12 w-12 h-[1px] bg-[#f59e0b]/50" />
+                  <div className="mt-12 w-12 h-[1px] bg-[#c8a68a]/50" />
                 </div>
                 <div className="flex-1">
                   <p className="text-sm text-gray-300 leading-relaxed font-jost mt-2">
@@ -426,9 +426,9 @@ export const UIOverlay = () => {
         {/* SCENE 7: STANCE */}
         {displayedScene === 7 && (
           <div className="w-full h-full flex justify-center items-end relative overflow-hidden pointer-events-auto pb-12">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(245,158,11,0.16),transparent_28%),radial-gradient(circle_at_62%_56%,rgba(20,241,217,0.08),transparent_24%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(200,166,138,0.13),transparent_28%),radial-gradient(circle_at_62%_56%,rgba(127,143,130,0.08),transparent_24%)]" />
             <div className="absolute left-12 top-14 hidden max-w-[18rem] md:block">
-              <span className="text-[10px] uppercase tracking-[0.45em] text-[#f59e0b] font-mono">STANCE HEALTH</span>
+              <span className="text-[10px] uppercase tracking-[0.45em] text-[#c8a68a] font-mono">STANCE HEALTH</span>
               <p className="mt-4 text-sm leading-relaxed text-white/55 font-jost">
                 A patient-facing web experience tuned for clarity, speed, and trust.
               </p>
@@ -441,11 +441,11 @@ export const UIOverlay = () => {
               onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(true); setModalOpen(true); }; }}
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-none w-36 h-36 flex items-center justify-center rounded-full"
             >
-              <div className="absolute inset-0 rounded-full border border-[#f59e0b]/25 bg-black/10 backdrop-blur-[2px] group-hover:border-[#f59e0b]/70 group-hover:shadow-[0_0_35px_rgba(245,158,11,0.2)] transition-all duration-700" />
+              <div className="absolute inset-0 rounded-full border border-[#c8a68a]/25 bg-black/10 backdrop-blur-[2px] group-hover:border-[#c8a68a]/70 group-hover:shadow-[0_0_35px_rgba(200,166,138,0.18)] transition-all duration-700" />
               <div className="absolute w-[1px] h-20 bg-gradient-to-b from-transparent via-[#f4dfc6]/70 to-transparent group-hover:h-32 transition-all duration-500" />
               <div className="absolute w-20 h-[1px] bg-gradient-to-r from-transparent via-[#f4dfc6]/70 to-transparent group-hover:w-32 transition-all duration-500" />
-              <div className="absolute w-10 h-10 rounded-full border border-[#14f1d9]/50 group-hover:scale-125 group-hover:border-[#14f1d9] transition-all duration-700" />
-              <div className="absolute w-2.5 h-2.5 rounded-full bg-[#fb3f7f] shadow-[0_0_18px_rgba(251,63,127,0.9)] group-hover:scale-150 transition-transform duration-500" />
+              <div className="absolute w-10 h-10 rounded-full border border-[#7f8f82]/50 group-hover:scale-125 group-hover:border-[#7f8f82] transition-all duration-700" />
+              <div className="absolute w-2.5 h-2.5 rounded-full bg-[#8f5162] shadow-[0_0_18px_rgba(143,81,98,0.65)] group-hover:scale-150 transition-transform duration-500" />
               <div className="absolute top-full mt-5 flex flex-col items-center opacity-80 transition-opacity duration-500 group-hover:opacity-100">
                 <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-[#f4dfc6]">Examine</span>
                 <span className="mt-1 text-[9px] uppercase tracking-[0.4em] font-mulish text-white/50">Patient Journey</span>
@@ -453,34 +453,34 @@ export const UIOverlay = () => {
             </button>
 
             {/* Warm clinical project slate */}
-            <div ref={stanceModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} items-center shadow-[0_30px_100px_rgba(245,158,11,0.14)]`}>
+            <div ref={stanceModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} items-center shadow-[0_30px_100px_rgba(200,166,138,0.12)]`}>
               <SVGNoise />
-              <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#f59e0b]/5 pointer-events-none select-none tracking-tighter">04</div>
-              <div className="absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(circle_at_70%_40%,rgba(20,241,217,0.08),transparent_35%)] pointer-events-none" />
+              <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#c8a68a]/5 pointer-events-none select-none tracking-tighter">04</div>
+              <div className="absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(circle_at_70%_40%,rgba(127,143,130,0.08),transparent_35%)] pointer-events-none" />
               
               <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-16">
                 <div className="flex-1">
-                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#f59e0b] font-mulish">Project 04 · STANCE HEALTH</span>
+                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#c8a68a] font-mulish">Project 04 · STANCE HEALTH</span>
                   <h2 className="text-5xl md:text-7xl font-jost mt-6 text-[#f4dfc6] tracking-tight uppercase">Stance</h2>
                   <p className="mt-6 max-w-md text-sm text-white/55 leading-relaxed font-jost">
                     Website pages for a health and movement brand, designed to make service discovery feel calm, trustworthy, and immediate.
                   </p>
-                  <div className="mt-12 w-24 h-[2px] bg-gradient-to-r from-[#f59e0b] via-[#14f1d9]/70 to-transparent" />
+                  <div className="mt-12 w-24 h-[2px] bg-gradient-to-r from-[#c8a68a] via-[#7f8f82]/70 to-transparent" />
                 </div>
                 
                 <div className="flex-1 pt-4">
                   <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mulish mb-4">Experience Priorities</h3>
                   <p className="text-sm text-gray-300 leading-relaxed font-jost mb-8">
-                    The Stance section now presents the project as a care pathway: a brighter anatomical model, a visible locator, and an after-scene narrative that lets the 3D reveal land before the SEO context appears.
+                    The Stance section now gives the original model more space to breathe: slower scroll resistance near the reveal, a muted care palette, and an after-scene narrative that lets the SEO context arrive later.
                   </p>
                   
                   <div className="grid grid-cols-2 gap-6">
                     <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#f59e0b] font-mulish block mb-2">Visibility</span>
-                      <span className="text-xs text-white/80 font-jost">Warm clinical contrast</span>
+                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#c8a68a] font-mulish block mb-2">Visibility</span>
+                      <span className="text-xs text-white/80 font-jost">Muted clinical contrast</span>
                     </div>
                     <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#14f1d9] font-mulish block mb-2">Focus</span>
+                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#7f8f82] font-mulish block mb-2">Focus</span>
                       <span className="text-xs text-white/80 font-jost">SEO + patient pages</span>
                     </div>
                   </div>
@@ -489,7 +489,7 @@ export const UIOverlay = () => {
                 <button 
                   onMouseEnter={() => SoundEngine.playHover()}
                   onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(false); setModalOpen(false); }; }}
-                  className={`${CLOSE_BUTTON_CLASS} static ml-auto hover:border-[#f59e0b] hover:bg-[#f59e0b]/10`}
+                  className={`${CLOSE_BUTTON_CLASS} static ml-auto hover:border-[#c8a68a] hover:bg-[#c8a68a]/10`}
                 >
                   <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
                   <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
