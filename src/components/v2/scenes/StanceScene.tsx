@@ -2,8 +2,8 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-const CLINICAL_CLAY = '#c8a68a';
-const DEEP_BRONZE = '#7a4f3a';
+const CLINICAL_CLAY = '#9c7963';
+const DEEP_BRONZE = '#fdffd8';
 const MUTED_PLUM = '#8f5162';
 
 export const StanceScene = ({ position }: { position: [number, number, number] }) => {
