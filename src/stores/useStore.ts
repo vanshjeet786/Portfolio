@@ -11,7 +11,7 @@ interface StoreState {
 }
 
 // Defines the total number of sequential scenes
-// 0: Home, 1: Compass, 2: Void, 3: Skillometer, 4: Void, 5: Ethereal Network, 6: Void, 7: Stance
+// 0: Home, 1: Compass, 2: Void, 3: Skillometer, 4: Void, 5: Stance, 6: Void, 7: Ethereal Network
 export const SCENE_COUNT = 10;
 
 export const useStore = create<StoreState>((set) => ({

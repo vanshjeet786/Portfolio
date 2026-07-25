@@ -10,9 +10,9 @@ export const StanceScene = ({ position = [0, 0, 0] }: { position?: [number, numb
   const groupRef = useRef<THREE.Group>(null);
   const progress = useStore((state) => state.progress);
   
-  // Stance is scene 7 out of 10.
-  // The progress interval for Stance is roughly 0.7 to 0.8
-  const localProgress = Math.max(0, Math.min(1, (progress - 0.7) * 10));
+  // Stance is scene 5 out of 10.
+  // The progress interval for Stance is roughly 0.5 to 0.6
+  const localProgress = Math.max(0, Math.min(1, (progress - 0.5) * 10));
   const isExploded = localProgress > 0.5;
 
   useFrame((state) => {
