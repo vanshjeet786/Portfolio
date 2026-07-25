@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN SYSTEM — Portfolio Experience Engine
+   Spec: 04_Brand_DNA.md, Creative_Direction.md, 05_Design_Constraints.md
+   
+   Material Language: Stone, Glass, Brass, Graphite, Concrete
+   Typography: Editorial, not futuristic
+   Motion: Heavy, intentional, confident, natural
+   ============================================================ */
+
+@theme {
+  /* ── Atmosphere Colors ── */
+  --color-void: #050505;
+  --color-surface: #0a0a0a;
+  --color-surface-elevated: #111111;
+  --color-surface-glass: rgba(255, 255, 255, 0.03);
+
+  /* ── Material Colors ── */
+  --color-stone: #1a1a1a;
+  --color-graphite: #2a2a2a;
+  --color-brass: #c5a880;
+  --color-brass-muted: rgba(197, 168, 128, 0.6);
+  --color-warm-white: #f5f0e8;
+  --color-cream: #e8e0d4;
+  --color-ivory: #faf8f5;
+
+  /* ── Text Hierarchy ── */
+  --color-text-primary: #f5f0e8;
+  --color-text-secondary: rgba(245, 240, 232, 0.5);
+  --color-text-tertiary: rgba(245, 240, 232, 0.25);
+  --color-text-accent: #c5a880;
+
+  /* ── Borders ── */
+  --color-border-subtle: rgba(255, 255, 255, 0.06);
+  --color-border-glass: rgba(255, 255, 255, 0.08);
+
+  /* ── Font Families ── */
+  --font-display: "Outfit", system-ui, -apple-system, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+
+  /* ── Spacing (8-point scale) ── */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+  --spacing-4xl: 96px;
+  --spacing-5xl: 128px;
+  --spacing-6xl: 192px;
+
+  /* ── Animation Tokens ── */
+  --duration-instant: 100ms;
+  --duration-fast: 150ms;
+  --duration-medium: 300ms;
+  --duration-slow: 600ms;
+  --duration-scene: 1200ms;
+  --duration-world: 2500ms;
+
+  /* ── Easing ── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ── Glass ── */
+  --glass-blur: 16px;
+  --glass-bg: rgba(10, 10, 10, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ── Base Reset ── */
+:root {
+  color-scheme: dark;
+  background-color: var(--color-void);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background-color: var(--color-void);
+}
+
+/* ── Lenis Scroll ── */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+/* ── Typography Utilities ── */
+.text-display {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.text-heading {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.text-label {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+/* ── Glass Surface ── */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Selection ── */
+::selection {
+  background-color: rgba(197, 168, 128, 0.25);
+  color: var(--color-warm-white);
+}
+
+/* ── Focus Visible ── */
+:focus-visible {
+  outline: 2px solid var(--color-brass-muted);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* ── Scroll Gutter Hide ── */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+}
