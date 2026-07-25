@@ -3,21 +3,10 @@ import { useStore } from '@/stores/useStore';
 import gsap from 'gsap';
 import { TrueFocus } from './ui/TrueFocus';
 import { EtherealNetwork } from './ui/EtherealNetwork';
+import { ConnectModal } from "./ui/ConnectModal/ConnectModal";
 import { SVGNoise } from './ui/SVGNoise';
 import { SoundEngine } from '@/utils/SoundEngine';
-import {
-  Github,
-  Linkedin,
-  Mail,
-  Instagram,
-  FileText,
-  Sparkles,
-  Code,
-  Headphones,
-  User,
-  ExternalLink,
-  Download
-} from 'lucide-react';
+
 
 const NARRATIVE_TEXTS_1 = [
   "You're lost. Maybe?",
@@ -98,7 +87,7 @@ export const UIOverlay = () => {
   const stanceTriggerRef = useRef<HTMLButtonElement>(null);
 
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
-  const terminalModalRef = useRef<HTMLDivElement>(null);
+
   const terminalTriggerRef = useRef<HTMLButtonElement>(null);
 
   // Scene transitions
@@ -217,22 +206,12 @@ export const UIOverlay = () => {
     }
   }, [isStanceOpen, displayedScene]);
 
-  // Terminal Modal Animation Effect
+  // Terminal Trigger Animation Effect
   useEffect(() => {
     if (displayedScene !== 9) return;
     if (isTerminalOpen) {
       gsap.to(terminalTriggerRef.current, { opacity: 0, scale: 0.9, duration: 0.4, ease: "power2.in" });
-      gsap.fromTo(terminalModalRef.current, 
-        { opacity: 0, scale: 0.95, filter: 'blur(10px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.2, ease: "expo.out", display: 'flex' }
-      );
     } else {
-      gsap.to(terminalModalRef.current, { 
-        opacity: 0, scale: 0.95, filter: 'blur(10px)', duration: 0.6, ease: "power3.inOut",
-        onComplete: () => {
-          if (terminalModalRef.current) terminalModalRef.current.style.display = 'none';
-        }
-      });
       gsap.fromTo(terminalTriggerRef.current,
         { opacity: 0, scale: 0.9 },
         { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -299,7 +278,7 @@ export const UIOverlay = () => {
   }, [progress]);
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full z-10 pointer-events-none flex flex-col">
+    <div id="ui-layout-layer" className="fixed top-0 left-0 w-full h-full z-10 pointer-events-none flex flex-col">
       
       {/* Dynamic Content Container */}
       <div ref={containerRef} className="flex-1 w-full h-full flex items-center justify-center p-8 md:p-16">
@@ -537,174 +516,16 @@ export const UIOverlay = () => {
               onClick={() => { SoundEngine.playClick(); { setIsTerminalOpen(true); setModalOpen(true); }; }}
               className="group cursor-none flex flex-col items-center justify-center relative z-20"
             >
-              <div className="relative w-32 h-32 rounded-full border border-white/20 flex items-center justify-center overflow-hidden group-hover:border-[#00f0ff]/50 transition-colors duration-700">
-                <div className="absolute inset-0 bg-[#00f0ff]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <div className="w-2 h-2 bg-white rounded-full group-hover:scale-[20] transition-transform duration-700 ease-in-out group-hover:bg-[#00f0ff]/20" />
+              <div className="relative w-32 h-32 rounded-full border border-white/20 flex items-center justify-center overflow-hidden group-hover:border-[#d4af37]/50 transition-colors duration-700">
+                <div className="absolute inset-0 bg-[#d4af37]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="w-2 h-2 bg-white rounded-full group-hover:scale-[20] transition-transform duration-700 ease-in-out group-hover:bg-[#d4af37]/20" />
                 <span className="absolute text-[8px] uppercase tracking-[0.4em] font-mulish text-white/50 group-hover:text-white transition-colors duration-300">
                   Connect
                 </span>
               </div>
             </button>
 
-            <div 
-              ref={terminalModalRef} 
-              style={{ display: 'none' }} 
-              className={`${MODAL_FRAME_CLASS} items-stretch justify-start overflow-y-auto max-h-[90vh] custom-scrollbar shadow-[0_30px_100px_rgba(0,240,255,0.15)] p-6 md:p-12`}
-            >
-              {/* Header Bar */}
-              <div className="flex justify-between items-center mb-8 pb-4 border-b border-white/10 w-full">
-                <div className="flex items-center gap-3">
-                  <div className="w-2.5 h-2.5 rounded-full bg-[#00f0ff] shadow-[0_0_12px_#00f0ff] animate-pulse" />
-                  <span className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-white/60 font-mono">
-                    TERMINAL // USER_PROFILE: VANSH
-                  </span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="hidden sm:inline-block text-[9px] uppercase tracking-[0.3em] text-[#00f0ff]/80 font-mono bg-[#00f0ff]/10 px-3 py-1 rounded-full border border-[#00f0ff]/20">
-                    ● ONLINE / READY TO CONNECT
-                  </span>
-                  <button 
-                    onMouseEnter={() => SoundEngine.playHover()}
-                    onClick={() => { SoundEngine.playClick(); setIsTerminalOpen(false); setModalOpen(false); }}
-                    className={CLOSE_BUTTON_CLASS}
-                  >
-                    <div className="w-4 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
-                    <div className="w-4 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Bio & Profile Hero Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10 w-full">
-                {/* Left Portrait & Badge (4 cols) */}
-                <div className="lg:col-span-4 flex flex-col items-center justify-center p-6 border border-white/10 rounded-2xl bg-white/[0.02] backdrop-blur-xl relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-b from-[#00f0ff]/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                  
-                  <div className="relative w-36 h-36 md:w-44 md:h-44 rounded-full p-1.5 border border-[#00f0ff]/30 group-hover:border-[#00f0ff]/80 shadow-[0_0_30px_rgba(0,240,255,0.2)] transition-all duration-700 mb-6 overflow-hidden">
-                    <img 
-                      src="/My_Photo.png" 
-                      alt="Vanshjeet Singh" 
-                      className="w-full h-full object-cover rounded-full filter grayscale hover:grayscale-0 transition-all duration-700 scale-105 group-hover:scale-110"
-                    />
-                  </div>
-
-                  <h3 className="text-xl md:text-2xl font-light text-white tracking-widest uppercase font-jost text-center">
-                    Vanshjeet Singh
-                  </h3>
-                  <span className="text-[10px] uppercase tracking-[0.35em] text-[#00f0ff] font-mono mt-1 text-center">
-                    Product Engineer & Architect
-                  </span>
-                  <span className="text-[9px] uppercase tracking-[0.25em] text-white/40 font-mono mt-2 text-center flex items-center gap-1.5">
-                    📍 Remote / Global
-                  </span>
-                </div>
-
-                {/* Right Bio Paragraph (8 cols) */}
-                <div className="lg:col-span-8 p-6 md:p-8 border border-white/10 rounded-2xl bg-white/[0.02] backdrop-blur-xl flex flex-col justify-between">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-[0.4em] text-[#00f0ff] font-mono block mb-3">
-                      About Me
-                    </span>
-                    <h2 className="text-3xl md:text-4xl font-light text-white tracking-tight uppercase font-jost mb-4">
-                      Engineering Systems That Feel Magic.
-                    </h2>
-                    <p className="text-sm text-white/70 leading-relaxed font-light font-jost tracking-wide mb-4">
-                      I'm Vansh, a Full-Stack Product Engineer passionate about high-throughput distributed systems, real-time message fabrics, and ultra-fluid interactive web experiences.
-                    </p>
-                    <p className="text-xs text-white/50 leading-relaxed font-light font-jost tracking-wide">
-                      From building multi-layered AI career counseling engines for Skitre.AI to engineering idempotent WebSocket architectures and GPU-accelerated canvas surfaces, I focus on merging deep technical rigor with state-of-the-art aesthetics.
-                    </p>
-                  </div>
-
-                  <div className="mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center gap-4 text-[10px] text-white/40 font-mono">
-                    <span className="flex items-center gap-1.5"><Sparkles className="w-3.5 h-3.5 text-[#00f0ff]" /> Realtime Systems</span>
-                    <span className="flex items-center gap-1.5"><Code className="w-3.5 h-3.5 text-[#00f0ff]" /> AI Models</span>
-                    <span className="flex items-center gap-1.5"><Headphones className="w-3.5 h-3.5 text-[#00f0ff]" /> Audiophile</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Hobbies & Interests Grid */}
-              <div className="mb-10 w-full">
-                <span className="text-[10px] uppercase tracking-[0.4em] text-white/40 font-mono block mb-4">
-                  Hobbies & Personal Crafts
-                </span>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {[
-                    { title: 'High-Craft UI', desc: 'GPU-accelerated canvases, GSAP, & glassmorphism', icon: Sparkles, color: '#00f0ff' },
-                    { title: 'Realtime Architecture', desc: 'WebSockets, Redis Pub/Sub, & strict idempotency', icon: Code, color: '#3b82f6' },
-                    { title: 'Audiophile & Sound', desc: 'IEM acoustics, soundscapes, & procedural audio', icon: Headphones, color: '#f59e0b' },
-                    { title: 'AI Counseling Models', desc: 'RIASEC, Big 5, & multi-layer graph evaluation', icon: User, color: '#a855f7' }
-                  ].map((hobby, i) => (
-                    <div key={i} className="p-5 border border-white/[0.08] bg-white/[0.02] rounded-xl hover:border-white/20 transition-all duration-300">
-                      <hobby.icon className="w-5 h-5 mb-3" style={{ color: hobby.color }} />
-                      <h4 className="text-xs uppercase tracking-widest text-white/90 font-jost font-medium mb-1">
-                        {hobby.title}
-                      </h4>
-                      <p className="text-[11px] text-white/40 font-light leading-relaxed">
-                        {hobby.desc}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Connect Links & Resume Action */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 w-full">
-                {[
-                  { name: 'GitHub', label: 'github.com/vanshjeet786', href: 'https://github.com/vanshjeet786', icon: Github, color: '#ffffff' },
-                  { name: 'LinkedIn', label: 'linkedin.com/in/vanshjeetsingh', href: 'https://www.linkedin.com/in/vanshjeet', icon: Linkedin, color: '#0a66c2' },
-                  { name: 'Mail', label: 'singhvanshjeet@gmail.com', href: 'mailto:singhvanshjeet@gmail.com', icon: Mail, color: '#00f0ff' },
-                  { name: 'Instagram', label: '@vanshjeetsingh', href: 'https://instagram.com/vanshjeetsingh', icon: Instagram, color: '#e1306c' }
-                ].map((link, i) => (
-                  <a 
-                    key={i}
-                    href={link.href}
-                    target={link.href.startsWith('http') ? '_blank' : undefined}
-                    rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
-                    onMouseEnter={() => SoundEngine.playHover()}
-                    onClick={() => SoundEngine.playClick()}
-                    className="group relative border border-white/10 p-5 rounded-xl hover:border-white/30 transition-all duration-500 cursor-pointer overflow-hidden flex flex-col justify-between"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <link.icon className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" style={{ color: link.color }} />
-                      <ExternalLink className="w-3.5 h-3.5 text-white/30 group-hover:text-white transition-colors duration-300" />
-                    </div>
-                    <div>
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-white/40 font-mono block mb-1">
-                        {link.name}
-                      </span>
-                      <span className="text-xs font-jost tracking-wide text-white/80 group-hover:text-white truncate block">
-                        {link.label}
-                      </span>
-                    </div>
-                  </a>
-                ))}
-
-                {/* Resume Button */}
-                <a
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noreferrer"
-                  onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => SoundEngine.playClick()}
-                  className="group relative border border-[#00f0ff]/40 bg-[#00f0ff]/10 p-5 rounded-xl hover:bg-[#00f0ff]/20 hover:border-[#00f0ff]/80 transition-all duration-500 cursor-pointer overflow-hidden flex flex-col justify-between"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <FileText className="w-5 h-5 text-[#00f0ff]" />
-                    <Download className="w-4 h-4 text-[#00f0ff] group-hover:translate-y-0.5 transition-transform duration-300" />
-                  </div>
-                  <div>
-                    <span className="text-[9px] uppercase tracking-[0.3em] text-[#00f0ff] font-mono block mb-1">
-                      Curriculum Vitae
-                    </span>
-                    <span className="text-xs font-jost tracking-wide text-white font-medium block">
-                      View / Download Resume
-                    </span>
-                  </div>
-                </a>
-              </div>
-            </div>
+            <ConnectModal isOpen={isTerminalOpen} onClose={() => { setIsTerminalOpen(false); setModalOpen(false); }} />
           </div>
         )}
 
