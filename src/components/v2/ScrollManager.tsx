@@ -24,14 +24,14 @@ export const ScrollManager = () => {
       const nearestProgress = nearestIndex * segmentSize;
 
       const distanceToNearest = Math.abs(targetProgress - nearestProgress);
-      const stanceProgress = 7 / (totalScenes - 1);
+      const stanceProgress = 5 / (totalScenes - 1);
       const distanceToStance = Math.abs(targetProgress - stanceProgress);
       const stanceRange = segmentSize * 0.72;
       const stanceSlowdown = distanceToStance < stanceRange
         ? 0.52 + 0.48 * (distanceToStance / stanceRange)
         : 1;
 
-      const etherealProgress = 5 / (totalScenes - 1);
+      const etherealProgress = 7 / (totalScenes - 1);
       const distanceToEthereal = Math.abs(targetProgress - etherealProgress);
       const etherealRange = segmentSize * 0.85;
       const etherealSlowdown = distanceToEthereal < etherealRange

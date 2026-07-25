@@ -35,7 +35,7 @@ export const CanvasContainer = () => {
             <Skillometer position={[0, 0, 0]} />
           </CullableScene>
           
-          <CullableScene position={[0, 0, -SCENE_SPACING * 7]}>
+          <CullableScene position={[0, 0, -SCENE_SPACING * 5]}>
             <StanceScene position={[0, 0, 0]} />
           </CullableScene>
           
@@ -43,7 +43,7 @@ export const CanvasContainer = () => {
             <OutroScene position={[0, 0, 0]} />
           </CullableScene>
           
-          {/* Scene 5 (Exiles/Leaderboard) is entirely DOM-based, so no 3D mesh here */}
+          {/* Scene 7 (Exiles/Leaderboard) is entirely DOM-based, so no 3D mesh here */}
           
           <ScrollEffects />
         </Suspense>

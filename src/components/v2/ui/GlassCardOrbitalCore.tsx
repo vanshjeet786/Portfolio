@@ -224,9 +224,9 @@ export const GlassCardOrbitalCore: React.FC<GlassCardOrbitalCoreProps> = ({ type
         const sinA = Math.sin(p.angle);
 
         // Position in un-rotated orbit plane
-        let x = p.radius * cosA;
-        let y = 0;
-        let z = p.radius * sinA;
+        const x = p.radius * cosA;
+        const y = 0;
+        const z = p.radius * sinA;
 
         // Apply plane tilts & mouse rotation
         const rx = coreRotationX + p.tiltX;

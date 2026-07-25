@@ -102,7 +102,7 @@ export const UIOverlay = () => {
       setTimeout(() => { setIsSkillometerOpen(false); setModalOpen(false); }, 0);
     }
     
-    if (activeScene !== 7 && isStanceOpen) {
+    if (activeScene !== 5 && isStanceOpen) {
       setTimeout(() => { setIsStanceOpen(false); setModalOpen(false); }, 0);
     }
     
@@ -273,7 +273,9 @@ export const UIOverlay = () => {
       subP = 0;
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setActiveNarrativeText(currentText);
+
     setNarrativeSubP(subP);
   }, [progress]);
 
@@ -424,15 +426,15 @@ export const UIOverlay = () => {
         {/* SCENE 4: NARRATIVE VOID 2 */}
         {displayedScene === 4 && <div className="w-full h-full" />}
 
-        {/* SCENE 5: ETHEREAL NETWORK (Exiles + Leaderboard) */}
-        {/* We keep this mounted when displayedScene is 5 */}
-        <EtherealNetwork isActive={displayedScene === 5} />
+        {/* SCENE 7: ETHEREAL NETWORK (Exiles + Leaderboard) */}
+        {/* We keep this mounted when displayedScene is 7 */}
+        <EtherealNetwork isActive={displayedScene === 7} />
 
         {/* SCENE 6: NARRATIVE VOID 3 */}
         {displayedScene === 6 && <div className="w-full h-full" />}
 
-        {/* SCENE 7: STANCE */}
-        {displayedScene === 7 && (
+        {/* SCENE 5: STANCE */}
+        {displayedScene === 5 && (
           <div className="w-full h-full flex justify-center items-end relative overflow-hidden pointer-events-auto pb-12">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(200,166,138,0.13),transparent_28%),radial-gradient(circle_at_62%_56%,rgba(127,143,130,0.08),transparent_24%)]" />
             <div className="absolute left-12 top-14 hidden max-w-[18rem] md:block">
