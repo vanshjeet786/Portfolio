@@ -8,7 +8,7 @@ import { SoundEngine } from '@/utils/SoundEngine';
 
 const NARRATIVE_TEXTS_1 = [
   "You're lost. Maybe?",
-  "I DEVELOPED a 6-LAYER AI Career Counsellor",
+  "I Ddeveloped a 6-LAYER AI Career Counsellor",
   "The priority was to ensure it doesn't assess",
   "Using RIASEC, Big 5, MBTI, Multiple Presonality",
   "And a few open ended questions to undertsnad someone better"
@@ -17,24 +17,24 @@ const NARRATIVE_TEXTS_1 = [
 const NARRATIVE_TEXTS_2 = [
   "This one Judges",
   "I built a 4-layer soft skills assessment test",
-  "The priority here was to ensure the accuracy",
-  "Most of the questions do not have an incorrect answer",
-  "It just evaluates the thinking of a person"
+  "The objective was to be accurate",
+  "Very Interesting project",
+  "Identifies the thinking patterns of a person"
 ];
 
 const NARRATIVE_TEXTS_3 = [
   "I designed a chat app and a Leaderboard Platform",
   "As a project  for a company.",
-  "Priority was Database design, idempotency and api functions",
+  "Priority was Database design",
   "Idempotency",
   "And API functions calls using CURL"
 ];
 
 const NARRATIVE_TEXTS_4 = [
-  "Then the clinical work leaves the stage.",
-  "The site still has to guide patients gently.",
-  "Stance became fast, readable, and search-ready.",
-  "Care, movement, and recovery — translated into pages.",
+  "These are exact models",
+  "I used to design a few webpages ",
+  "for Stance Health",
+  "Priority was SEO"
 ];
 
 const NARRATIVE_TEXTS_5 = [
@@ -242,37 +242,48 @@ export const UIOverlay = () => {
     return () => window.removeEventListener('keydown', closeActiveModal);
   }, [isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen, setModalOpen]);
 
-  // Scroll-driven Narrative Text Engine
+  // Scroll-driven Narrative Text Engine (Flat single-line layout with letter-by-letter scroll fade)
   const [activeNarrativeText, setActiveNarrativeText] = useState("");
+  const [narrativeSubP, setNarrativeSubP] = useState(0);
+
   useEffect(() => {
     let currentText = "";
-    // Adjusted bounds for 4 voids over 8 scenes total
-    if (progress > 0.15 && progress < 0.25) {
-      const p = (progress - 0.15) / 0.1;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_1.length - 1, Math.floor(p * NARRATIVE_TEXTS_1.length)));
-      currentText = NARRATIVE_TEXTS_1[idx];
-    } else if (progress > 0.35 && progress < 0.45) {
-      const p = (progress - 0.35) / 0.1;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_2.length - 1, Math.floor(p * NARRATIVE_TEXTS_2.length)));
-      currentText = NARRATIVE_TEXTS_2[idx];
-    } else if (progress > 0.58 && progress < 0.68) {
-      const p = (progress - 0.58) / 0.1;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_3.length - 1, Math.floor(p * NARRATIVE_TEXTS_3.length)));
-      currentText = NARRATIVE_TEXTS_3[idx];
-    } else if (progress > 0.81 && progress < 0.89) {
-      const p = (progress - 0.81) / 0.08;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_4.length - 1, Math.floor(p * NARRATIVE_TEXTS_4.length)));
-      currentText = NARRATIVE_TEXTS_4[idx];
-    } else if (progress > 0.91 && progress < 0.99) {
-      const p = (progress - 0.91) / 0.08;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_5.length - 1, Math.floor(p * NARRATIVE_TEXTS_5.length)));
-      currentText = NARRATIVE_TEXTS_5[idx];
+    let subP = 0;
+
+    const calculateNarrativeState = (
+      startP: number,
+      endP: number,
+      texts: string[]
+    ) => {
+      if (progress >= startP && progress <= endP) {
+        const totalDuration = endP - startP;
+        const lineDuration = totalDuration / texts.length;
+        const relativeP = progress - startP;
+        const idx = Math.max(0, Math.min(texts.length - 1, Math.floor(relativeP / lineDuration)));
+        currentText = texts[idx];
+        const lineStartP = startP + idx * lineDuration;
+        subP = Math.max(0, Math.min(1, (progress - lineStartP) / lineDuration));
+        return true;
+      }
+      return false;
+    };
+
+    // Check each narrative void section
+    const active =
+      calculateNarrativeState(0.15, 0.29, NARRATIVE_TEXTS_1) ||
+      calculateNarrativeState(0.37, 0.51, NARRATIVE_TEXTS_2) ||
+      calculateNarrativeState(0.59, 0.73, NARRATIVE_TEXTS_3) ||
+      calculateNarrativeState(0.81, 0.93, NARRATIVE_TEXTS_4) ||
+      calculateNarrativeState(0.93, 0.99, NARRATIVE_TEXTS_5);
+
+    if (!active) {
+      currentText = "";
+      subP = 0;
     }
 
-    if (currentText !== activeNarrativeText) {
-      setTimeout(() => setActiveNarrativeText(currentText), 0);
-    }
-  }, [progress, activeNarrativeText]);
+    setActiveNarrativeText(currentText);
+    setNarrativeSubP(subP);
+  }, [progress]);
 
   return (
     <div className="fixed top-0 left-0 w-full h-full z-10 pointer-events-none flex flex-col">
@@ -285,9 +296,11 @@ export const UIOverlay = () => {
           <div className="w-full flex justify-center items-center pointer-events-auto h-full">
             <div className="relative inline-flex items-center justify-center p-12">
               <TrueFocus 
-                text="VANSHJEET " 
-                splitBy="letter" 
-                animationSpeed={0.8}
+                customItems={['SOME', 'WHERE']} 
+                splitBy="word" 
+                noGap={true}
+                animationSpeed={1.8}
+                blurAmount={10}
                 className="text-5xl md:text-8xl font-jost tracking-[0.25em] text-white z-0"
               />
               <div 
@@ -319,11 +332,11 @@ export const UIOverlay = () => {
               <div className="relative w-12 h-12 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity duration-500">
                 <div className="absolute w-full h-[1px] bg-white/40 group-hover:scale-x-150 transition-transform duration-500" />
                 <div className="absolute w-[1px] h-full bg-white/40 group-hover:scale-y-150 transition-transform duration-500" />
-                <div className="w-2 h-2 bg-[#00f0ff] rounded-full shadow-[0_0_15px_#00f0ff] group-hover:scale-150 transition-transform duration-500" />
+                <div className="w-2 h-2 bg-[#e8c1a9] rounded-full shadow-[0_0_15px_#00f0ff] group-hover:scale-150 transition-transform duration-500" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-mono mb-1">ABOUT PROJECT</span>
-                <span className="text-xs tracking-[0.2em] uppercase text-white group-hover:text-[#00f0ff] transition-colors duration-500">
+                <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-lexend mb-1">ABOUT PROJECT</span>
+                <span className="text-xs tracking-[0.2em] uppercase text-white group-hover:text-[#e8c1a9] transition-colors duration-500">
                   CAREER COMPASS
                 </span>
               </div>
@@ -378,8 +391,11 @@ export const UIOverlay = () => {
               <div className="w-8 h-8 rounded-full border border-[#f8f7da]/50 flex items-center justify-center group-hover:border-[#f8f7da] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
                 <div className="w-1.5 h-1.5 bg-[#f8f7da] rounded-full group-hover:scale-150 transition-transform duration-300" />
               </div>
+<span className="text-xs tracking-[0.2em] uppercase text-white group-hover:text-[#e8c1a9] transition-colors duration-500">
+                  ABOUT PROJECT
+                </span>
               <span className="text-[12px] tracking-[0.4em] uppercase text-white/50 font-lato mt-2 group-hover:text-[#f8f7da] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
-                MORE
+                SKILLOMETER
               </span>
             </button>
 
@@ -428,10 +444,6 @@ export const UIOverlay = () => {
           <div className="w-full h-full flex justify-center items-end relative overflow-hidden pointer-events-auto pb-12">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(200,166,138,0.13),transparent_28%),radial-gradient(circle_at_62%_56%,rgba(127,143,130,0.08),transparent_24%)]" />
             <div className="absolute left-12 top-14 hidden max-w-[18rem] md:block">
-              <span className="text-[10px] uppercase tracking-[0.45em] text-[#c8a68a] font-mono">STANCE HEALTH</span>
-              <p className="mt-4 text-sm leading-relaxed text-white/55 font-jost">
-                A patient-facing web experience tuned for clarity, speed, and trust.
-              </p>
             </div>
             
             {/* Anatomical locator trigger */}
@@ -439,16 +451,16 @@ export const UIOverlay = () => {
               ref={stanceTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
               onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(true); setModalOpen(true); }; }}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-none w-36 h-36 flex items-center justify-center rounded-full"
+              className="absolute left-1/5 top-3/7 -translate-x-1/2 -translate-y-1/2 group cursor-none w-36 h-36 flex items-left justify-left rounded-full"
             >
-              <div className="absolute inset-0 rounded-full border border-[#c8a68a]/25 bg-black/10 backdrop-blur-[2px] group-hover:border-[#c8a68a]/70 group-hover:shadow-[0_0_35px_rgba(200,166,138,0.18)] transition-all duration-700" />
+              <div className="absolute inset-0 rounded-full border border-[#ffe897]/25 bg-black/10 backdrop-blur-[2px] group-hover:border-[#ffe897]/70 group-hover:shadow-[0_0_35px_rgba(200,166,138,0.18)] transition-all duration-700" />
               <div className="absolute w-[1px] h-20 bg-gradient-to-b from-transparent via-[#f4dfc6]/70 to-transparent group-hover:h-32 transition-all duration-500" />
               <div className="absolute w-20 h-[1px] bg-gradient-to-r from-transparent via-[#f4dfc6]/70 to-transparent group-hover:w-32 transition-all duration-500" />
-              <div className="absolute w-10 h-10 rounded-full border border-[#7f8f82]/50 group-hover:scale-125 group-hover:border-[#7f8f82] transition-all duration-700" />
-              <div className="absolute w-2.5 h-2.5 rounded-full bg-[#8f5162] shadow-[0_0_18px_rgba(143,81,98,0.65)] group-hover:scale-150 transition-transform duration-500" />
+              <div className="absolute w-10 h-10 rounded-full border border-[#ffe897]/50 group-hover:scale-125 group-hover:border-[#ffe897] transition-all duration-700" />
+              <div className="absolute w-2.5 h-2.5 rounded-full bg-[#f8f7da] shadow-[0_0_18px_rgba(143,81,98,0.65)] group-hover:scale-150 transition-transform duration-500" />
               <div className="absolute top-full mt-5 flex flex-col items-center opacity-80 transition-opacity duration-500 group-hover:opacity-100">
-                <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-[#f4dfc6]">Examine</span>
-                <span className="mt-1 text-[9px] uppercase tracking-[0.4em] font-mulish text-white/50">Patient Journey</span>
+                <span className="text-[7px] uppercase tracking-[0.4em] font-mono text-[#f4dfc6]">ABOUT PROJECT</span>
+                <span className="mt-1 text-[15px] uppercase tracking-[0.4em] font-mulish text-white/50">STANCE</span>
               </div>
             </button>
 
@@ -576,22 +588,12 @@ export const UIOverlay = () => {
 
       </div>
 
-      {/* Global Narrative Overlay (Fades in editor text based on scroll) */}
+      {/* Global Narrative Overlay (Flat single-line layout with scroll-driven letter fade out) */}
       <div 
         ref={narrativeRef}
-        className="absolute top-[75%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none text-center w-full max-w-4xl px-8 z-10"
+        className="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none text-center w-full max-w-5xl px-4 z-10 overflow-visible flex justify-center items-center"
       >
-        <h2 
-          className="text-4xl md:text-6xl font-light text-white tracking-tight"
-          style={{
-            opacity: activeNarrativeText ? 1 : 0,
-            transform: `scale(${activeNarrativeText ? 1 : 0.95}) translateY(${activeNarrativeText ? '0px' : '20px'})`,
-            filter: `blur(${activeNarrativeText ? '0px' : '10px'})`,
-            transition: 'opacity 0.8s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1s ease'
-          }}
-        >
-          {activeNarrativeText}
-        </h2>
+        <FlatNarrativeText text={activeNarrativeText} subP={narrativeSubP} />
       </div>
       
 
@@ -647,7 +649,7 @@ const SceneProgress = ({ activeScene, progress, isHidden, onJump }: SceneProgres
         >
           <span
             className={`block h-[1px] transition-all duration-300 ${
-              isActive ? 'w-10 bg-[#00f0ff] shadow-[0_0_10px_#00f0ff]' : 'w-4 bg-white/25 group-hover:w-8 group-hover:bg-white/60'
+              isActive ? 'w-10 bg-[#f8f7da] shadow-[0_0_10px_#f8f7da]' : 'w-4 bg-white/25 group-hover:w-8 group-hover:bg-white/60'
             }`}
           />
           <span className={`text-[9px] uppercase tracking-[0.28em] font-lato transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/30 group-hover:text-white/70'}`}>
@@ -658,3 +660,61 @@ const SceneProgress = ({ activeScene, progress, isHidden, onJump }: SceneProgres
     })}
   </nav>
 );
+
+const FlatNarrativeText = ({ text, subP }: { text: string; subP: number }) => {
+  if (!text) return null;
+
+  // Entrance phase: subP 0.0 -> 0.18
+  let overallEntranceOpacity = 1;
+  if (subP < 0.18) {
+    overallEntranceOpacity = Math.max(0, subP / 0.18);
+  }
+
+  const chars = Array.from(text);
+  const totalChars = chars.length;
+
+  return (
+    <div className="w-full text-center whitespace-nowrap overflow-visible pointer-events-none select-none flex justify-center items-center">
+      <h2 
+        className="text-base sm:text-xl md:text-2xl lg:text-3xl font-light text-white tracking-wider uppercase font-jost whitespace-nowrap inline-flex max-w-[95vw] overflow-visible"
+        style={{
+          opacity: overallEntranceOpacity,
+          transform: `translateY(${(1 - overallEntranceOpacity) * 12}px)`,
+          filter: `blur(${(1 - overallEntranceOpacity) * 5}px)`,
+        }}
+      >
+        {chars.map((char, i) => {
+          // Sequential letter exit threshold: subP from 0.50 to 0.95
+          const exitStart = 0.50 + (i / Math.max(1, totalChars)) * 0.35;
+          const exitEnd = Math.min(0.98, exitStart + 0.15);
+
+          let charOpacity = 1;
+          let charBlur = 0;
+          let charY = 0;
+
+          if (subP > exitStart) {
+            const exitP = Math.min(1, (subP - exitStart) / (exitEnd - exitStart));
+            charOpacity = 1 - exitP;
+            charBlur = exitP * 8;
+            charY = -exitP * 12;
+          }
+
+          return (
+            <span
+              key={i}
+              className="inline-block transition-all duration-75"
+              style={{
+                opacity: charOpacity,
+                filter: `blur(${charBlur}px)`,
+                transform: `translateY(${charY}px)`,
+                whiteSpace: char === ' ' ? 'pre' : 'normal',
+              }}
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </span>
+          );
+        })}
+      </h2>
+    </div>
+  );
+};
