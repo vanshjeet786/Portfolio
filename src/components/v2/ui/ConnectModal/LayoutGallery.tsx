@@ -33,84 +33,82 @@ export const LayoutGallery: React.FC<{ onSwitchLayout: () => void }> = ({ onSwit
 
   return (
     <div className="w-full h-full bg-[#e8e6e1] relative text-[#1a1a1a]">
-      {/* Switch Layout - Proportion Dots */}
-      <div
-        className="absolute top-6 right-6 z-20 flex gap-2 cursor-pointer group p-2"
+
+      {/* View Switcher */}
+      <button
         onClick={(e) => { e.stopPropagation(); onSwitchLayout(); }}
+        className="absolute top-8 right-24 z-20 group flex items-center gap-4 cursor-pointer"
+        aria-label="Switch to Grid View"
       >
-        <div className="w-2 h-2 rounded-full bg-[#1a1a1a]/40 group-hover:bg-[#1a1a1a] transition-colors" />
-        <div className="w-3 h-2 rounded-full bg-[#1a1a1a]/40 group-hover:bg-[#1a1a1a] transition-colors" />
-        <div className="w-5 h-2 rounded-full bg-[#1a1a1a]/40 group-hover:bg-[#1a1a1a] transition-colors" />
-      </div>
+        <span className="text-xs uppercase tracking-widest font-mono text-[#1a1a1a]/40 group-hover:text-[#1a1a1a] transition-colors opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 duration-500 ease-out">
+          Grid View
+        </span>
+        <div className="w-12 h-12 rounded-full border border-[#1a1a1a]/20 group-hover:border-[#1a1a1a] flex items-center justify-center transition-all duration-500">
+          <div className="w-3 h-3 rounded-full bg-[#1a1a1a]/20 group-hover:bg-[#1a1a1a] transition-all duration-500 scale-50 group-hover:scale-100" />
+        </div>
+      </button>
 
       {/* Progress Track */}
       <div className="absolute bottom-10 left-12 right-12 h-[1px] bg-[#1a1a1a]/10 z-10 pointer-events-none hidden md:block">
         <div
           className="absolute top-0 left-0 h-full bg-[#1a1a1a] transition-all duration-300 ease-out"
-          style={{ width: `${Math.max(5, scrollProgress * 100)}%` }}
-        />
-        <div
-          className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#1a1a1a] transition-all duration-300 ease-out"
-          style={{ left: `calc(${scrollProgress * 100}% - 4px)` }}
+          style={{ width: `${Math.max(2, scrollProgress * 100)}%` }}
         />
       </div>
 
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        className="w-full h-full overflow-x-auto overflow-y-hidden flex items-center hide-scrollbar pl-12 md:pl-24 pr-[50vw]"
+        className="w-full h-full overflow-x-auto overflow-y-hidden flex items-center hide-scrollbar pl-12 md:pl-24 pr-[30vw] md:pr-[50vw]"
       >
-        <div ref={trackRef} className="flex items-center h-[70%] gap-24 md:gap-40 shrink-0">
+        <div ref={trackRef} className="flex items-center h-full py-24 gap-40 shrink-0">
 
-          {/* Piece 1: Title/Bio */}
-          <div className="w-[80vw] md:w-[600px] flex flex-col justify-end h-full pb-10 border-l border-[#1a1a1a]/20 pl-8 md:pl-16 relative">
-            <span className="absolute top-0 left-[-2px] text-[10px] font-mono rotate-90 origin-left text-[#1a1a1a]/40 tracking-widest">
-              EXHIBIT 01
-            </span>
-            <h1 className="text-5xl md:text-7xl font-light tracking-tighter uppercase font-jost mb-6 leading-[0.9]">
-              {CONNECT_DATA.profile.name.split(' ').map((n, i) => <div key={i}>{n}</div>)}
-            </h1>
-            <p className="text-sm md:text-base font-jost text-[#1a1a1a]/70 max-w-md mb-8 leading-relaxed">
-              {CONNECT_DATA.about.headline} {CONNECT_DATA.about.paragraphs[0]}
-            </p>
-            <div className="flex gap-4">
-              <span className="text-[10px] font-mono tracking-widest uppercase border border-[#1a1a1a]/20 px-3 py-1">
+          {/* Identity Section */}
+          <div className="flex items-center gap-16 shrink-0 h-full">
+            <div className="h-full aspect-[3/4] max-h-[60vh] relative overflow-hidden bg-black/5">
+              <img
+                src={CONNECT_DATA.profile.image}
+                alt="Portrait"
+                className="w-full h-full object-cover filter grayscale"
+              />
+            </div>
+            <div className="flex flex-col max-w-lg">
+              <h1 className="text-6xl md:text-8xl font-light tracking-tight uppercase font-jost mb-6 text-[#1a1a1a] leading-none whitespace-nowrap">
+                {CONNECT_DATA.profile.name}
+              </h1>
+              <span className="text-sm font-mono tracking-widest uppercase text-[#1a1a1a]/50">
                 {CONNECT_DATA.profile.title}
               </span>
             </div>
           </div>
 
-          {/* Piece 2: Portrait */}
-          <div className="w-[80vw] md:w-[400px] h-full flex flex-col justify-center shrink-0">
-             <div className="w-full aspect-[3/4] relative overflow-hidden bg-[#1a1a1a]/5 p-2 md:p-4">
-                <img
-                  src={CONNECT_DATA.profile.image}
-                  alt="Portrait"
-                  className="w-full h-full object-cover filter grayscale sepia-[0.2]"
-                />
-             </div>
-             <p className="text-[10px] font-mono text-center mt-4 text-[#1a1a1a]/40 tracking-[0.4em]">FIG. 1 — REMOTE / GLOBAL</p>
+          {/* Story Section */}
+          <div className="flex flex-col justify-center shrink-0 max-w-2xl h-full border-l border-[#1a1a1a]/10 pl-24">
+            <h2 className="text-4xl md:text-5xl font-light tracking-tight uppercase font-jost mb-12 text-[#1a1a1a] leading-tight max-w-xl">
+              {CONNECT_DATA.about.headline}
+            </h2>
+            <div className="space-y-8">
+              {CONNECT_DATA.about.paragraphs.map((p, i) => (
+                <p key={i} className="text-xl font-jost text-[#1a1a1a]/70 leading-loose">
+                  {p}
+                </p>
+              ))}
+            </div>
           </div>
 
-          {/* Piece 3: Crafts */}
-          <div className="w-[80vw] md:w-[700px] h-full flex flex-col justify-center shrink-0 border-l border-[#1a1a1a]/20 pl-8 md:pl-16 relative">
-            <span className="absolute top-0 left-[-2px] text-[10px] font-mono rotate-90 origin-left text-[#1a1a1a]/40 tracking-widest">
-              EXHIBIT 02
-            </span>
-            <h3 className="text-[10px] uppercase tracking-[0.4em] font-mono mb-12 text-[#1a1a1a]/50">
+          {/* Crafts Section */}
+          <div className="flex flex-col justify-center shrink-0 h-full border-l border-[#1a1a1a]/10 pl-24">
+            <h3 className="text-xs uppercase tracking-widest font-mono mb-16 text-[#1a1a1a]/40">
               {CONNECT_DATA.hobbies.header}
             </h3>
-            <div className="grid grid-cols-2 gap-x-12 gap-y-16">
+            <div className="grid grid-cols-2 gap-x-24 gap-y-20 max-w-4xl">
               {CONNECT_DATA.hobbies.items.map((hobby, i) => (
-                <div key={i} className="group">
-                  <div className="flex items-center gap-4 mb-4">
-                    <span className="text-[10px] font-mono text-[#1a1a1a]/30">0{i+1}</span>
-                    <div className="h-[1px] flex-1 bg-[#1a1a1a]/10 group-hover:bg-[#1a1a1a]/40 transition-colors" />
-                  </div>
-                  <h4 className="text-xl tracking-wider uppercase font-jost mb-3 text-[#1a1a1a]">
+                <div key={i} className="flex flex-col">
+                  <hobby.icon className="w-8 h-8 text-[#1a1a1a]/80 mb-6" strokeWidth={1} />
+                  <h4 className="text-2xl tracking-wider uppercase font-jost mb-4 text-[#1a1a1a]">
                     {hobby.title}
                   </h4>
-                  <p className="text-sm text-[#1a1a1a]/60 font-light font-jost leading-relaxed">
+                  <p className="text-lg text-[#1a1a1a]/60 font-light font-jost leading-relaxed max-w-sm">
                     {hobby.desc}
                   </p>
                 </div>
@@ -118,32 +116,35 @@ export const LayoutGallery: React.FC<{ onSwitchLayout: () => void }> = ({ onSwit
             </div>
           </div>
 
-          {/* Piece 4: Links */}
-          <div className="w-[80vw] md:w-[500px] h-full flex flex-col justify-center shrink-0 border-l border-[#1a1a1a]/20 pl-8 md:pl-16 relative">
-            <span className="absolute top-0 left-[-2px] text-[10px] font-mono rotate-90 origin-left text-[#1a1a1a]/40 tracking-widest">
-              EXHIBIT 03
-            </span>
-            <div className="space-y-8">
+          {/* Network Section */}
+          <div className="flex flex-col justify-center shrink-0 h-full border-l border-[#1a1a1a]/10 pl-24">
+            <h3 className="text-xs uppercase tracking-widest font-mono mb-16 text-[#1a1a1a]/40">
+              {CONNECT_DATA.links.header}
+            </h3>
+            <div className="flex flex-col gap-12">
               {CONNECT_DATA.links.items.map((link, i) => (
                 <a
                   key={i} href={link.href} target="_blank" rel="noreferrer"
-                  className="block group"
+                  className="group flex items-center justify-between w-96 border-b border-[#1a1a1a]/10 pb-6 hover:border-[#1a1a1a]/50 transition-colors"
                 >
-                  <p className="text-[10px] font-mono tracking-widest text-[#1a1a1a]/40 mb-1 uppercase">{link.name}</p>
-                  <p className="text-2xl font-light font-jost text-[#1a1a1a] flex items-center gap-4">
-                    {link.label}
-                    <ExternalLink className="w-4 h-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
-                  </p>
+                  <span className="text-3xl font-light font-jost text-[#1a1a1a] group-hover:translate-x-2 transition-transform duration-500 ease-out">
+                    {link.name}
+                  </span>
+                  <ExternalLink className="w-5 h-5 opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 transition-all duration-500 text-[#1a1a1a]/50" />
                 </a>
               ))}
 
-              <div className="pt-8 mt-8 border-t border-[#1a1a1a]/20">
+              <div className="pt-12">
                 <a
                   href={CONNECT_DATA.resume.href} target="_blank" rel="noreferrer"
-                  className="inline-flex items-center gap-4 px-6 py-4 bg-[#1a1a1a] text-[#e8e6e1] hover:bg-[#333] transition-colors"
+                  className="inline-flex items-center gap-6 group"
                 >
-                  <span className="text-xs tracking-[0.2em] uppercase font-mono">{CONNECT_DATA.resume.name}</span>
-                  <Download className="w-4 h-4" />
+                  <div className="w-16 h-16 rounded-full border border-[#1a1a1a] flex items-center justify-center bg-transparent group-hover:bg-[#1a1a1a] transition-colors duration-500">
+                    <Download className="w-5 h-5 text-[#1a1a1a] group-hover:text-[#e8e6e1] transition-colors duration-500" strokeWidth={1.5} />
+                  </div>
+                  <span className="text-lg font-jost uppercase tracking-widest text-[#1a1a1a]">
+                    {CONNECT_DATA.resume.label}
+                  </span>
                 </a>
               </div>
             </div>
@@ -153,9 +154,9 @@ export const LayoutGallery: React.FC<{ onSwitchLayout: () => void }> = ({ onSwit
       </div>
 
       {/* Scroll Hint */}
-      <div className="absolute top-1/2 right-4 md:right-8 -translate-y-1/2 pointer-events-none md:hidden flex flex-col items-center gap-2 opacity-50">
-        <span className="text-[10px] font-mono tracking-widest text-[#1a1a1a] rotate-90 origin-center whitespace-nowrap">DRAG</span>
-        <div className="w-[1px] h-12 bg-[#1a1a1a]" />
+      <div className="absolute bottom-24 right-12 pointer-events-none hidden md:flex items-center gap-4 opacity-40">
+        <div className="w-12 h-[1px] bg-[#1a1a1a]" />
+        <span className="text-xs font-mono tracking-widest text-[#1a1a1a] uppercase">Scroll</span>
       </div>
 
     </div>
