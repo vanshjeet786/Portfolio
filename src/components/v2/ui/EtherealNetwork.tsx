@@ -5,7 +5,7 @@ import { SoundEngine } from '@/utils/SoundEngine';
 import { useStore } from '@/stores/useStore';
 import { GlassCard } from './GlassCard';
 import { TrueFocus } from './TrueFocus';
-import { GlassCardOrbitalCore } from './GlassCardOrbitalCore';
+import { GlassCardEventStream } from './GlassCardEventStream';
 
 type ProjectType = 'exiles' | 'leaderboard' | null;
 
@@ -130,8 +130,8 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, isHovered, onHover, 
       >
         <GlassCard className={`w-full h-full border-white/10 rounded-2xl relative transition-all duration-1000 ${isActive ? 'bg-[#050505]/95 backdrop-blur-[64px] shadow-[0_30px_100px_rgba(0,0,0,0.8)]' : 'bg-[#050505]/70 backdrop-blur-3xl'}`}>
 
-          {/* 3D Orbital Core Engine Animation */}
-          <GlassCardOrbitalCore type={type} isHovered={isHovered} isActive={isActive} />
+          {/* Event-Stream Waterfall (Cybernetic Signal Rain) */}
+          <GlassCardEventStream type={type} isHovered={isHovered} isActive={isActive} />
 
           {/* Node Marker Text (Base State) */}
           <div
