@@ -5,6 +5,7 @@ import { SoundEngine } from '@/utils/SoundEngine';
 import { useStore } from '@/stores/useStore';
 import { GlassCard } from './GlassCard';
 import { TrueFocus } from './TrueFocus';
+import { GlassCardEventStream } from './GlassCardEventStream';
 
 type ProjectType = 'exiles' | 'leaderboard' | null;
 
@@ -18,8 +19,8 @@ interface TransformBase {
   opacity: number;
 }
 
-const EXILES_BASE: TransformBase = { x: -20, y: -20, z: 30, rotateX: 15, rotateY: -25, scale: 0.9, opacity: 0.9 };
-const LEADERBOARD_BASE: TransformBase = { x: 20, y: 20, z: -30, rotateX: 15, rotateY: -25, scale: 0.9, opacity: 0.6 };
+const EXILES_BASE: TransformBase = { x: 0, y: 0, z: 0, rotateX: 4, rotateY: -6, scale: 0.82, opacity: 0.95 };
+const LEADERBOARD_BASE: TransformBase = { x: 0, y: 0, z: 0, rotateX: 4, rotateY: -6, scale: 0.82, opacity: 0.95 };
 
 interface ProjectPaneProps {
   type: 'exiles' | 'leaderboard';
@@ -50,7 +51,7 @@ const PROJECT_PROOF = {
   },
 };
 
-const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
+const ProjectPane = ({ type, isActive, onActivate, onClose, isHovered, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
   const isExiles = type === 'exiles';
   const proof = PROJECT_PROOF[type];
   const paneRef = useRef<HTMLDivElement>(null);
@@ -112,7 +113,13 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
       ref={paneRef}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
-      onClick={(e) => { e.stopPropagation(); if(!isActive) { SoundEngine.playClick(); onActivate(); } }}
+      onClick={(e) => { 
+        e.stopPropagation(); 
+        if (!isActive && !hasActiveProject) { 
+          SoundEngine.playClick(); 
+          onActivate(); 
+        } 
+      }}
       className={`group absolute cursor-pointer flex items-center justify-center ${isActive ? 'pointer-events-auto cursor-default' : 'pointer-events-auto'} ${hasActiveProject && !isActive ? 'pointer-events-none' : ''}`}
       style={{ transformStyle: 'preserve-3d' }}
     >
@@ -123,19 +130,22 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
       >
         <GlassCard className={`w-full h-full border-white/10 rounded-2xl relative transition-all duration-1000 ${isActive ? 'bg-[#050505]/95 backdrop-blur-[64px] shadow-[0_30px_100px_rgba(0,0,0,0.8)]' : 'bg-[#050505]/70 backdrop-blur-3xl'}`}>
 
+          {/* Event-Stream Waterfall (Cybernetic Signal Rain) */}
+          <GlassCardEventStream type={type} isHovered={isHovered} isActive={isActive} />
+
           {/* Node Marker Text (Base State) */}
           <div
             ref={textRef}
             className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
           >
               <TrueFocus text={isExiles ? 'EXILES' : 'LEADERBOARD'} className="text-3xl font-light tracking-[0.25em] text-white/80 uppercase" splitBy="word" animationSpeed={1.5} />
-              <span className="mt-8 text-[9px] uppercase tracking-[0.4em] text-white/35 font-mono group-hover:text-white/70">Click to expand</span>
+          
           </div>
 
           {/* Detailed Content (Active State) */}
           <div ref={contentRef} className={`absolute inset-0 p-10 flex flex-col overflow-y-auto custom-scrollbar ${isActive ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`} style={{ transition: 'opacity 0.5s ease', transitionDelay: isActive ? '0.3s' : '0s' }}>
             {/* Header & Close */}
-            <div className="flex justify-between items-start mb-8 w-full opacity-0">
+            <div className={`flex justify-between items-start mb-8 w-full transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
               <div>
                 <span className="text-[10px] uppercase tracking-[0.5em] text-white/40 font-mono">
                   Module {isExiles ? '03' : '04'} // {isExiles ? 'Realtime' : 'Ranking'}
@@ -145,11 +155,19 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, onHover, onLeave, ha
                 </h2>
               </div>
               <button
-                onClick={(e) => { e.stopPropagation(); onClose(); }}
-                className="w-12 h-12 flex items-center justify-center group/btn hover:bg-white/10 rounded-full transition-colors duration-500 border border-transparent hover:border-white/10"
+                type="button"
+                onMouseEnter={() => SoundEngine.playHover()}
+                onClick={(e) => { 
+                  e.stopPropagation(); 
+                  e.preventDefault();
+                  SoundEngine.playClick(); 
+                  onClose(); 
+                  useStore.getState().setModalOpen(false);
+                }}
+                className="relative z-50 w-11 h-11 flex items-center justify-center border border-white/20 hover:border-white/50 hover:bg-white/10 rounded-full transition-all duration-300 cursor-pointer group/btn"
               >
-                <div className="w-5 h-[1px] bg-white/80 rotate-45 absolute group-hover/btn:rotate-135 transition-transform duration-500" />
-                <div className="w-5 h-[1px] bg-white/80 -rotate-45 absolute group-hover/btn:-rotate-135 transition-transform duration-500" />
+                <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover/btn:rotate-135 transition-transform duration-500" />
+                <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover/btn:-rotate-135 transition-transform duration-500" />
               </button>
             </div>
 
@@ -301,11 +319,11 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
     if (!exilesRef.current || !leaderboardRef.current) return;
 
     if (activeProject === 'exiles') {
-      gsap.to(exilesRef.current, { x: 0, y: 0, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
-      gsap.to(leaderboardRef.current, { x: 300, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(exilesRef.current, { x: 220, y: 110, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(leaderboardRef.current, { x: 400, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
     } else if (activeProject === 'leaderboard') {
-      gsap.to(leaderboardRef.current, { x: 0, y: 0, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
-      gsap.to(exilesRef.current, { x: -300, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(leaderboardRef.current, { x: -160, y: 110, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(exilesRef.current, { x: -400, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
     } else if (isActive) {
       // return to base
       gsap.to(exilesRef.current, { ...EXILES_BASE, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
@@ -320,18 +338,17 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
       onMouseMove={handleMouseMove}
       onClick={() => activeProject && setActiveProject(null)}
       style={{ display: 'none', perspective: '1200px' }}
-      className={`absolute inset-0 w-full h-full z-20 items-center justify-center overflow-hidden ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}
+      className={`absolute inset-0 w-full h-full z-20 items-start justify-start overflow-hidden ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}
     >
       <div className={`absolute inset-0 bg-[#020202] transition-opacity duration-1000 pointer-events-none ${activeProject ? 'opacity-90' : 'opacity-0'}`} />
 
-      <div className="relative w-full max-w-5xl h-[600px] flex items-center justify-center transform-style-3d">
-        <div className="absolute -top-14 left-1/2 -translate-x-1/2 text-center pointer-events-none">
-          <div className="text-[10px] uppercase tracking-[0.45em] text-white/35 font-mono">Network Projects</div>
-          <div className="mt-2 text-xs text-white/50 font-light tracking-wide">Choose a module. Expanded cards include proof, role, stack, and close affordances.</div>
+      <div className="relative w-full h-full flex items-start justify-start p-6 md:p-12 transform-style-3d">
+        <div className="absolute top-6 left-6 md:left-12 text-left pointer-events-none z-10">
+          <div className="text-[10px] uppercase tracking-[0.45em] text-[#aa9e6d] font-lato">Mini Projects</div>
         </div>
 
-        {/* EXILES PANE */}
-        <div ref={exilesRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ transformStyle: 'preserve-3d' }}>
+        {/* EXILES PANE - TOP LEFT */}
+        <div ref={exilesRef} className="absolute left-6 md:left-12 top-20 md:top-24" style={{ transformStyle: 'preserve-3d' }}>
            <ProjectPane
              type="exiles"
              isActive={activeProject === 'exiles'}
@@ -347,8 +364,8 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
            />
         </div>
 
-        {/* LEADERBOARD PANE */}
-        <div ref={leaderboardRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" style={{ transformStyle: 'preserve-3d' }}>
+        {/* LEADERBOARD PANE - SIDE BY SIDE */}
+        <div ref={leaderboardRef} className="absolute left-[360px] md:left-[410px] top-20 md:top-24" style={{ transformStyle: 'preserve-3d' }}>
            <ProjectPane
              type="leaderboard"
              isActive={activeProject === 'leaderboard'}

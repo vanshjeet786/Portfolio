@@ -31,8 +31,28 @@ export const ScrollManager = () => {
         ? 0.52 + 0.48 * (distanceToStance / stanceRange)
         : 1;
 
-      // Normalize wheel delta and slow down near Stance so the model has room to settle.
-      const baseDelta = e.deltaY * 0.000105 * stanceSlowdown;
+      const etherealProgress = 5 / (totalScenes - 1);
+      const distanceToEthereal = Math.abs(targetProgress - etherealProgress);
+      const etherealRange = segmentSize * 0.85;
+      const etherealSlowdown = distanceToEthereal < etherealRange
+        ? 0.42 + 0.58 * (distanceToEthereal / etherealRange)
+        : 1;
+
+      // Slow down scroll in Narrative Void scenes (2, 4, 6, 8) so text reading is smooth and unhurried
+      const voidScenes = [2, 4, 6, 8];
+      let minVoidSlowdown = 1;
+      for (const vIndex of voidScenes) {
+        const vProgress = vIndex / (totalScenes - 1);
+        const dist = Math.abs(targetProgress - vProgress);
+        const vRange = segmentSize * 0.85;
+        if (dist < vRange) {
+          const slowdown = 0.38 + 0.62 * (dist / vRange);
+          if (slowdown < minVoidSlowdown) minVoidSlowdown = slowdown;
+        }
+      }
+
+      // Normalize wheel delta and slow down near Stance, Ethereal & Narrative Voids
+      const baseDelta = e.deltaY * 0.000105 * stanceSlowdown * etherealSlowdown * minVoidSlowdown;
 
       // If we are within 20% of a segment to the center, apply friction
       const frictionThreshold = segmentSize * 0.2;
