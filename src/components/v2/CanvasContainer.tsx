@@ -14,7 +14,7 @@ export const SCENE_SPACING = 30; // Distance between scenes on Z axis
 
 export const CanvasContainer = () => {
   return (
-    <div className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none">
+    <div id="canvas-container" className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none">
       <Canvas>
         <color attach="background" args={['#050505']} />
         <fog attach="fog" args={['#050505', 5, 25]} />
