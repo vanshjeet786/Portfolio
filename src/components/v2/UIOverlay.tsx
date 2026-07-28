@@ -1,30 +1,38 @@
+import { ProjectModalV2 } from './ui/ProjectModalV2/ProjectModalV2';
 import { useEffect, useRef, useState } from 'react';
 import { useStore } from '@/stores/useStore';
 import gsap from 'gsap';
 import { TrueFocus } from './ui/TrueFocus';
 import { EtherealNetwork } from './ui/EtherealNetwork';
 import { ConnectModal } from "./ui/ConnectModal/ConnectModal";
-import { SVGNoise } from './ui/SVGNoise';
+// import { SVGNoise } from './ui/SVGNoise';
 import { SoundEngine } from '@/utils/SoundEngine';
 
 
 const NARRATIVE_TEXTS_1 = [
   "You're lost. Maybe?",
-  "I Ddeveloped a 6-LAYER AI Career Counsellor",
+  "I developed a 6-LAYER AI Career Counsellor",
   "The priority was to ensure it doesn't assess",
   "Using RIASEC, Big 5, MBTI, Multiple Presonality",
-  "And a few open ended questions to undertsnad someone better"
+  "And a few open ended questions to understand a person better"
 ];
 
 const NARRATIVE_TEXTS_2 = [
   "This one Judges",
   "I built a 4-layer soft skills assessment test",
   "The objective was to be accurate",
-  "Very Interesting project",
+  "Very interesting project",
   "Identifies the thinking patterns of a person"
 ];
 
 const NARRATIVE_TEXTS_3 = [
+  "These are the exact models",
+  "I used to design a few webpages ",
+  "for Stance Health",
+  "Priority was SEO"
+];
+
+const NARRATIVE_TEXTS_4 = [
   "I designed a chat app and a Leaderboard Platform",
   "As a project  for a company.",
   "Priority was Database design",
@@ -32,14 +40,8 @@ const NARRATIVE_TEXTS_3 = [
   "And API functions calls using CURL"
 ];
 
-const NARRATIVE_TEXTS_4 = [
-  "These are exact models",
-  "I used to design a few webpages ",
-  "for Stance Health",
-  "Priority was SEO"
-];
-
 const NARRATIVE_TEXTS_5 = [
+  "",
   "Hello!!!",
   "I am Vansh",
   "Would love to connect!",
@@ -51,18 +53,18 @@ const SCENE_LABELS = [
   'WHERE AM I?',
   'Skillometer',
   'WHERE AM I NOW?',
-  'Mini Projects',
-  'WHERE AM I AGAIN?',
   'Stance',
+  'WHERE AM I AGAIN?',
+  'Mini Projects',
   'I THINK THIS IS THE END',
   'Vansh'
 ];
 
-const MODAL_FRAME_CLASS =
-  'fixed inset-4 md:inset-8 z-30 flex flex-col bg-[#050505]/92 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 md:p-12 overflow-y-auto custom-scrollbar shadow-[0_30px_100px_rgba(0,0,0,0.65)]';
+// const MODAL_FRAME_CLASS =
+  
 
-const CLOSE_BUTTON_CLASS =
-  'absolute top-6 right-6 md:top-8 md:right-8 w-11 h-11 flex items-center justify-center border border-white/15 hover:border-white/40 hover:bg-white/5 transition-all cursor-none group rounded-full';
+// const CLOSE_BUTTON_CLASS =
+  
 
 export const UIOverlay = () => {
   const activeScene = useStore((state) => state.activeScene);
@@ -74,16 +76,16 @@ export const UIOverlay = () => {
   const [displayedScene, setDisplayedScene] = useState(activeScene);
   
   const [isCompassOpen, setIsCompassOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
+  
   const triggerRef = useRef<HTMLButtonElement>(null);
   const narrativeRef = useRef<HTMLDivElement>(null);
 
   const [isSkillometerOpen, setIsSkillometerOpen] = useState(false);
-  const skillometerModalRef = useRef<HTMLDivElement>(null);
+  
   const skillometerTriggerRef = useRef<HTMLButtonElement>(null);
 
   const [isStanceOpen, setIsStanceOpen] = useState(false);
-  const stanceModalRef = useRef<HTMLDivElement>(null);
+  
   const stanceTriggerRef = useRef<HTMLButtonElement>(null);
 
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
@@ -142,17 +144,9 @@ export const UIOverlay = () => {
     if (displayedScene !== 1) return;
     if (isCompassOpen) {
       gsap.to(triggerRef.current, { opacity: 0, x: -20, duration: 0.4, ease: "power2.in" });
-      gsap.fromTo(modalRef.current, 
-        { opacity: 0, x: 40, clipPath: 'circle(0% at center)' },
-        { opacity: 1, x: 0, clipPath: 'circle(150% at center)', duration: 1.2, ease: "expo.out", display: 'block' }
-      );
+     
     } else {
-      gsap.to(modalRef.current, { 
-        opacity: 0, x: 40, clipPath: 'circle(0% at center)', duration: 0.6, ease: "power3.inOut",
-        onComplete: () => {
-          if (modalRef.current) modalRef.current.style.display = 'none';
-        }
-      });
+     
       gsap.fromTo(triggerRef.current,
         { opacity: 0, x: -20 },
         { opacity: 1, x: 0, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -165,17 +159,9 @@ export const UIOverlay = () => {
     if (displayedScene !== 3) return;
     if (isSkillometerOpen) {
       gsap.to(skillometerTriggerRef.current, { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" });
-      gsap.fromTo(skillometerModalRef.current, 
-        { opacity: 0, y: 40, clipPath: 'circle(0% at center)' },
-        { opacity: 1, y: 0, clipPath: 'circle(150% at center)', duration: 1.2, ease: "expo.out", display: 'block' }
-      );
+     
     } else {
-      gsap.to(skillometerModalRef.current, { 
-        opacity: 0, y: 40, clipPath: 'circle(0% at center)', duration: 0.6, ease: "power3.inOut",
-        onComplete: () => {
-          if (skillometerModalRef.current) skillometerModalRef.current.style.display = 'none';
-        }
-      });
+     
       gsap.fromTo(skillometerTriggerRef.current,
         { opacity: 0, y: -20 },
         { opacity: 1, y: 0, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -188,17 +174,9 @@ export const UIOverlay = () => {
     if (displayedScene !== 7) return;
     if (isStanceOpen) {
       gsap.to(stanceTriggerRef.current, { opacity: 0, scale: 0.8, duration: 0.7, ease: "power2.in" });
-      gsap.fromTo(stanceModalRef.current, 
-        { opacity: 0, y: -40, clipPath: 'circle(0% at center)' },
-        { opacity: 1, y: 0, clipPath: 'circle(150% at center)', duration: 1.2, ease: "expo.out", display: 'block' }
-      );
+     
     } else {
-      gsap.to(stanceModalRef.current, { 
-        opacity: 0, y: -40, clipPath: 'circle(0% at center)', duration: 0.6, ease: "power3.inOut",
-        onComplete: () => {
-          if (stanceModalRef.current) stanceModalRef.current.style.display = 'none';
-        }
-      });
+     
       gsap.fromTo(stanceTriggerRef.current,
         { opacity: 0, scale: 0.8 },
         { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -302,7 +280,7 @@ export const UIOverlay = () => {
                 style={{
                   background: 'rgba(255, 255, 255, 0.01)',
                   backdropFilter: 'blur(3px)',
-                  WebkitBackdropFilter: 'blur(3px)',
+                  WebkitBackdropFilter: 'blur(1px)',
                   border: '1px solid rgba(255, 255, 255, 0.01)',
                   boxShadow: 'inset 0 0 30px rgba(255,255,255,0.02)',
                   transform: 'scale(1.2)'
@@ -314,14 +292,15 @@ export const UIOverlay = () => {
           </div>
         )}
 
+        
         {/* SCENE 1: CAREER COMPASS */}
         {displayedScene === 1 && (
           <div className="w-full h-full flex justify-end items-end relative pointer-events-auto pb-12 pr-12">
             <button
               ref={triggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); { setIsCompassOpen(true); setModalOpen(true); }; }}
-              className="absolute left-16 top-1/2 -translate-y-1/2 group flex items-center gap-6 cursor-none"
+              onClick={() => { SoundEngine.playClick(); setIsCompassOpen(true); setModalOpen(true); }}
+              className="absolute left-36 top-1/4 -translate-y-1/2 group flex items-center gap-6 cursor-none"
             >
               <div className="relative w-12 h-12 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity duration-500">
                 <div className="absolute w-full h-[1px] bg-white/40 group-hover:scale-x-150 transition-transform duration-500" />
@@ -335,95 +314,142 @@ export const UIOverlay = () => {
                 </span>
               </div>
             </button>
-
-            <div ref={modalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} justify-center items-center`}>
-              <SVGNoise />
-              <div className="flex justify-between items-start mb-16">
-                <div>
-                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#ef8532] font-lato">Welcome!</span>
-                  <h2 className="text-4xl md:text-6xl font-light mt-4 text-white tracking-tight">Career Compass</h2>
-                </div>
-                <button 
-                  onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => { SoundEngine.playClick(); { setIsCompassOpen(false); setModalOpen(false); }; }}
-                  className={CLOSE_BUTTON_CLASS}
-                >
-                  <div className="w-full h-full bg-[#ef8532]/10 absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <div className="w-4 h-[1px] bg-white rotate-45 absolute" />
-                  <div className="w-4 h-[1px] bg-white -rotate-45 absolute" />
-                </button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-white/10 pt-8">
-                <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">About</h3>
-                  <p className="text-sm text-white font-light tracking-wide">An AI Powered Career Counsellor I built for Skitre.AI.</p>
-                </div>
-                <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-lato mb-4">Stack</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed font-jost">
-                    React, Supabase, CSS
-                  </p>
-                </div>
-              </div>
-            </div>
+            <ProjectModalV2 
+              isOpen={isCompassOpen}
+              onClose={() => { setIsCompassOpen(false); setModalOpen(false); }}
+              title="Career Compass"
+              tagline="An AI Powered Career Counsellor"
+              meta={{
+                role: "Tech. Prod. Manager and Lead Developer",
+                timeline: "July 2025 to Dec 2025",
+                context: "Full-time project for Skitre.ai",
+                about: "Built for Skitre.AI, Career Compass is an application designed to guide users towards their ideal career paths. It features a comprehensive, 6-layer assessment that evaluates multiple intelligences, personality traits, aptitudes, background, interests, and self-reflection. The app utilizes real-time market data and an integrated AI Career Counselor to provide highly personalized career recommendations."
+              }}
+              sections={{
+                foundation: {
+                  title: "Tech Stack & Tooling",
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <span>Frontend: React 18, Vite, Tailwind CSS (Glassmorphism), Lucide React</span>
+                      <span>Backend: Nodejs (v22.22), Supabase (PostgreSQL, Auth, RLS)</span>
+                      <span>AI/ML: Groq AI</span>
+                    </div>
+                  )
+                },
+                design: {
+                  title: "UI/UX Design Process",
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <span>Light Mode (Background: #f8fafc; Text: #1c1c1c) with Glassmorphism accents.</span>
+                      <span>Outfit for headings and Figtree for body text.</span>
+                      <span>Fully responsive layout with mobile-friendly assessment cards.</span>
+                    </div>
+                  )
+                },
+                engineering: {
+                  title: "Technical Architecture",
+                  content: "The Vite/React frontend serves as a single-page application (SPA) interfacing securely with a PostgreSQL backend. Authentication and Row-Level Security (RLS) are implemented to protect user data."
+                },
+                deepDive: {
+                  title: "Implementation Deep-Dive",
+                  content: "Normalizes candidate traits across a multi-stage cognitive schema. Designed the assessment schema, implemented Supabase SQL matching functions, built the React client, and integrated GPT-driven reasoning evaluation."
+                },
+                showcase: {
+                  primaryImage: {
+                    src: "/assets/images/careercompass.png",
+                    alt: "Career Compass Primary Showcase",
+                  },
+                  gallery: [
+                    {
+                      src: "/assets/images/careercompass.png",
+                      alt: "Dashboard Overview",
+                      caption: "Dashboard Overview"
+                    },
+                    {
+                      src: "/assets/images/career-compass-results.png",
+                      alt: "Assessment Flow and Personalized Results",
+                      caption: "Personalized Results"
+                    }
+                  ]
+                }
+              }}
+            />
           </div>
         )}
         
-        {/* SCENE 2: NARRATIVE VOID */}
+{/* SCENE 2: NARRATIVE VOID */}
         {displayedScene === 2 && <div className="w-full h-full" />}
 
+        
         {/* SCENE 3: SKILLOMETER */}
         {displayedScene === 3 && (
           <div className="w-full h-full flex justify-center items-end relative pointer-events-auto pb-12">
             <button
               ref={skillometerTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); { setIsSkillometerOpen(true); setModalOpen(true); }; }}
+              onClick={() => { SoundEngine.playClick(); setIsSkillometerOpen(true); setModalOpen(true); }}
               className="absolute right-16 top-16 group flex flex-col items-center gap-4 cursor-none"
             >
               <div className="w-[1px] h-16 bg-gradient-to-b from-transparent to-white/50 group-hover:h-24 transition-all duration-500" />
               <div className="w-8 h-8 rounded-full border border-[#f8f7da]/50 flex items-center justify-center group-hover:border-[#f8f7da] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
                 <div className="w-1.5 h-1.5 bg-[#f8f7da] rounded-full group-hover:scale-150 transition-transform duration-300" />
               </div>
-<span className="text-xs tracking-[0.2em] uppercase text-white group-hover:text-[#e8c1a9] transition-colors duration-500">
-                  ABOUT PROJECT
-                </span>
               <span className="text-[12px] tracking-[0.4em] uppercase text-white/50 font-lato mt-2 group-hover:text-[#f8f7da] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
                 SKILLOMETER
               </span>
             </button>
-
-            <div ref={skillometerModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} justify-center items-center shadow-[0_30px_100px_rgba(245,158,11,0.12)]`}>
-              <SVGNoise />
-              <div className="absolute -top-10 -left-10 text-[180px] font-bold text-white/5 pointer-events-none select-none tracking-tighter">02</div>
-              <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-12">
-                <div className="flex-1">
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#c8a68a] font-lato">Welcome again!</span>
-                  <h2 className="text-4xl md:text-5xl font-jost mt-4 text-white tracking-tight">Skillometer</h2>
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-lato mt-2">soft-Skill assessment test</h3>
-                  <div className="mt-12 w-12 h-[1px] bg-[#c8a68a]/50" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-300 leading-relaxed font-jost mt-2">
-                    An architectural graph modeling candidate signals, capability matrices, and alignment scores dynamically. True alignment emerges not from scores, but from relationships within the ecosystem.
-                  </p>
-                  <div className="mt-10 flex items-center gap-6">
-                  </div>
-                </div>
-                <button 
-                  onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => { SoundEngine.playClick(); { setIsSkillometerOpen(false); setModalOpen(false); }; }}
-                  className={`${CLOSE_BUTTON_CLASS} static ml-auto`}
-                >
-                  <div className="w-4 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
-                  <div className="w-4 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
-                </button>
-              </div>
-            </div>
+            <ProjectModalV2 
+              isOpen={isSkillometerOpen}
+              onClose={() => { setIsSkillometerOpen(false); setModalOpen(false); }}
+              title="Skillometer"
+              tagline="soft-Skill assessment test"
+              meta={{
+                role: "Lead Product Engineer, Creative Technologist",
+                timeline: "2024",
+                context: "Freelance / Concept",
+                about: "An architectural graph modeling candidate signals, capability matrices, and alignment scores dynamically. True alignment emerges not from scores, but from relationships within the ecosystem."
+              }}
+              sections={{
+                foundation: {
+                  title: "Tech Stack & Tooling",
+                  content: "React, TypeScript, Three.js, R3F, GSAP, Supabase, PostgreSQL"
+                },
+                design: {
+                  title: "Design System",
+                  content: "Organic structures and graph-based visualization avoiding rigid dashboards."
+                },
+                engineering: {
+                  title: "Technical Architecture",
+                  content: "Dynamic Relation Schema constructing real-time relationship graphs between traits and capability signals."
+                },
+                deepDive: {
+                  title: "Implementation Deep-Dive",
+                  content: "Graph Matching Vectors: Evaluates role alignment using cosine similarity vector operations over normalized capabilities."
+                },
+                showcase: {
+                  primaryImage: {
+                    src: "/assets/images/skillometer..png",
+                    alt: "Skillometer Interface",
+                  },
+                  gallery: [
+                    {
+                      src: "/assets/images/skillometer..png",
+                      alt: "Skillometer Interface",
+                      caption: "Capability Matrix"
+                    },
+                    {
+                      src: "/assets/images/skillometer.skitre.ai daf09edb8776.png",
+                      alt: "Skillometer Results",
+                      caption: "Assessment Analytics"
+                    }
+                  ]
+                }
+              }}
+            />
           </div>
         )}
-
-        {/* SCENE 4: NARRATIVE VOID 2 */}
+        
+{/* SCENE 4: NARRATIVE VOID 2 */}
         {displayedScene === 4 && <div className="w-full h-full" />}
 
         {/* SCENE 7: ETHEREAL NETWORK (Exiles + Leaderboard) */}
@@ -431,6 +457,67 @@ export const UIOverlay = () => {
         <EtherealNetwork isActive={displayedScene === 7} />
 
         {/* SCENE 6: NARRATIVE VOID 3 */}
+        {displayedScene === 6 && <div className="w-full h-full" />}
+
+        
+        {/* SCENE 5: STANCE */}
+        {displayedScene === 5 && (
+          <div className="w-full h-full flex justify-center items-end relative pointer-events-auto pb-12">
+            
+    
+
+            <ProjectModalV2 
+              isOpen={isStanceOpen}
+              onClose={() => { setIsStanceOpen(false); setModalOpen(false); }}
+              title="Stance"
+              tagline="STANCE HEALTH"
+              meta={{
+                role: "Lead Product Engineer, Creative Technologist, Three.js Engineer",
+                timeline: "2024",
+                context: "Freelance",
+                about: "Website pages for a health and movement brand, designed to make service discovery feel calm, trustworthy, and immediate. An abstract, soft, physically grounded digital sanctuary focusing on movement and recovery without healthcare tropes."
+              }}
+              sections={{
+                foundation: {
+                  title: "Tech Stack & Tooling",
+                  content: "React, TypeScript, Three.js, R3F, GSAP, Framer Motion, TailwindCSS"
+                },
+                design: {
+                  title: "Design Priorities",
+                  content: "The Stance section gives the original model space to breathe: slower scroll resistance near the reveal, a muted care palette, and an after-scene narrative that lets the SEO context arrive later."
+                },
+                engineering: {
+                  title: "Technical Architecture",
+                  content: "Translucent Material Optimization: Custom physical materials balancing rendering cost with the high aesthetic requirement of frosted, breathable glass forms."
+                },
+                deepDive: {
+                  title: "Implementation Deep-Dive",
+                  content: "GSAP Scroll Pipeline: Highly optimized scroll-driven animation timeline managing Three.js canvas state and DOM elements concurrently without layout thrashing."
+                },
+                showcase: {
+                  primaryImage: {
+                    src: "/assets/images/stance-back.png",
+                    alt: "Stance Health Overview",
+                  },
+                  gallery: [
+                    {
+                      src: "/assets/images/stance-back.png",
+                      alt: "Stance Health",
+                      caption: "Organic Structure"
+                    },
+                    {
+                      src: "/assets/images/stance-womens.png",
+                      alt: "Stance Details",
+                      caption: "Abstract Sanctuary"
+                    }
+                  ]
+                }
+              }}
+            />
+          </div>
+        )}
+        
+{/* SCENE 6: NARRATIVE VOID 3 */}
         {displayedScene === 6 && <div className="w-full h-full" />}
 
         {/* SCENE 5: STANCE */}
@@ -445,7 +532,7 @@ export const UIOverlay = () => {
               ref={stanceTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
               onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(true); setModalOpen(true); }; }}
-              className="absolute left-1/5 top-3/7 -translate-x-1/2 -translate-y-1/2 group cursor-none w-36 h-36 flex items-left justify-left rounded-full"
+              className="absolute left-8/10 top-1/7 -translate-x-1/2 -translate-y-1/2 group cursor-none w-36 h-36 flex items-left justify-left rounded-full"
             >
               <div className="absolute inset-0 rounded-full border border-[#ffe897]/25 bg-black/10 backdrop-blur-[2px] group-hover:border-[#ffe897]/70 group-hover:shadow-[0_0_35px_rgba(200,166,138,0.18)] transition-all duration-700" />
               <div className="absolute w-[1px] h-20 bg-gradient-to-b from-transparent via-[#f4dfc6]/70 to-transparent group-hover:h-32 transition-all duration-500" />
@@ -459,50 +546,7 @@ export const UIOverlay = () => {
             </button>
 
             {/* Warm clinical project slate */}
-            <div ref={stanceModalRef} style={{ display: 'none' }} className={`${MODAL_FRAME_CLASS} items-center shadow-[0_30px_100px_rgba(200,166,138,0.12)]`}>
-              <SVGNoise />
-              <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#c8a68a]/5 pointer-events-none select-none tracking-tighter">04</div>
-              <div className="absolute right-0 top-0 h-full w-1/2 bg-[radial-gradient(circle_at_70%_40%,rgba(127,143,130,0.08),transparent_35%)] pointer-events-none" />
-              
-              <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-16">
-                <div className="flex-1">
-                  <span className="text-[14px] uppercase tracking-[0.4em] text-[#c8a68a] font-mulish">Project 04 · STANCE HEALTH</span>
-                  <h2 className="text-5xl md:text-7xl font-jost mt-6 text-[#f4dfc6] tracking-tight uppercase">Stance</h2>
-                  <p className="mt-6 max-w-md text-sm text-white/55 leading-relaxed font-jost">
-                    Website pages for a health and movement brand, designed to make service discovery feel calm, trustworthy, and immediate.
-                  </p>
-                  <div className="mt-12 w-24 h-[2px] bg-gradient-to-r from-[#c8a68a] via-[#7f8f82]/70 to-transparent" />
-                </div>
-                
-                <div className="flex-1 pt-4">
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mulish mb-4">Experience Priorities</h3>
-                  <p className="text-sm text-gray-300 leading-relaxed font-jost mb-8">
-                    The Stance section now gives the original model more space to breathe: slower scroll resistance near the reveal, a muted care palette, and an after-scene narrative that lets the SEO context arrive later.
-                  </p>
-                  
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#c8a68a] font-mulish block mb-2">Visibility</span>
-                      <span className="text-xs text-white/80 font-jost">Muted clinical contrast</span>
-                    </div>
-                    <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#7f8f82] font-mulish block mb-2">Focus</span>
-                      <span className="text-xs text-white/80 font-jost">SEO + patient pages</span>
-                    </div>
-                  </div>
-                </div>
-
-                <button 
-                  onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(false); setModalOpen(false); }; }}
-                  className={`${CLOSE_BUTTON_CLASS} static ml-auto hover:border-[#c8a68a] hover:bg-[#c8a68a]/10`}
-                >
-                  <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
-                  <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
-                </button>
-              </div>
-            </div>
-          </div>
+                      </div>
         )}
 
         {/* SCENE 8: NARRATIVE VOID 4 */}
@@ -515,7 +559,7 @@ export const UIOverlay = () => {
             <button
               ref={terminalTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); { setIsTerminalOpen(true); setModalOpen(true); }; }}
+              onClick={() => { SoundEngine.playClick(); setIsTerminalOpen(true); setModalOpen(true); }}
               className="group cursor-none flex flex-col items-center justify-center relative z-20"
             >
               <div className="relative w-32 h-32 rounded-full border border-white/20 flex items-center justify-center overflow-hidden group-hover:border-[#d4af37]/50 transition-colors duration-700">

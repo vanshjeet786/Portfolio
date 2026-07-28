@@ -1,3 +1,4 @@
+import { ProjectModalV2 } from './ProjectModalV2/ProjectModalV2';
 
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
@@ -26,7 +27,7 @@ interface ProjectPaneProps {
   type: 'exiles' | 'leaderboard';
   isActive: boolean;
   onActivate: () => void;
-  onClose: () => void;
+  
   isHovered: boolean;
   onHover: () => void;
   onLeave: () => void;
@@ -51,7 +52,7 @@ const PROJECT_PROOF = {
   },
 };
 
-const ProjectPane = ({ type, isActive, onActivate, onClose, isHovered, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
+const ProjectPane = ({ type, isActive, onActivate, isHovered, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
   const isExiles = type === 'exiles';
   const proof = PROJECT_PROOF[type];
   const paneRef = useRef<HTMLDivElement>(null);
@@ -161,7 +162,7 @@ const ProjectPane = ({ type, isActive, onActivate, onClose, isHovered, onHover, 
                   e.stopPropagation(); 
                   e.preventDefault();
                   SoundEngine.playClick(); 
-                  onClose(); 
+                  // onClose(); 
                   useStore.getState().setModalOpen(false);
                 }}
                 className="relative z-50 w-11 h-11 flex items-center justify-center border border-white/20 hover:border-white/50 hover:bg-white/10 rounded-full transition-all duration-300 cursor-pointer group/btn"
@@ -236,6 +237,11 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [activeProject, setActiveProject] = useState<ProjectType>(null);
+  const handleClose = () => {
+    // SoundEngine.playClick(); // Handled by ProjectModalV2
+    setActiveProject(null);
+  };
+
   const [hoveredProject, setHoveredProject] = useState<ProjectType>(null);
 
   const [mouseRotX, setMouseRotX] = useState(0);
@@ -254,7 +260,9 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
     };
 
     window.addEventListener('keydown', handleEscape);
-    return () => window.removeEventListener('keydown', handleEscape);
+    
+  
+return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
   // Mount/Unmount
@@ -354,7 +362,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
              isActive={activeProject === 'exiles'}
              hasActiveProject={activeProject !== null}
              onActivate={() => setActiveProject('exiles')}
-             onClose={() => setActiveProject(null)}
+             
              isHovered={hoveredProject === 'exiles'}
              onHover={() => { SoundEngine.playHover(); setHoveredProject('exiles'); }}
              onLeave={() => setHoveredProject(null)}
@@ -371,7 +379,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
              isActive={activeProject === 'leaderboard'}
              hasActiveProject={activeProject !== null}
              onActivate={() => setActiveProject('leaderboard')}
-             onClose={() => setActiveProject(null)}
+             
              isHovered={hoveredProject === 'leaderboard'}
              onHover={() => { SoundEngine.playHover(); setHoveredProject('leaderboard'); }}
              onLeave={() => setHoveredProject(null)}
@@ -382,6 +390,93 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
         </div>
 
       </div>
-    </div>
+    
+      <ProjectModalV2 
+        isOpen={activeProject === 'exiles'}
+        onClose={handleClose}
+        title="Exiles"
+        tagline="Realtime messaging fabric"
+        meta={{
+          role: "Lead Engineer",
+          timeline: "2024",
+          context: "Module 03",
+          about: "Exiles is a highly-available, realtime messaging fabric built for strict idempotency and guaranteed delivery. It eliminates race conditions across distributed nodes by establishing a single source of chronological truth. The architecture ensures that no matter the latency or distance, the signal remains persistent and properly ordered."
+        }}
+        sections={{
+          foundation: {
+            title: "Tech Stack & Tooling",
+            content: "React, TypeScript, Supabase Realtime, PostgreSQL, Lucide React, date-fns"
+          },
+          design: {
+            title: "Architectural Focus",
+            content: "Designed the realtime channel architecture, idempotency system, presence tracking, and attachment schema on Supabase."
+          },
+          engineering: {
+            title: "Technical Architecture",
+            content: "Supabase Realtime Channels: Per-conversation channels with postgres_changes subscriptions for INSERT events across messages, edits, and deletions."
+          },
+          deepDive: {
+            title: "Implementation Deep-Dive",
+            content: "Idempotency Key System: UUID-based idempotency keys prevent duplicate messages on network retries, enforced at the PostgreSQL RPC layer. Sequence ID Ordering: Multi-layer chronological ordering via sequence_id resolves simultaneous message conflicts deterministically."
+          },
+          showcase: {
+            primaryImage: {
+              src: "/assets/images/exiles-chat.png",
+              alt: "Exiles Chat Interface",
+            },
+            gallery: [
+              {
+                src: "/assets/images/exiles-chat.png",
+                alt: "Exiles Chat Interface",
+                caption: "Realtime Chat"
+              }
+            ]
+          }
+        }}
+      />
+      <ProjectModalV2 
+        isOpen={activeProject === 'leaderboard'}
+        onClose={handleClose}
+        title="Leaderboard"
+        tagline="High-throughput ranking engine"
+        meta={{
+          role: "Lead Product Engineer & Three.js Engineer",
+          timeline: "2024",
+          context: "Module 04",
+          about: "The Leaderboard module is a high-throughput ranking engine engineered to ingest and sort thousands of concurrent score mutations per second. Built on event-sourcing principles, it treats every change as an immutable record, providing near-instantaneous global rankings while maintaining perfect chronological reconstruction capabilities."
+        }}
+        sections={{
+          foundation: {
+            title: "Tech Stack & Tooling",
+            content: "React, TypeScript, Three.js, R3F, Supabase Edge Functions, PostgreSQL"
+          },
+          design: {
+            title: "Architectural Focus",
+            content: "Built the ranking engine, deduplication API, Supabase Edge Functions, and the kinetic 3D monolith architecture."
+          },
+          engineering: {
+            title: "Technical Architecture",
+            content: "Ranking & Caching: Optimized SQL ranking engine broadcasting immediate updates via postgres_changes."
+          },
+          deepDive: {
+            title: "Implementation Deep-Dive",
+            content: "Deduplication Engine: Score Submission API running on Edge Functions to deduplicate and validate incoming game events."
+          },
+          showcase: {
+            primaryImage: {
+              src: "/assets/images/leaderboard.png",
+              alt: "Leaderboard UI",
+            },
+            gallery: [
+              {
+                src: "/assets/images/leaderboard.png",
+                alt: "Leaderboard UI",
+                caption: "Global Rankings"
+              }
+            ]
+          }
+        }}
+      />
+</div>
   );
 };
