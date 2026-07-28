@@ -19,7 +19,7 @@ export const ExilesUI: React.FC = () => {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   // Exiles occupies scroll range 0.775 → 0.855
-  const isWorldActive = scrollProgress >= 0.775;
+  const isWorldActive = scrollProgress >= 0.68;
 
   // Narrative — one sentence, then silence
   let narrativeText = '';

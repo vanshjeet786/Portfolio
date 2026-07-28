@@ -1,5 +1,8 @@
 class SoundEngineClass {
   private ctx: AudioContext | null = null;
+  private ambientOscillator: OscillatorNode | null = null;
+  private ambientGain: GainNode | null = null;
+  private isAmbientPlaying: boolean = false;
 
   private init() {
     if (!this.ctx) {
@@ -9,6 +12,80 @@ class SoundEngineClass {
       this.ctx.resume();
     }
   }
+
+  // --- Procedural Audio Synthesis Engine --- //
+
+  // Start the continuous ambient drone
+  public startAmbientDrone = () => {
+    try {
+      this.init();
+      if (!this.ctx || this.isAmbientPlaying) return;
+
+      this.ambientOscillator = this.ctx.createOscillator();
+      this.ambientGain = this.ctx.createGain();
+
+      // Deep, low-frequency sine wave for a physical, monolithic presence
+      this.ambientOscillator.type = 'sine';
+      this.ambientOscillator.frequency.value = 55; // 55Hz (A1)
+
+      // Start completely silent, fade in
+      this.ambientGain.gain.value = 0;
+      this.ambientGain.gain.linearRampToValueAtTime(0.05, this.ctx.currentTime + 2);
+
+      this.ambientOscillator.connect(this.ambientGain);
+      this.ambientGain.connect(this.ctx.destination);
+
+      this.ambientOscillator.start();
+      this.isAmbientPlaying = true;
+    } catch {
+      // Ignore
+    }
+  };
+
+  // Update the ambient drone based on scroll progress (0 to 1)
+  public updateAmbientDrone = (progress: number) => {
+    if (!this.ctx || !this.ambientOscillator || !this.ambientGain) return;
+
+    // Change the frequency dynamically. 
+    // It drops into lower bass during transitions and rises slightly during scenes.
+    // Progress goes 0 -> 1. We can map this to subtle frequency shifts.
+    const baseFreq = 55;
+    // Map progress to a repeating wave (e.g., 10 scenes, so it pulses 10 times)
+    const sceneCount = 10;
+    const pulse = Math.sin(progress * Math.PI * 2 * (sceneCount - 1));
+    
+    // Pitch drops when halfway between scenes (pulse ~ -1)
+    const targetFreq = baseFreq + (pulse * 10); 
+    
+    // Modulate volume subtly based on speed (simulated by rate of change of progress)
+    // For simplicity, we just pulse the volume
+    const baseVolume = 0.05;
+    const targetVolume = baseVolume + (Math.abs(pulse) * 0.02);
+
+    // Smoothly interpolate to the new values
+    this.ambientOscillator.frequency.setTargetAtTime(targetFreq, this.ctx.currentTime, 0.5);
+    this.ambientGain.gain.setTargetAtTime(targetVolume, this.ctx.currentTime, 0.5);
+  };
+
+  public stopAmbientDrone = () => {
+    if (this.ambientOscillator && this.ambientGain && this.ctx) {
+      this.ambientGain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 1);
+      setTimeout(() => {
+        if (this.ambientOscillator) {
+          this.ambientOscillator.stop();
+          this.ambientOscillator.disconnect();
+          this.ambientOscillator = null;
+        }
+        if (this.ambientGain) {
+          this.ambientGain.disconnect();
+          this.ambientGain = null;
+        }
+        this.isAmbientPlaying = false;
+      }, 1000);
+    }
+  };
+
+  // --- UI Sound Effects --- //
 
   // A very short, high-frequency tick simulating tapping on thick glass
   public playHover = () => {
@@ -59,6 +136,9 @@ class SoundEngineClass {
       
       osc.start();
       osc.stop(this.ctx.currentTime + 0.15);
+      
+      // Attempt to start ambient drone on first user interaction if not already playing
+      this.startAmbientDrone();
     } catch {
       // Ignore
     }

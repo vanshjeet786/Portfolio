@@ -1,72 +1,95 @@
+import { ProjectModalV2 } from './ui/ProjectModalV2/ProjectModalV2';
 import { useEffect, useRef, useState } from 'react';
 import { useStore } from '@/stores/useStore';
 import gsap from 'gsap';
 import { TrueFocus } from './ui/TrueFocus';
 import { EtherealNetwork } from './ui/EtherealNetwork';
+import { ConnectModal } from "./ui/ConnectModal/ConnectModal";
+// import { SVGNoise } from './ui/SVGNoise';
 import { SoundEngine } from '@/utils/SoundEngine';
 
+
 const NARRATIVE_TEXTS_1 = [
-  "You're lost.",
-  "We all are.",
-  "Personality tests are horoscopes for LinkedIn.",
-  "The Compass doesn't ask what you want to be.",
-  "It calculates what you already are."
+  "You're lost. Maybe?",
+  "I developed a 6-LAYER AI Career Counsellor",
+  "The priority was to ensure it doesn't assess",
+  "Using RIASEC, Big 5, MBTI, Multiple Presonality",
+  "And a few open ended questions to understand a person better"
 ];
 
 const NARRATIVE_TEXTS_2 = [
-  "Paper tells a flat story.",
-  "We built a system that reads between the lines.",
-  "A living graph of human potential.",
-  "Not just what they did.",
-  "How they think."
+  "This one Judges",
+  "I built a 4-layer soft skills assessment test",
+  "The objective was to be accurate",
+  "Very interesting project",
+  "Identifies the thinking patterns of a person"
 ];
 
 const NARRATIVE_TEXTS_3 = [
-  "Most apps just send text.",
-  "They forget the most important part of talking.",
-  "Knowing the other person is actually there.",
-  "We didn't build a chat app.",
-  "We built a place."
+  "These are the exact models",
+  "I used to design a few webpages ",
+  "for Stance Health",
+  "Priority was SEO"
 ];
 
 const NARRATIVE_TEXTS_4 = [
-  "Scale breaks everything.",
-  "Unless it's built to bend.",
-  "Data must flow without friction.",
-  "A solid stance.",
-  "An unbreakable structure."
+  "I designed a chat app and a Leaderboard Platform",
+  "As a project  for a company.",
+  "Priority was Database design",
+  "Idempotency",
+  "And API functions calls using CURL"
 ];
 
 const NARRATIVE_TEXTS_5 = [
-  "Structure is nothing without signal.",
-  "Data is useless without intent.",
-  "The network is open.",
-  "Initiate protocol.",
-  "Make contact."
+  "",
+  "Hello!!!",
+  "I am Vansh",
+  "Would love to connect!",
 ];
+
+const SCENE_LABELS = [
+  'Home',
+  'Compass',
+  'WHERE AM I?',
+  'Skillometer',
+  'WHERE AM I NOW?',
+  'Stance',
+  'WHERE AM I AGAIN?',
+  'Mini Projects',
+  'I THINK THIS IS THE END',
+  'Vansh'
+];
+
+// const MODAL_FRAME_CLASS =
+  
+
+// const CLOSE_BUTTON_CLASS =
+  
 
 export const UIOverlay = () => {
   const activeScene = useStore((state) => state.activeScene);
+  const setModalOpen = useStore((state) => state.setModalOpen);
   const progress = useStore((state) => state.progress);
+  const jumpToScene = useStore((state) => state.jumpToScene);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const [displayedScene, setDisplayedScene] = useState(activeScene);
   
   const [isCompassOpen, setIsCompassOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
+  
   const triggerRef = useRef<HTMLButtonElement>(null);
   const narrativeRef = useRef<HTMLDivElement>(null);
 
   const [isSkillometerOpen, setIsSkillometerOpen] = useState(false);
-  const skillometerModalRef = useRef<HTMLDivElement>(null);
+  
   const skillometerTriggerRef = useRef<HTMLButtonElement>(null);
 
   const [isStanceOpen, setIsStanceOpen] = useState(false);
-  const stanceModalRef = useRef<HTMLDivElement>(null);
+  
   const stanceTriggerRef = useRef<HTMLButtonElement>(null);
 
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
-  const terminalModalRef = useRef<HTMLDivElement>(null);
+
   const terminalTriggerRef = useRef<HTMLButtonElement>(null);
 
   // Scene transitions
@@ -74,19 +97,19 @@ export const UIOverlay = () => {
     if (!containerRef.current || displayedScene === activeScene) return;
 
     if (activeScene !== 1 && isCompassOpen) {
-      setTimeout(() => setIsCompassOpen(false), 0);
+      setTimeout(() => { setIsCompassOpen(false); setModalOpen(false); }, 0);
     }
     
     if (activeScene !== 3 && isSkillometerOpen) {
-      setTimeout(() => setIsSkillometerOpen(false), 0);
+      setTimeout(() => { setIsSkillometerOpen(false); setModalOpen(false); }, 0);
     }
     
-    if (activeScene !== 7 && isStanceOpen) {
-      setTimeout(() => setIsStanceOpen(false), 0);
+    if (activeScene !== 5 && isStanceOpen) {
+      setTimeout(() => { setIsStanceOpen(false); setModalOpen(false); }, 0);
     }
     
     if (activeScene !== 9 && isTerminalOpen) {
-      setTimeout(() => setIsTerminalOpen(false), 0);
+      setTimeout(() => { setIsTerminalOpen(false); setModalOpen(false); }, 0);
     }
 
     // Play Deep Sub-bass Transition Sound
@@ -114,24 +137,16 @@ export const UIOverlay = () => {
         }
       });
     }
-  }, [activeScene, displayedScene, isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen]);
+  }, [activeScene, displayedScene, isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen, setModalOpen]);
 
   // Compass Modal Animation Effect
   useEffect(() => {
     if (displayedScene !== 1) return;
     if (isCompassOpen) {
       gsap.to(triggerRef.current, { opacity: 0, x: -20, duration: 0.4, ease: "power2.in" });
-      gsap.fromTo(modalRef.current, 
-        { opacity: 0, x: 40, clipPath: 'inset(0 100% 0 0)' },
-        { opacity: 1, x: 0, clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: "expo.out", display: 'block' }
-      );
+     
     } else {
-      gsap.to(modalRef.current, { 
-        opacity: 0, x: 40, clipPath: 'inset(0 100% 0 0)', duration: 0.6, ease: "power3.inOut",
-        onComplete: () => {
-          if (modalRef.current) modalRef.current.style.display = 'none';
-        }
-      });
+     
       gsap.fromTo(triggerRef.current,
         { opacity: 0, x: -20 },
         { opacity: 1, x: 0, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -144,17 +159,9 @@ export const UIOverlay = () => {
     if (displayedScene !== 3) return;
     if (isSkillometerOpen) {
       gsap.to(skillometerTriggerRef.current, { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" });
-      gsap.fromTo(skillometerModalRef.current, 
-        { opacity: 0, y: 40, clipPath: 'inset(100% 0 0 0)' },
-        { opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)', duration: 1.2, ease: "expo.out", display: 'block' }
-      );
+     
     } else {
-      gsap.to(skillometerModalRef.current, { 
-        opacity: 0, y: 40, clipPath: 'inset(100% 0 0 0)', duration: 0.6, ease: "power3.inOut",
-        onComplete: () => {
-          if (skillometerModalRef.current) skillometerModalRef.current.style.display = 'none';
-        }
-      });
+     
       gsap.fromTo(skillometerTriggerRef.current,
         { opacity: 0, y: -20 },
         { opacity: 1, y: 0, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -166,18 +173,10 @@ export const UIOverlay = () => {
   useEffect(() => {
     if (displayedScene !== 7) return;
     if (isStanceOpen) {
-      gsap.to(stanceTriggerRef.current, { opacity: 0, scale: 0.8, duration: 0.4, ease: "power2.in" });
-      gsap.fromTo(stanceModalRef.current, 
-        { opacity: 0, y: -40, clipPath: 'inset(0 0 100% 0)' },
-        { opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)', duration: 1.2, ease: "expo.out", display: 'block' }
-      );
+      gsap.to(stanceTriggerRef.current, { opacity: 0, scale: 0.8, duration: 0.7, ease: "power2.in" });
+     
     } else {
-      gsap.to(stanceModalRef.current, { 
-        opacity: 0, y: -40, clipPath: 'inset(0 0 100% 0)', duration: 0.6, ease: "power3.inOut",
-        onComplete: () => {
-          if (stanceModalRef.current) stanceModalRef.current.style.display = 'none';
-        }
-      });
+     
       gsap.fromTo(stanceTriggerRef.current,
         { opacity: 0, scale: 0.8 },
         { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -185,22 +184,12 @@ export const UIOverlay = () => {
     }
   }, [isStanceOpen, displayedScene]);
 
-  // Terminal Modal Animation Effect
+  // Terminal Trigger Animation Effect
   useEffect(() => {
     if (displayedScene !== 9) return;
     if (isTerminalOpen) {
       gsap.to(terminalTriggerRef.current, { opacity: 0, scale: 0.9, duration: 0.4, ease: "power2.in" });
-      gsap.fromTo(terminalModalRef.current, 
-        { opacity: 0, scale: 0.95, filter: 'blur(10px)' },
-        { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 1.2, ease: "expo.out", display: 'flex' }
-      );
     } else {
-      gsap.to(terminalModalRef.current, { 
-        opacity: 0, scale: 0.95, filter: 'blur(10px)', duration: 0.6, ease: "power3.inOut",
-        onComplete: () => {
-          if (terminalModalRef.current) terminalModalRef.current.style.display = 'none';
-        }
-      });
       gsap.fromTo(terminalTriggerRef.current,
         { opacity: 0, scale: 0.9 },
         { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -208,40 +197,68 @@ export const UIOverlay = () => {
     }
   }, [isTerminalOpen, displayedScene]);
 
-  // Scroll-driven Narrative Text Engine
+
+  useEffect(() => {
+    const closeActiveModal = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      if (isCompassOpen) setIsCompassOpen(false);
+      if (isSkillometerOpen) setIsSkillometerOpen(false);
+      if (isStanceOpen) setIsStanceOpen(false);
+      if (isTerminalOpen) setIsTerminalOpen(false);
+      setModalOpen(false);
+    };
+
+    window.addEventListener('keydown', closeActiveModal);
+    return () => window.removeEventListener('keydown', closeActiveModal);
+  }, [isCompassOpen, isSkillometerOpen, isStanceOpen, isTerminalOpen, setModalOpen]);
+
+  // Scroll-driven Narrative Text Engine (Flat single-line layout with letter-by-letter scroll fade)
   const [activeNarrativeText, setActiveNarrativeText] = useState("");
+  const [narrativeSubP, setNarrativeSubP] = useState(0);
+
   useEffect(() => {
     let currentText = "";
-    // Adjusted bounds for 4 voids over 8 scenes total
-    if (progress > 0.15 && progress < 0.25) {
-      const p = (progress - 0.15) / 0.1;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_1.length - 1, Math.floor(p * NARRATIVE_TEXTS_1.length)));
-      currentText = NARRATIVE_TEXTS_1[idx];
-    } else if (progress > 0.35 && progress < 0.45) {
-      const p = (progress - 0.35) / 0.1;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_2.length - 1, Math.floor(p * NARRATIVE_TEXTS_2.length)));
-      currentText = NARRATIVE_TEXTS_2[idx];
-    } else if (progress > 0.55 && progress < 0.65) {
-      const p = (progress - 0.55) / 0.1;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_3.length - 1, Math.floor(p * NARRATIVE_TEXTS_3.length)));
-      currentText = NARRATIVE_TEXTS_3[idx];
-    } else if (progress > 0.70 && progress < 0.78) {
-      const p = (progress - 0.70) / 0.08;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_4.length - 1, Math.floor(p * NARRATIVE_TEXTS_4.length)));
-      currentText = NARRATIVE_TEXTS_4[idx];
-    } else if (progress > 0.85 && progress < 0.95) {
-      const p = (progress - 0.85) / 0.1;
-      const idx = Math.max(0, Math.min(NARRATIVE_TEXTS_5.length - 1, Math.floor(p * NARRATIVE_TEXTS_5.length)));
-      currentText = NARRATIVE_TEXTS_5[idx];
+    let subP = 0;
+
+    const calculateNarrativeState = (
+      startP: number,
+      endP: number,
+      texts: string[]
+    ) => {
+      if (progress >= startP && progress <= endP) {
+        const totalDuration = endP - startP;
+        const lineDuration = totalDuration / texts.length;
+        const relativeP = progress - startP;
+        const idx = Math.max(0, Math.min(texts.length - 1, Math.floor(relativeP / lineDuration)));
+        currentText = texts[idx];
+        const lineStartP = startP + idx * lineDuration;
+        subP = Math.max(0, Math.min(1, (progress - lineStartP) / lineDuration));
+        return true;
+      }
+      return false;
+    };
+
+    // Check each narrative void section
+    const active =
+      calculateNarrativeState(0.15, 0.29, NARRATIVE_TEXTS_1) ||
+      calculateNarrativeState(0.37, 0.51, NARRATIVE_TEXTS_2) ||
+      calculateNarrativeState(0.59, 0.73, NARRATIVE_TEXTS_3) ||
+      calculateNarrativeState(0.81, 0.93, NARRATIVE_TEXTS_4) ||
+      calculateNarrativeState(0.93, 0.99, NARRATIVE_TEXTS_5);
+
+    if (!active) {
+      currentText = "";
+      subP = 0;
     }
 
-    if (currentText !== activeNarrativeText) {
-      setTimeout(() => setActiveNarrativeText(currentText), 0);
-    }
-  }, [progress, activeNarrativeText]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setActiveNarrativeText(currentText);
+
+    setNarrativeSubP(subP);
+  }, [progress]);
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full z-10 pointer-events-none flex flex-col">
+    <div id="ui-layout-layer" className="fixed top-0 left-0 w-full h-full z-10 pointer-events-none flex flex-col">
       
       {/* Dynamic Content Container */}
       <div ref={containerRef} className="flex-1 w-full h-full flex items-center justify-center p-8 md:p-16">
@@ -251,20 +268,22 @@ export const UIOverlay = () => {
           <div className="w-full flex justify-center items-center pointer-events-auto h-full">
             <div className="relative inline-flex items-center justify-center p-12">
               <TrueFocus 
-                text="VANSHJEET" 
-                splitBy="letter" 
-                animationSpeed={0.8}
-                className="text-5xl md:text-8xl font-light tracking-[0.25em] text-white z-0"
+                customItems={['SOME', 'WHERE']} 
+                splitBy="word" 
+                noGap={true}
+                animationSpeed={1.8}
+                blurAmount={10}
+                className="text-5xl md:text-8xl font-jost tracking-[0.25em] text-white z-0"
               />
               <div 
                 className="absolute inset-0 rounded-2xl pointer-events-none z-10 shadow-2xl"
                 style={{
                   background: 'rgba(255, 255, 255, 0.01)',
-                  backdropFilter: 'blur(4px)',
-                  WebkitBackdropFilter: 'blur(4px)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(3px)',
+                  WebkitBackdropFilter: 'blur(1px)',
+                  border: '1px solid rgba(255, 255, 255, 0.01)',
                   boxShadow: 'inset 0 0 30px rgba(255,255,255,0.02)',
-                  transform: 'scale(1.15)'
+                  transform: 'scale(1.2)'
                 }}
               >
                 <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
@@ -273,195 +292,261 @@ export const UIOverlay = () => {
           </div>
         )}
 
+        
         {/* SCENE 1: CAREER COMPASS */}
         {displayedScene === 1 && (
           <div className="w-full h-full flex justify-end items-end relative pointer-events-auto pb-12 pr-12">
             <button
               ref={triggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); setIsCompassOpen(true); }}
-              className="absolute left-16 top-1/2 -translate-y-1/2 group flex items-center gap-6 cursor-none"
+              onClick={() => { SoundEngine.playClick(); setIsCompassOpen(true); setModalOpen(true); }}
+              className="absolute left-36 top-1/4 -translate-y-1/2 group flex items-center gap-6 cursor-none"
             >
               <div className="relative w-12 h-12 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity duration-500">
                 <div className="absolute w-full h-[1px] bg-white/40 group-hover:scale-x-150 transition-transform duration-500" />
                 <div className="absolute w-[1px] h-full bg-white/40 group-hover:scale-y-150 transition-transform duration-500" />
-                <div className="w-2 h-2 bg-[#00f0ff] rounded-full shadow-[0_0_15px_#00f0ff] group-hover:scale-150 transition-transform duration-500" />
+                <div className="w-2 h-2 bg-[#e8c1a9] rounded-full shadow-[0_0_15px_#00f0ff] group-hover:scale-150 transition-transform duration-500" />
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-mono mb-1">Target Acquired</span>
-                <span className="text-xs tracking-[0.2em] uppercase text-white group-hover:text-[#00f0ff] transition-colors duration-500">
-                  Access Data
+                <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-lexend mb-1">ABOUT PROJECT</span>
+                <span className="text-xs tracking-[0.2em] uppercase text-white group-hover:text-[#e8c1a9] transition-colors duration-500">
+                  CAREER COMPASS
                 </span>
               </div>
             </button>
-
-            <div ref={modalRef} style={{ display: 'none' }} className="w-full max-w-2xl bg-black/40 backdrop-blur-xl border-t border-white/20 p-12">
-              <div className="flex justify-between items-start mb-16">
-                <div>
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#00f0ff] font-mono">Project 01</span>
-                  <h2 className="text-4xl md:text-6xl font-light mt-4 text-white tracking-tight">Career Compass</h2>
-                </div>
-                <button 
-                  onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => { SoundEngine.playClick(); setIsCompassOpen(false); }}
-                  className="w-10 h-10 flex items-center justify-center border border-white/20 hover:border-[#00f0ff] rounded-none transition-colors cursor-none group relative overflow-hidden"
-                >
-                  <div className="w-full h-full bg-[#00f0ff]/10 absolute bottom-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                  <div className="w-4 h-[1px] bg-white rotate-45 absolute" />
-                  <div className="w-4 h-[1px] bg-white -rotate-45 absolute" />
-                </button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-white/10 pt-8">
-                <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-mono mb-4">Classification</h3>
-                  <p className="text-sm text-white font-light tracking-wide">Decision Support System</p>
-                </div>
-                <div>
-                  <h3 className="text-xs tracking-[0.2em] text-white/50 uppercase font-mono mb-4">Synopsis</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed font-light">
-                    Conventional guidance relies on static questionnaires. Career Compass normalizes cognitive traits to establish true direction. A deeply integrated neural matrix mapping the psyche.
-                  </p>
-                  <button 
-                    onMouseEnter={() => SoundEngine.playHover()}
-                    onClick={() => SoundEngine.playClick()}
-                    className="mt-8 px-6 py-3 text-[10px] tracking-[0.3em] uppercase text-[#00f0ff] border border-[#00f0ff]/30 hover:bg-[#00f0ff]/10 transition-colors duration-300 cursor-none"
-                  >
-                    Initialize Matrix
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ProjectModalV2 
+              isOpen={isCompassOpen}
+              onClose={() => { setIsCompassOpen(false); setModalOpen(false); }}
+              title="Career Compass"
+              tagline="An AI Powered Career Counsellor"
+              meta={{
+                role: "Tech. Prod. Manager and Lead Developer",
+                timeline: "July 2025 to Dec 2025",
+                context: "Full-time project for Skitre.ai",
+                about: "Built for Skitre.AI, Career Compass is an application designed to guide users towards their ideal career paths. It features a comprehensive, 6-layer assessment that evaluates multiple intelligences, personality traits, aptitudes, background, interests, and self-reflection. The app utilizes real-time market data and an integrated AI Career Counselor to provide highly personalized career recommendations."
+              }}
+              sections={{
+                foundation: {
+                  title: "Tech Stack & Tooling",
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <span>Frontend: React 18, Vite, Tailwind CSS (Glassmorphism), Lucide React</span>
+                      <span>Backend: Nodejs (v22.22), Supabase (PostgreSQL, Auth, RLS)</span>
+                      <span>AI/ML: Groq AI</span>
+                    </div>
+                  )
+                },
+                design: {
+                  title: "UI/UX Design Process",
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <span>Light Mode (Background: #f8fafc; Text: #1c1c1c) with Glassmorphism accents.</span>
+                      <span>Outfit for headings and Figtree for body text.</span>
+                      <span>Fully responsive layout with mobile-friendly assessment cards.</span>
+                    </div>
+                  )
+                },
+                engineering: {
+                  title: "Technical Architecture",
+                  content: "The Vite/React frontend serves as a single-page application (SPA) interfacing securely with a PostgreSQL backend. Authentication and Row-Level Security (RLS) are implemented to protect user data."
+                },
+                deepDive: {
+                  title: "Implementation Deep-Dive",
+                  content: "Normalizes candidate traits across a multi-stage cognitive schema. Designed the assessment schema, implemented Supabase SQL matching functions, built the React client, and integrated GPT-driven reasoning evaluation."
+                },
+                showcase: {
+                  primaryImage: {
+                    src: "/assets/images/careercompass.png",
+                    alt: "Career Compass Primary Showcase",
+                  },
+                  gallery: [
+                    {
+                      src: "/assets/images/careercompass.png",
+                      alt: "Dashboard Overview",
+                      caption: "Dashboard Overview"
+                    },
+                    {
+                      src: "/assets/images/career-compass-results.png",
+                      alt: "Assessment Flow and Personalized Results",
+                      caption: "Personalized Results"
+                    }
+                  ]
+                }
+              }}
+            />
           </div>
         )}
         
-        {/* SCENE 2: NARRATIVE VOID */}
+{/* SCENE 2: NARRATIVE VOID */}
         {displayedScene === 2 && <div className="w-full h-full" />}
 
+        
         {/* SCENE 3: SKILLOMETER */}
         {displayedScene === 3 && (
           <div className="w-full h-full flex justify-center items-end relative pointer-events-auto pb-12">
             <button
               ref={skillometerTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); setIsSkillometerOpen(true); }}
+              onClick={() => { SoundEngine.playClick(); setIsSkillometerOpen(true); setModalOpen(true); }}
               className="absolute right-16 top-16 group flex flex-col items-center gap-4 cursor-none"
             >
               <div className="w-[1px] h-16 bg-gradient-to-b from-transparent to-white/50 group-hover:h-24 transition-all duration-500" />
-              <div className="w-8 h-8 rounded-full border border-[#f59e0b]/50 flex items-center justify-center group-hover:border-[#f59e0b] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
-                <div className="w-1.5 h-1.5 bg-[#f59e0b] rounded-full group-hover:scale-150 transition-transform duration-300" />
+              <div className="w-8 h-8 rounded-full border border-[#f8f7da]/50 flex items-center justify-center group-hover:border-[#f8f7da] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
+                <div className="w-1.5 h-1.5 bg-[#f8f7da] rounded-full group-hover:scale-150 transition-transform duration-300" />
               </div>
-              <span className="text-[9px] tracking-[0.4em] uppercase text-white/50 font-mono mt-2 group-hover:text-[#f59e0b] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
-                Initiate Scan
+              <span className="text-[12px] tracking-[0.4em] uppercase text-white/50 font-lato mt-2 group-hover:text-[#f8f7da] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
+                SKILLOMETER
               </span>
             </button>
-
-            <div ref={skillometerModalRef} style={{ display: 'none' }} className="w-full max-w-5xl bg-[#111111]/80 backdrop-blur-2xl border border-white/10 rounded-2xl p-10 overflow-hidden relative shadow-2xl">
-              <div className="absolute -top-10 -left-10 text-[180px] font-bold text-white/5 pointer-events-none select-none tracking-tighter">02</div>
-              <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-12">
-                <div className="flex-1">
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#f59e0b] font-mono">Project 02</span>
-                  <h2 className="text-4xl md:text-5xl font-light mt-4 text-white tracking-tight">Skillometer</h2>
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mono mt-2">The Living System</h3>
-                  <div className="mt-12 w-12 h-[1px] bg-[#f59e0b]/50" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-300 leading-relaxed font-light mt-2">
-                    An architectural graph modeling candidate signals, capability matrices, and alignment scores dynamically. True alignment emerges not from scores, but from relationships within the ecosystem.
-                  </p>
-                  <div className="mt-10 flex items-center gap-6">
-                    <button 
-                      onMouseEnter={() => SoundEngine.playHover()}
-                      onClick={() => SoundEngine.playClick()}
-                      className="px-8 py-3 text-[10px] tracking-[0.3em] uppercase text-[#f59e0b] border border-[#f59e0b]/30 hover:bg-[#f59e0b]/10 transition-colors duration-300 cursor-none"
-                    >
-                      View Architecture
-                    </button>
-                  </div>
-                </div>
-                <button 
-                  onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => { SoundEngine.playClick(); setIsSkillometerOpen(false); }}
-                  className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/5 transition-colors cursor-none group ml-auto"
-                >
-                  <div className="w-4 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
-                  <div className="w-4 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
-                </button>
-              </div>
-            </div>
+            <ProjectModalV2 
+              isOpen={isSkillometerOpen}
+              onClose={() => { setIsSkillometerOpen(false); setModalOpen(false); }}
+              title="Skillometer"
+              tagline="soft-Skill assessment test"
+              meta={{
+                role: "Lead Product Engineer, Creative Technologist",
+                timeline: "2024",
+                context: "Freelance / Concept",
+                about: "An architectural graph modeling candidate signals, capability matrices, and alignment scores dynamically. True alignment emerges not from scores, but from relationships within the ecosystem."
+              }}
+              sections={{
+                foundation: {
+                  title: "Tech Stack & Tooling",
+                  content: "React, TypeScript, Three.js, R3F, GSAP, Supabase, PostgreSQL"
+                },
+                design: {
+                  title: "Design System",
+                  content: "Organic structures and graph-based visualization avoiding rigid dashboards."
+                },
+                engineering: {
+                  title: "Technical Architecture",
+                  content: "Dynamic Relation Schema constructing real-time relationship graphs between traits and capability signals."
+                },
+                deepDive: {
+                  title: "Implementation Deep-Dive",
+                  content: "Graph Matching Vectors: Evaluates role alignment using cosine similarity vector operations over normalized capabilities."
+                },
+                showcase: {
+                  primaryImage: {
+                    src: "/assets/images/skillometer..png",
+                    alt: "Skillometer Interface",
+                  },
+                  gallery: [
+                    {
+                      src: "/assets/images/skillometer..png",
+                      alt: "Skillometer Interface",
+                      caption: "Capability Matrix"
+                    },
+                    {
+                      src: "/assets/images/skillometer.skitre.ai daf09edb8776.png",
+                      alt: "Skillometer Results",
+                      caption: "Assessment Analytics"
+                    }
+                  ]
+                }
+              }}
+            />
           </div>
         )}
-
-        {/* SCENE 4: NARRATIVE VOID 2 */}
+        
+{/* SCENE 4: NARRATIVE VOID 2 */}
         {displayedScene === 4 && <div className="w-full h-full" />}
 
-        {/* SCENE 5: ETHEREAL NETWORK (Exiles + Leaderboard) */}
-        {/* We keep this mounted when displayedScene is 5 */}
-        <EtherealNetwork isActive={displayedScene === 5} />
+        {/* SCENE 7: ETHEREAL NETWORK (Exiles + Leaderboard) */}
+        {/* We keep this mounted when displayedScene is 7 */}
+        <EtherealNetwork isActive={displayedScene === 7} />
 
         {/* SCENE 6: NARRATIVE VOID 3 */}
         {displayedScene === 6 && <div className="w-full h-full" />}
 
-        {/* SCENE 7: STANCE */}
-        {displayedScene === 7 && (
+        
+        {/* SCENE 5: STANCE */}
+        {displayedScene === 5 && (
           <div className="w-full h-full flex justify-center items-end relative pointer-events-auto pb-12">
             
-            {/* Minimalist Floating Crosshair Trigger */}
+    
+
+            <ProjectModalV2 
+              isOpen={isStanceOpen}
+              onClose={() => { setIsStanceOpen(false); setModalOpen(false); }}
+              title="Stance"
+              tagline="STANCE HEALTH"
+              meta={{
+                role: "Lead Product Engineer, Creative Technologist, Three.js Engineer",
+                timeline: "2024",
+                context: "Freelance",
+                about: "Website pages for a health and movement brand, designed to make service discovery feel calm, trustworthy, and immediate. An abstract, soft, physically grounded digital sanctuary focusing on movement and recovery without healthcare tropes."
+              }}
+              sections={{
+                foundation: {
+                  title: "Tech Stack & Tooling",
+                  content: "React, TypeScript, Three.js, R3F, GSAP, Framer Motion, TailwindCSS"
+                },
+                design: {
+                  title: "Design Priorities",
+                  content: "The Stance section gives the original model space to breathe: slower scroll resistance near the reveal, a muted care palette, and an after-scene narrative that lets the SEO context arrive later."
+                },
+                engineering: {
+                  title: "Technical Architecture",
+                  content: "Translucent Material Optimization: Custom physical materials balancing rendering cost with the high aesthetic requirement of frosted, breathable glass forms."
+                },
+                deepDive: {
+                  title: "Implementation Deep-Dive",
+                  content: "GSAP Scroll Pipeline: Highly optimized scroll-driven animation timeline managing Three.js canvas state and DOM elements concurrently without layout thrashing."
+                },
+                showcase: {
+                  primaryImage: {
+                    src: "/assets/images/stance-back.png",
+                    alt: "Stance Health Overview",
+                  },
+                  gallery: [
+                    {
+                      src: "/assets/images/stance-back.png",
+                      alt: "Stance Health",
+                      caption: "Organic Structure"
+                    },
+                    {
+                      src: "/assets/images/stance-womens.png",
+                      alt: "Stance Details",
+                      caption: "Abstract Sanctuary"
+                    }
+                  ]
+                }
+              }}
+            />
+          </div>
+        )}
+        
+{/* SCENE 6: NARRATIVE VOID 3 */}
+        {displayedScene === 6 && <div className="w-full h-full" />}
+
+        {/* SCENE 5: STANCE */}
+        {displayedScene === 5 && (
+          <div className="w-full h-full flex justify-center items-end relative overflow-hidden pointer-events-auto pb-12">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(200,166,138,0.13),transparent_28%),radial-gradient(circle_at_62%_56%,rgba(127,143,130,0.08),transparent_24%)]" />
+            <div className="absolute left-12 top-14 hidden max-w-[18rem] md:block">
+            </div>
+            
+            {/* Anatomical locator trigger */}
             <button
               ref={stanceTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); setIsStanceOpen(true); }}
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 group cursor-none w-24 h-24 flex items-center justify-center"
+              onClick={() => { SoundEngine.playClick(); { setIsStanceOpen(true); setModalOpen(true); }; }}
+              className="absolute left-8/10 top-1/7 -translate-x-1/2 -translate-y-1/2 group cursor-none w-36 h-36 flex items-left justify-left rounded-full"
             >
-              <div className="absolute w-[1px] h-12 bg-white/30 group-hover:h-24 transition-all duration-500" />
-              <div className="absolute w-12 h-[1px] bg-white/30 group-hover:w-24 transition-all duration-500" />
-              <div className="absolute w-6 h-6 border border-white/50 rotate-45 group-hover:rotate-90 group-hover:scale-150 transition-all duration-700" />
-              <div className="absolute top-full mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-center">
-                <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-white/80">Analyze</span>
-                <span className="text-[9px] uppercase tracking-[0.4em] font-mono text-white/50">Structure</span>
+              <div className="absolute inset-0 rounded-full border border-[#ffe897]/25 bg-black/10 backdrop-blur-[2px] group-hover:border-[#ffe897]/70 group-hover:shadow-[0_0_35px_rgba(200,166,138,0.18)] transition-all duration-700" />
+              <div className="absolute w-[1px] h-20 bg-gradient-to-b from-transparent via-[#f4dfc6]/70 to-transparent group-hover:h-32 transition-all duration-500" />
+              <div className="absolute w-20 h-[1px] bg-gradient-to-r from-transparent via-[#f4dfc6]/70 to-transparent group-hover:w-32 transition-all duration-500" />
+              <div className="absolute w-10 h-10 rounded-full border border-[#ffe897]/50 group-hover:scale-125 group-hover:border-[#ffe897] transition-all duration-700" />
+              <div className="absolute w-2.5 h-2.5 rounded-full bg-[#f8f7da] shadow-[0_0_18px_rgba(143,81,98,0.65)] group-hover:scale-150 transition-transform duration-500" />
+              <div className="absolute top-full mt-5 flex flex-col items-center opacity-80 transition-opacity duration-500 group-hover:opacity-100">
+                <span className="text-[7px] uppercase tracking-[0.4em] font-mono text-[#f4dfc6]">ABOUT PROJECT</span>
+                <span className="mt-1 text-[15px] uppercase tracking-[0.4em] font-mulish text-white/50">STANCE</span>
               </div>
             </button>
 
-            {/* Monolithic Data Slate Modal (Similar to Skillometer but matching the Monolith design) */}
-            <div ref={stanceModalRef} style={{ display: 'none' }} className="absolute top-12 left-12 right-12 md:left-24 md:right-24 max-w-6xl mx-auto bg-[#050505]/90 backdrop-blur-3xl border border-white/10 rounded-none p-12 overflow-hidden shadow-[0_30px_100px_rgba(225,29,72,0.1)]">
-              {/* Massive background typography matching the monolith vibe */}
-              <div className="absolute -top-12 -left-4 text-[240px] font-bold text-[#e11d48]/5 pointer-events-none select-none tracking-tighter">05</div>
-              
-              <div className="relative z-10 flex flex-col md:flex-row justify-between items-start gap-16">
-                <div className="flex-1">
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-[#e11d48] font-mono">Project 05 // Structural Engine</span>
-                  <h2 className="text-5xl md:text-7xl font-light mt-6 text-white tracking-tight uppercase">Stance</h2>
-                  <div className="mt-12 w-24 h-[2px] bg-gradient-to-r from-[#e11d48] to-transparent" />
-                </div>
-                
-                <div className="flex-1 pt-4">
-                  <h3 className="text-xs tracking-[0.2em] text-white/40 uppercase font-mono mb-4">Integrity Matrix</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed font-light mb-8">
-                    Stance was built to ensure perfect alignment in highly rigid, structured data pipelines. It operates like a glass monolith: completely transparent, incredibly dense, and unbreakable under immense load.
-                  </p>
-                  
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mono block mb-2">Protocol</span>
-                      <span className="text-xs text-white/80 font-light">GraphQL Over WS</span>
-                    </div>
-                    <div className="border border-white/5 p-4 hover:border-white/20 transition-colors duration-300">
-                      <span className="text-[9px] uppercase tracking-[0.3em] text-[#e11d48] font-mono block mb-2">Resilience</span>
-                      <span className="text-xs text-white/80 font-light">99.999% Uptime</span>
-                    </div>
-                  </div>
-                </div>
-
-                <button 
-                  onMouseEnter={() => SoundEngine.playHover()}
-                  onClick={() => { SoundEngine.playClick(); setIsStanceOpen(false); }}
-                  className="w-12 h-12 flex items-center justify-center border border-white/20 hover:bg-[#e11d48]/10 hover:border-[#e11d48] transition-all cursor-none group ml-auto"
-                >
-                  <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
-                  <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
-                </button>
-              </div>
-            </div>
-          </div>
+            {/* Warm clinical project slate */}
+                      </div>
         )}
 
         {/* SCENE 8: NARRATIVE VOID 4 */}
@@ -474,89 +559,43 @@ export const UIOverlay = () => {
             <button
               ref={terminalTriggerRef}
               onMouseEnter={() => SoundEngine.playHover()}
-              onClick={() => { SoundEngine.playClick(); setIsTerminalOpen(true); }}
+              onClick={() => { SoundEngine.playClick(); setIsTerminalOpen(true); setModalOpen(true); }}
               className="group cursor-none flex flex-col items-center justify-center relative z-20"
             >
-              <div className="relative w-32 h-32 rounded-full border border-white/20 flex items-center justify-center overflow-hidden group-hover:border-[#00f0ff]/50 transition-colors duration-700">
-                <div className="absolute inset-0 bg-[#00f0ff]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <div className="w-2 h-2 bg-white rounded-full group-hover:scale-[20] transition-transform duration-700 ease-in-out group-hover:bg-[#00f0ff]/20" />
-                <span className="absolute text-[8px] uppercase tracking-[0.4em] font-mono text-white/50 group-hover:text-white transition-colors duration-300">
+              <div className="relative w-32 h-32 rounded-full border border-white/20 flex items-center justify-center overflow-hidden group-hover:border-[#d4af37]/50 transition-colors duration-700">
+                <div className="absolute inset-0 bg-[#d4af37]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="w-2 h-2 bg-white rounded-full group-hover:scale-[20] transition-transform duration-700 ease-in-out group-hover:bg-[#d4af37]/20" />
+                <span className="absolute text-[8px] uppercase tracking-[0.4em] font-mulish text-white/50 group-hover:text-white transition-colors duration-300">
                   Connect
                 </span>
               </div>
             </button>
 
-            <div 
-              ref={terminalModalRef} 
-              style={{ display: 'none' }} 
-              className="absolute inset-0 z-30 flex-col items-center justify-center bg-[#050505]/95 backdrop-blur-3xl border border-white/5 p-12"
-            >
-              <button 
-                onMouseEnter={() => SoundEngine.playHover()}
-                onClick={() => { SoundEngine.playClick(); setIsTerminalOpen(false); }}
-                className="absolute top-12 right-12 w-12 h-12 flex items-center justify-center hover:bg-white/5 transition-colors cursor-none group"
-              >
-                <div className="w-5 h-[1px] bg-white rotate-45 absolute group-hover:rotate-135 transition-transform duration-500" />
-                <div className="w-5 h-[1px] bg-white -rotate-45 absolute group-hover:-rotate-135 transition-transform duration-500" />
-              </button>
-
-              <div className="text-center mb-16">
-                <h2 className="text-6xl md:text-8xl font-light text-white tracking-tighter uppercase mb-4">
-                  End of Transmission
-                </h2>
-                <div className="w-24 h-[1px] bg-[#00f0ff]/50 mx-auto" />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
-                {[
-                  { name: 'GitHub', label: 'git://vanshjeet', color: '#ffffff' },
-                  { name: 'LinkedIn', label: 'net://vanshjeet', color: '#0a66c2' },
-                  { name: 'Email', label: 'mailto://connect', color: '#00f0ff' }
-                ].map((link, i) => (
-                  <a 
-                    key={i}
-                    href="#"
-                    onMouseEnter={() => SoundEngine.playHover()}
-                    onClick={(e) => { e.preventDefault(); SoundEngine.playClick(); }}
-                    className="group relative border border-white/10 p-8 hover:border-white/30 transition-all duration-500 cursor-none overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
-                    <span className="relative z-10 text-[10px] uppercase tracking-[0.4em] text-white/50 font-mono block mb-4">
-                      {link.name}
-                    </span>
-                    <span 
-                      className="relative z-10 text-sm md:text-base font-light tracking-widest transition-colors duration-300"
-                      style={{ color: link.color }}
-                    >
-                      {link.label}
-                    </span>
-                  </a>
-                ))}
-              </div>
-            </div>
+            <ConnectModal isOpen={isTerminalOpen} onClose={() => { setIsTerminalOpen(false); setModalOpen(false); }} />
           </div>
         )}
 
       </div>
 
-      {/* Global Narrative Overlay (Fades in editor text based on scroll) */}
+      {/* Global Narrative Overlay (Flat single-line layout with scroll-driven letter fade out) */}
       <div 
         ref={narrativeRef}
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none text-center w-full max-w-4xl px-8 z-10"
+        className="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none text-center w-full max-w-5xl px-4 z-10 overflow-visible flex justify-center items-center"
       >
-        <h2 
-          className="text-4xl md:text-6xl font-light text-white tracking-tight"
-          style={{
-            opacity: activeNarrativeText ? 1 : 0,
-            transform: `scale(${activeNarrativeText ? 1 : 0.95}) translateY(${activeNarrativeText ? '0px' : '20px'})`,
-            filter: `blur(${activeNarrativeText ? '0px' : '10px'})`,
-            transition: 'opacity 0.8s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1s ease'
-          }}
-        >
-          {activeNarrativeText}
-        </h2>
+        <FlatNarrativeText text={activeNarrativeText} subP={narrativeSubP} />
       </div>
       
+
+      <SceneProgress
+        activeScene={activeScene}
+        progress={progress}
+        isHidden={isCompassOpen || isSkillometerOpen || isStanceOpen || isTerminalOpen}
+        onJump={(index) => {
+          SoundEngine.playClick();
+          jumpToScene(index);
+        }}
+      />
+
       {/* Global Scroll Indicator */}
       <div 
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-opacity duration-500 z-10"
@@ -565,6 +604,106 @@ export const UIOverlay = () => {
         <span className="text-[9px] uppercase tracking-[0.4em] mb-4 font-mono text-white">Scroll</span>
         <div className="w-[1px] h-16 bg-gradient-to-b from-white to-transparent"></div>
       </div>
+    </div>
+  );
+};
+
+interface SceneProgressProps {
+  activeScene: number;
+  progress: number;
+  isHidden: boolean;
+  onJump: (index: number) => void;
+}
+
+const SceneProgress = ({ activeScene, progress, isHidden, onJump }: SceneProgressProps) => (
+  <nav
+    aria-label="Scene progress"
+    className="absolute left-6 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-3 pointer-events-auto md:flex"
+    style={{ opacity: isHidden ? 0 : 1, transition: 'opacity 0.5s ease' }}
+  >
+    <div className="mb-2 text-[9px] uppercase tracking-[0.35em] text-white/35 font-mono">
+      {Math.round(progress * 100).toString().padStart(2, '0')}%
+    </div>
+    {SCENE_LABELS.map((label, index) => {
+      const isActive = activeScene === index;
+      return (
+        <button
+          key={label}
+          type="button"
+          aria-label={`Jump to ${label}`}
+          aria-current={isActive ? 'step' : undefined}
+          onMouseEnter={() => SoundEngine.playHover()}
+          onClick={() => onJump(index)}
+          className="group flex items-center gap-3 cursor-none text-left"
+        >
+          <span
+            className={`block h-[1px] transition-all duration-300 ${
+              isActive ? 'w-10 bg-[#f8f7da] shadow-[0_0_10px_#f8f7da]' : 'w-4 bg-white/25 group-hover:w-8 group-hover:bg-white/60'
+            }`}
+          />
+          <span className={`text-[9px] uppercase tracking-[0.28em] font-lato transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/30 group-hover:text-white/70'}`}>
+            {label}
+          </span>
+        </button>
+      );
+    })}
+  </nav>
+);
+
+const FlatNarrativeText = ({ text, subP }: { text: string; subP: number }) => {
+  if (!text) return null;
+
+  // Entrance phase: subP 0.0 -> 0.18
+  let overallEntranceOpacity = 1;
+  if (subP < 0.18) {
+    overallEntranceOpacity = Math.max(0, subP / 0.18);
+  }
+
+  const chars = Array.from(text);
+  const totalChars = chars.length;
+
+  return (
+    <div className="w-full text-center whitespace-nowrap overflow-visible pointer-events-none select-none flex justify-center items-center">
+      <h2 
+        className="text-base sm:text-xl md:text-2xl lg:text-3xl font-light text-white tracking-wider uppercase font-jost whitespace-nowrap inline-flex max-w-[95vw] overflow-visible"
+        style={{
+          opacity: overallEntranceOpacity,
+          transform: `translateY(${(1 - overallEntranceOpacity) * 12}px)`,
+          filter: `blur(${(1 - overallEntranceOpacity) * 5}px)`,
+        }}
+      >
+        {chars.map((char, i) => {
+          // Sequential letter exit threshold: subP from 0.50 to 0.95
+          const exitStart = 0.50 + (i / Math.max(1, totalChars)) * 0.35;
+          const exitEnd = Math.min(0.98, exitStart + 0.15);
+
+          let charOpacity = 1;
+          let charBlur = 0;
+          let charY = 0;
+
+          if (subP > exitStart) {
+            const exitP = Math.min(1, (subP - exitStart) / (exitEnd - exitStart));
+            charOpacity = 1 - exitP;
+            charBlur = exitP * 8;
+            charY = -exitP * 12;
+          }
+
+          return (
+            <span
+              key={i}
+              className="inline-block transition-all duration-75"
+              style={{
+                opacity: charOpacity,
+                filter: `blur(${charBlur}px)`,
+                transform: `translateY(${charY}px)`,
+                whiteSpace: char === ' ' ? 'pre' : 'normal',
+              }}
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </span>
+          );
+        })}
+      </h2>
     </div>
   );
 };

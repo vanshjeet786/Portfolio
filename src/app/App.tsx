@@ -5,7 +5,7 @@ import { CustomCursor } from '@/components/v2/ui/CustomCursor';
 
 export function App() {
   return (
-    <div className="w-full h-screen bg-black overflow-hidden relative" style={{ cursor: 'none' }}>
+    <div id="app-root" className="w-full h-screen bg-black overflow-hidden relative" style={{ cursor: 'none' }}>
       <CustomCursor />
       <ScrollManager />
       <CanvasContainer />
