@@ -58,34 +58,34 @@ export const LayoutDynamicGrid: React.FC<{ onSwitchLayout?: () => void }> = () =
             onClick={() => handleBlockClick('about')}
             className={`
               relative overflow-hidden cursor-pointer group transition-all duration-700 ease-[cubic-bezier(0.87,0,0.13,1)] bg-[#141414]
-              ${activeBlock === 'about' ? 'flex-[4]' : 'flex-[1] hover:bg-[#1a1a1a]'}
+              ${activeBlock === 'about' ? 'flex-[5]' : 'flex-[1] hover:bg-[#1a1a1a]'}
             `}
           >
-            <div className={`absolute inset-0 flex flex-col ${activeBlock === 'about' ? 'p-8 md:p-12 overflow-y-auto custom-scrollbar' : 'p-8 md:p-12 justify-end'}`}>
+            <div className={`absolute inset-0 flex flex-col ${activeBlock === 'about' ? 'p-8 md:p-14 overflow-y-auto custom-scrollbar' : 'p-8 md:p-12 justify-end'}`}>
               {!activeBlock.includes('about') && (
                 <h2 className="text-2xl md:text-3xl font-jost uppercase text-white/40 group-hover:text-white/80 transition-colors">Story</h2>
               )}
 
               {activeBlock === 'about' && (
-                <div className="animate-fade-in-up h-full flex flex-col justify-center w-full max-w-5xl mx-auto py-4">
+                <div className="animate-fade-in-up flex flex-col justify-center w-full py-4">
                   <div className="flex items-center gap-3 mb-6">
-                    <span className="text-xs uppercase tracking-[0.3em] font-mono text-[#c8a68a]">Story & Philosophy</span>
+                    <span className="text-xs uppercase tracking-[0.3em] font-mono text-[#c8a68a]">Story &amp; Philosophy</span>
                     <div className="h-[1px] flex-1 bg-gradient-to-r from-white/20 to-transparent" />
                   </div>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-light font-jost text-white mb-8 uppercase leading-tight tracking-wide">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-light font-jost text-white mb-8 uppercase leading-tight tracking-tight">
                     {CONNECT_DATA.about.headline}
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 mb-10">
+                  <div className="flex flex-col gap-5 mb-10 max-w-8xl">
                     {CONNECT_DATA.about.paragraphs.map((p, i) => (
-                      <p key={i} className="text-base md:text-lg text-white/80 font-light font-jost leading-relaxed tracking-wide">
+                      <p key={i} className="text-base md:text-lg text-white/75 font-light font-jost leading-relaxed">
                         {p}
                       </p>
                     ))}
                   </div>
-                  <div className="flex flex-wrap gap-4 pt-6 border-t border-white/10">
+                  <div className="flex flex-wrap gap-3 pt-6 border-t border-white/10">
                     {CONNECT_DATA.about.tags.map((t, i) => (
-                      <div key={i} className="flex items-center gap-2.5 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-white/70 uppercase tracking-widest">
-                        <t.icon className="w-3.5 h-3.5 text-[#c8a68a]" />
+                      <div key={i} className="flex items-center gap-2.5 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-white/60 uppercase tracking-widest">
+                        <t.icon className="w-3.5 h-3.5 text-[#c8a68a] flex-shrink-0" />
                         <span>{t.label}</span>
                       </div>
                     ))}
