@@ -76,25 +76,25 @@ export const GlassCardEventStream: React.FC<GlassCardEventStreamProps> = ({
     const lbAccent = 'rgba(168, 85, 247, 0.85)';
 
     const exilesBadges = [
-      'DELIVERY',
-      'ORDERED',
-      'PRESENCE',
-      'SOCKET',
-      'IDEMPOTENT',
-      'STREAM',
-      'SIGNAL',
-      'RECONNECT',
+      '👋 HEY!',
+      'WANNA PLAY?',
+      '🎮 GG',
+      'KONICHIWA',
+      '🚀 LFG',
+      '🔥 NICE!',
+      '👾 READY?',
+      '💬 ONLINE',
     ];
 
     const lbBadges = [
-      'INGEST',
-      'MUTATION',
-      'TOP 1%',
+      '🏆 WINNER',
       'RANK #1',
-      'EVENT',
-      'RECORD',
-      'STATE',
+      'TOP 1%',
       '+250 PTS',
+      '⚡ LEVEL UP',
+      '👑 BOSS',
+      '🔥 STREAK',
+      '🎯 HIGH SCORE',
     ];
 
     const badges = isExiles ? exilesBadges : lbBadges;

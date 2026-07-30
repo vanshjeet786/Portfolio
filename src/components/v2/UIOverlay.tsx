@@ -350,23 +350,19 @@ export const UIOverlay = () => {
                   title: "Technical Architecture",
                   content: "The Vite/React frontend serves as a single-page application (SPA) interfacing securely with a PostgreSQL backend. Authentication and Row-Level Security (RLS) are implemented to protect user data."
                 },
-                deepDive: {
-                  title: "Implementation Deep-Dive",
-                  content: "Normalizes candidate traits across a multi-stage cognitive schema. Designed the assessment schema, implemented Supabase SQL matching functions, built the React client, and integrated GPT-driven reasoning evaluation."
-                },
                 showcase: {
                   primaryImage: {
-                    src: "/assets/images/careercompass.png",
+                    src: "/src/assets/images/careercompass.webp",
                     alt: "Career Compass Primary Showcase",
                   },
                   gallery: [
                     {
-                      src: "/assets/images/careercompass.png",
+                      src: "/src/assets/images/careercompass.webp",
                       alt: "Dashboard Overview",
                       caption: "Dashboard Overview"
                     },
                     {
-                      src: "/assets/images/career-compass-results.png",
+                      src: "/src/assets/images/career-compass-results.webp",
                       alt: "Assessment Flow and Personalized Results",
                       caption: "Personalized Results"
                     }
@@ -402,43 +398,49 @@ export const UIOverlay = () => {
               isOpen={isSkillometerOpen}
               onClose={() => { setIsSkillometerOpen(false); setModalOpen(false); }}
               title="Skillometer"
-              tagline="soft-Skill assessment test"
+              tagline="A Soft Skills Assessment Platform"
               meta={{
-                role: "Lead Product Engineer, Creative Technologist",
+                role: "Lead Product Engineer and Creative Technologist",
                 timeline: "2024",
-                context: "Freelance / Concept",
-                about: "An architectural graph modeling candidate signals, capability matrices, and alignment scores dynamically. True alignment emerges not from scores, but from relationships within the ecosystem."
+                context: "Freelance Concept",
+                about: "I built Skillometer as a 4-layer soft skills assessment platform. The objective was to be highly accurate in identifying the thinking patterns of a person. It dynamically models candidate signals and alignment scores, avoiding traditional rigid dashboards in favor of organic, graph-based visualizations."
               }}
               sections={{
                 foundation: {
                   title: "Tech Stack & Tooling",
-                  content: "React, TypeScript, Three.js, R3F, GSAP, Supabase, PostgreSQL"
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <span>Frontend: React, TypeScript, Three.js, R3F, GSAP</span>
+                      <span>Backend: Supabase, PostgreSQL</span>
+                    </div>
+                  )
                 },
                 design: {
-                  title: "Design System",
-                  content: "Organic structures and graph-based visualization avoiding rigid dashboards."
+                  title: "UI/UX Design Process",
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <span>Designed an organic, node-based visual system avoiding standard grid dashboards.</span>
+                      <span>Emphasized fluid capability matrices and real-time graph visualization.</span>
+                    </div>
+                  )
                 },
                 engineering: {
                   title: "Technical Architecture",
-                  content: "Dynamic Relation Schema constructing real-time relationship graphs between traits and capability signals."
-                },
-                deepDive: {
-                  title: "Implementation Deep-Dive",
-                  content: "Graph Matching Vectors: Evaluates role alignment using cosine similarity vector operations over normalized capabilities."
+                  content: "The system utilizes a dynamic relational schema to construct real-time relationship graphs. I implemented graph matching vectors using cosine similarity to evaluate role alignment."
                 },
                 showcase: {
                   primaryImage: {
-                    src: "/assets/images/skillometer..png",
+                    src: "/src/assets/images/skillometer..webp",
                     alt: "Skillometer Interface",
                   },
                   gallery: [
                     {
-                      src: "/assets/images/skillometer..png",
+                      src: "/src/assets/images/skillometer..webp",
                       alt: "Skillometer Interface",
                       caption: "Capability Matrix"
                     },
                     {
-                      src: "/assets/images/skillometer.skitre.ai daf09edb8776.png",
+                      src: "/src/assets/images/skillometer.skitre.ai daf09edb8776.webp",
                       alt: "Skillometer Results",
                       caption: "Assessment Analytics"
                     }
@@ -470,43 +472,49 @@ export const UIOverlay = () => {
               isOpen={isStanceOpen}
               onClose={() => { setIsStanceOpen(false); setModalOpen(false); }}
               title="Stance"
-              tagline="STANCE HEALTH"
+              tagline="A Data-Driven Physiotherapy Platform"
               meta={{
-                role: "Lead Product Engineer, Creative Technologist, Three.js Engineer",
+                role: "Lead Product Engineer and Three.js Developer",
                 timeline: "2024",
-                context: "Freelance",
-                about: "Website pages for a health and movement brand, designed to make service discovery feel calm, trustworthy, and immediate. An abstract, soft, physically grounded digital sanctuary focusing on movement and recovery without healthcare tropes."
+                context: "Freelance Project",
+                about: "I designed and developed website pages for Stance Health. The priority was SEO and creating a calm, trustworthy digital sanctuary. I utilized abstract, soft, physically grounded 3D elements to focus on movement and recovery without relying on typical healthcare tropes."
               }}
               sections={{
                 foundation: {
                   title: "Tech Stack & Tooling",
-                  content: "React, TypeScript, Three.js, R3F, GSAP, Framer Motion, TailwindCSS"
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <span>Frontend: React, TypeScript, Tailwind CSS, Framer Motion</span>
+                      <span>3D Engine: Three.js, R3F, GSAP</span>
+                    </div>
+                  )
                 },
                 design: {
-                  title: "Design Priorities",
-                  content: "The Stance section gives the original model space to breathe: slower scroll resistance near the reveal, a muted care palette, and an after-scene narrative that lets the SEO context arrive later."
+                  title: "UI/UX Design Process",
+                  content: (
+                    <div className="flex flex-col gap-2">
+                      <span>Structured the layout to give the 3D models breathing room.</span>
+                      <span>Used a muted care palette and fine-tuned scroll resistance to reveal content gradually, ensuring the SEO context arrives naturally.</span>
+                    </div>
+                  )
                 },
                 engineering: {
                   title: "Technical Architecture",
-                  content: "Translucent Material Optimization: Custom physical materials balancing rendering cost with the high aesthetic requirement of frosted, breathable glass forms."
-                },
-                deepDive: {
-                  title: "Implementation Deep-Dive",
-                  content: "GSAP Scroll Pipeline: Highly optimized scroll-driven animation timeline managing Three.js canvas state and DOM elements concurrently without layout thrashing."
+                  content: "I developed a highly optimized GSAP scroll-driven pipeline to manage the Three.js canvas state alongside DOM elements without layout thrashing. Custom physical materials were created for the translucent glass forms."
                 },
                 showcase: {
                   primaryImage: {
-                    src: "/assets/images/stance-back.png",
+                    src: "/src/assets/images/stance-back.webp",
                     alt: "Stance Health Overview",
                   },
                   gallery: [
                     {
-                      src: "/assets/images/stance-back.png",
+                      src: "/src/assets/images/stance-back.webp",
                       alt: "Stance Health",
                       caption: "Organic Structure"
                     },
                     {
-                      src: "/assets/images/stance-womens.png",
+                      src: "/src/assets/images/stance-womens.webp",
                       alt: "Stance Details",
                       caption: "Abstract Sanctuary"
                     }
@@ -707,3 +715,5 @@ const FlatNarrativeText = ({ text, subP }: { text: string; subP: number }) => {
     </div>
   );
 };
+
+export default UIOverlay;
