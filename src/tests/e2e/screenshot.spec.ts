@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 test('take a screenshot', async ({ page }) => {
   await page.goto('/');
   await page.waitForTimeout(5000);
