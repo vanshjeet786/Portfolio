@@ -27,7 +27,8 @@ interface ProjectPaneProps {
   type: 'exiles' | 'leaderboard';
   isActive: boolean;
   onActivate: () => void;
-  
+  onCloseCard: () => void;
+  onOpenModal: () => void;
   isHovered: boolean;
   onHover: () => void;
   onLeave: () => void;
@@ -41,18 +42,18 @@ const PROJECT_PROOF = {
   exiles: {
     outcome: 'Realtime room presence, ordered delivery, and resilient reconnects for distributed chat surfaces.',
     role: 'Realtime architecture, idempotent message flow, delivery guarantees',
-    stack: ['WebSockets', 'Redis Pub/Sub', 'Node.js'],
+    stack: ['Supabase Realtime', 'PostgreSQL', 'React'],
     signal: 'Built for low-latency conversations without duplicate or out-of-order events.',
   },
   leaderboard: {
     outcome: 'High-throughput score ingestion with reconstructable ranking history.',
     role: 'Ranking engine design, event stream modeling, data contracts',
-    stack: ['PostgreSQL', 'GraphQL', 'Prisma'],
+    stack: ['Supabase Edge Functions', 'PostgreSQL', 'Three.js'],
     signal: 'Optimized for clear ranking state under concurrent score mutations.',
   },
 };
 
-const ProjectPane = ({ type, isActive, onActivate, isHovered, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
+const ProjectPane = ({ type, isActive, onActivate, onCloseCard, onOpenModal, isHovered, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
   const isExiles = type === 'exiles';
   const proof = PROJECT_PROOF[type];
   const paneRef = useRef<HTMLDivElement>(null);
@@ -118,6 +119,7 @@ const ProjectPane = ({ type, isActive, onActivate, isHovered, onHover, onLeave, 
         e.stopPropagation(); 
         if (!isActive && !hasActiveProject) { 
           SoundEngine.playClick(); 
+          SoundEngine.playTransition();
           onActivate(); 
         } 
       }}
@@ -149,7 +151,7 @@ const ProjectPane = ({ type, isActive, onActivate, isHovered, onHover, onLeave, 
             <div className={`flex justify-between items-start mb-8 w-full transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
               <div>
                 <span className="text-[10px] uppercase tracking-[0.5em] text-white/40 font-mono">
-                  Module {isExiles ? '03' : '04'} // {isExiles ? 'Realtime' : 'Ranking'}
+                  {isExiles ? 'Realtime Messaging' : 'Ranking Engine'}
                 </span>
                 <h2 className="text-4xl font-light mt-3 text-white/95 tracking-widest uppercase">
                   {isExiles ? 'Exiles' : 'Leaderboard'}
@@ -162,8 +164,7 @@ const ProjectPane = ({ type, isActive, onActivate, isHovered, onHover, onLeave, 
                   e.stopPropagation(); 
                   e.preventDefault();
                   SoundEngine.playClick(); 
-                  // onClose(); 
-                  useStore.getState().setModalOpen(false);
+                  onCloseCard(); 
                 }}
                 className="relative z-50 w-11 h-11 flex items-center justify-center border border-white/20 hover:border-white/50 hover:bg-white/10 rounded-full transition-all duration-300 cursor-pointer group/btn"
               >
@@ -224,6 +225,21 @@ const ProjectPane = ({ type, isActive, onActivate, isHovered, onHover, onLeave, 
                     : 'State is never mutated directly. Every change is an appended event.'}
                 </p>
               </div>
+
+              {/* View Full Modal Trigger Button */}
+              <button
+                type="button"
+                onMouseEnter={() => SoundEngine.playHover()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  SoundEngine.playClick();
+                  onOpenModal();
+                }}
+                className="mt-2 w-full py-3 px-4 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 rounded-xl text-xs font-mono tracking-widest text-white uppercase transition-all duration-300 flex items-center justify-center gap-2 group/modalbtn cursor-pointer"
+              >
+                <span>View Specification</span>
+                <span className="group-hover/modalbtn:translate-x-1 transition-transform">&rarr;</span>
+              </button>
             </div>
           </div>
         </GlassCard>
@@ -237,9 +253,10 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [activeProject, setActiveProject] = useState<ProjectType>(null);
-  const handleClose = () => {
-    // SoundEngine.playClick(); // Handled by ProjectModalV2
-    setActiveProject(null);
+  const [activeModalProject, setActiveModalProject] = useState<ProjectType>(null);
+
+  const handleCloseModal = () => {
+    setActiveModalProject(null);
   };
 
   const [hoveredProject, setHoveredProject] = useState<ProjectType>(null);
@@ -251,19 +268,23 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
   const leaderboardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setModalOpen(activeProject !== null);
-  }, [activeProject, setModalOpen]);
+    setModalOpen(activeModalProject !== null);
+  }, [activeModalProject, setModalOpen]);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setActiveProject(null);
+      if (event.key === 'Escape') {
+        if (activeModalProject) {
+          setActiveModalProject(null);
+        } else if (activeProject) {
+          setActiveProject(null);
+        }
+      }
     };
 
     window.addEventListener('keydown', handleEscape);
-    
-  
-return () => window.removeEventListener('keydown', handleEscape);
-  }, []);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [activeModalProject, activeProject]);
 
   // Mount/Unmount
   useEffect(() => {
@@ -287,6 +308,7 @@ return () => window.removeEventListener('keydown', handleEscape);
         onComplete: () => {
           if (containerRef.current) containerRef.current.style.display = 'none';
           setActiveProject(null);
+          setActiveModalProject(null);
           setHoveredProject(null);
           setModalOpen(false);
         }
@@ -344,7 +366,7 @@ return () => window.removeEventListener('keydown', handleEscape);
     <div 
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      onClick={() => activeProject && setActiveProject(null)}
+      onClick={() => activeProject && !activeModalProject && setActiveProject(null)}
       style={{ display: 'none', perspective: '1200px' }}
       className={`absolute inset-0 w-full h-full z-20 items-start justify-start overflow-hidden ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}
     >
@@ -352,7 +374,7 @@ return () => window.removeEventListener('keydown', handleEscape);
 
       <div className="relative w-full h-full flex items-start justify-start p-6 md:p-12 transform-style-3d">
         <div className="absolute top-6 left-6 md:left-12 text-left pointer-events-none z-10">
-          <div className="text-[10px] uppercase tracking-[0.45em] text-[#aa9e6d] font-lato">Mini Projects</div>
+          <div className="text-[10px] uppercase tracking-[0.45em] text-[#aa9e6d] font-lato">Exiles & Leaderboard</div>
         </div>
 
         {/* EXILES PANE - TOP LEFT */}
@@ -362,7 +384,8 @@ return () => window.removeEventListener('keydown', handleEscape);
              isActive={activeProject === 'exiles'}
              hasActiveProject={activeProject !== null}
              onActivate={() => setActiveProject('exiles')}
-             
+             onCloseCard={() => setActiveProject(null)}
+             onOpenModal={() => setActiveModalProject('exiles')}
              isHovered={hoveredProject === 'exiles'}
              onHover={() => { SoundEngine.playHover(); setHoveredProject('exiles'); }}
              onLeave={() => setHoveredProject(null)}
@@ -379,7 +402,8 @@ return () => window.removeEventListener('keydown', handleEscape);
              isActive={activeProject === 'leaderboard'}
              hasActiveProject={activeProject !== null}
              onActivate={() => setActiveProject('leaderboard')}
-             
+             onCloseCard={() => setActiveProject(null)}
+             onOpenModal={() => setActiveModalProject('leaderboard')}
              isHovered={hoveredProject === 'leaderboard'}
              onHover={() => { SoundEngine.playHover(); setHoveredProject('leaderboard'); }}
              onLeave={() => setHoveredProject(null)}
@@ -392,41 +416,47 @@ return () => window.removeEventListener('keydown', handleEscape);
       </div>
     
       <ProjectModalV2 
-        isOpen={activeProject === 'exiles'}
-        onClose={handleClose}
+        isOpen={activeModalProject === 'exiles'}
+        onClose={handleCloseModal}
         title="Exiles"
-        tagline="Realtime messaging fabric"
+        tagline="A Real-Time Messaging Fabric"
         meta={{
           role: "Lead Engineer",
           timeline: "2024",
-          context: "Module 03",
-          about: "Exiles is a highly-available, realtime messaging fabric built for strict idempotency and guaranteed delivery. It eliminates race conditions across distributed nodes by establishing a single source of chronological truth. The architecture ensures that no matter the latency or distance, the signal remains persistent and properly ordered."
+          context: "Company Project",
+          about: "I designed Exiles as a chat application and real-time messaging fabric for a company project. The priority was database design and strict idempotency. I built the architecture to guarantee delivery order and eliminate race conditions across distributed nodes, establishing a single source of chronological truth."
         }}
         sections={{
           foundation: {
             title: "Tech Stack & Tooling",
-            content: "React, TypeScript, Supabase Realtime, PostgreSQL, Lucide React, date-fns"
+            content: (
+              <div className="flex flex-col gap-2">
+                <span>Frontend: React, TypeScript, Lucide React, date-fns</span>
+                <span>Backend: Supabase Realtime, PostgreSQL</span>
+              </div>
+            )
           },
           design: {
-            title: "Architectural Focus",
-            content: "Designed the realtime channel architecture, idempotency system, presence tracking, and attachment schema on Supabase."
+            title: "System Architecture Focus",
+            content: (
+              <div className="flex flex-col gap-2">
+                <span>Designed the real-time channel architecture, presence tracking, and attachment schema on Supabase.</span>
+                <span>Implemented UUID-based idempotency keys enforced at the PostgreSQL RPC layer.</span>
+              </div>
+            )
           },
           engineering: {
             title: "Technical Architecture",
-            content: "Supabase Realtime Channels: Per-conversation channels with postgres_changes subscriptions for INSERT events across messages, edits, and deletions."
-          },
-          deepDive: {
-            title: "Implementation Deep-Dive",
-            content: "Idempotency Key System: UUID-based idempotency keys prevent duplicate messages on network retries, enforced at the PostgreSQL RPC layer. Sequence ID Ordering: Multi-layer chronological ordering via sequence_id resolves simultaneous message conflicts deterministically."
+            content: "Configured Supabase Realtime channels with subscriptions for insertion, edits, and deletions. I set up multi-layer chronological ordering via sequence IDs to deterministically resolve simultaneous message conflicts."
           },
           showcase: {
             primaryImage: {
-              src: "/assets/images/exiles-chat.png",
+              src: "/src/assets/images/exiles-chat.webp",
               alt: "Exiles Chat Interface",
             },
             gallery: [
               {
-                src: "/assets/images/exiles-chat.png",
+                src: "/src/assets/images/exiles-chat.webp",
                 alt: "Exiles Chat Interface",
                 caption: "Realtime Chat"
               }
@@ -435,41 +465,47 @@ return () => window.removeEventListener('keydown', handleEscape);
         }}
       />
       <ProjectModalV2 
-        isOpen={activeProject === 'leaderboard'}
-        onClose={handleClose}
+        isOpen={activeModalProject === 'leaderboard'}
+        onClose={handleCloseModal}
         title="Leaderboard"
-        tagline="High-throughput ranking engine"
+        tagline="A High-Throughput Ranking Engine"
         meta={{
-          role: "Lead Product Engineer & Three.js Engineer",
+          role: "Lead Product Engineer and Three.js Developer",
           timeline: "2024",
-          context: "Module 04",
-          about: "The Leaderboard module is a high-throughput ranking engine engineered to ingest and sort thousands of concurrent score mutations per second. Built on event-sourcing principles, it treats every change as an immutable record, providing near-instantaneous global rankings while maintaining perfect chronological reconstruction capabilities."
+          context: "Company Project",
+          about: "As part of the same company project, I engineered the Leaderboard platform as a high-throughput ranking engine capable of ingesting and sorting thousands of concurrent score mutations per second. Built on event-sourcing principles, the system treats every change as an immutable record, ensuring perfect chronological reconstruction."
         }}
         sections={{
           foundation: {
             title: "Tech Stack & Tooling",
-            content: "React, TypeScript, Three.js, R3F, Supabase Edge Functions, PostgreSQL"
+            content: (
+              <div className="flex flex-col gap-2">
+                <span>Frontend: React, TypeScript, Three.js, R3F</span>
+                <span>Backend: Supabase Edge Functions, PostgreSQL</span>
+              </div>
+            )
           },
           design: {
-            title: "Architectural Focus",
-            content: "Built the ranking engine, deduplication API, Supabase Edge Functions, and the kinetic 3D monolith architecture."
+            title: "System Architecture Focus",
+            content: (
+              <div className="flex flex-col gap-2">
+                <span>Built the core ranking engine, deduplication API, and Supabase Edge Functions.</span>
+                <span>Created a kinetic 3D monolith architecture for the front-end visualization.</span>
+              </div>
+            )
           },
           engineering: {
             title: "Technical Architecture",
-            content: "Ranking & Caching: Optimized SQL ranking engine broadcasting immediate updates via postgres_changes."
-          },
-          deepDive: {
-            title: "Implementation Deep-Dive",
-            content: "Deduplication Engine: Score Submission API running on Edge Functions to deduplicate and validate incoming game events."
+            content: "Developed an optimized SQL ranking engine that broadcasts immediate updates via PostgreSQL changes. Designed a score submission API running on Edge Functions to deduplicate and validate incoming game events."
           },
           showcase: {
             primaryImage: {
-              src: "/assets/images/leaderboard.png",
+              src: "/src/assets/images/leaderboard.webp",
               alt: "Leaderboard UI",
             },
             gallery: [
               {
-                src: "/assets/images/leaderboard.png",
+                src: "/src/assets/images/leaderboard.webp",
                 alt: "Leaderboard UI",
                 caption: "Global Rankings"
               }

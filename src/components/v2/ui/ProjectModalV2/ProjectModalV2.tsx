@@ -34,7 +34,6 @@ export interface ProjectModalV2Props {
     foundation: ProjectSection;
     design: ProjectSection;
     engineering: ProjectSection;
-    deepDive: ProjectSection;
     optimization?: ProjectSection;
     devops?: ProjectSection;
     showcase?: ProjectShowcase;
@@ -174,6 +173,8 @@ export const ProjectModalV2: React.FC<ProjectModalV2Props> = ({
                 >
                   <img 
                     alt={sections.showcase.primaryImage.alt} 
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105" 
                     src={sections.showcase.primaryImage.src}
                   />
@@ -192,7 +193,7 @@ export const ProjectModalV2: React.FC<ProjectModalV2Props> = ({
                       {sections.showcase.gallery.map((img, idx) => (
                         <div key={idx} className="flex-shrink-0 w-64 space-y-2 cursor-pointer group" onClick={() => setZoomedImage(img)}>
                           <div className="aspect-video bg-black/50 rounded-lg border border-white/10 overflow-hidden relative">
-                            <img alt={img.alt} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" src={img.src} />
+                            <img loading="lazy" decoding="async" alt={img.alt} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" src={img.src} />
                             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                               <ZoomIn className="w-4 h-4 text-white/80" />
                             </div>
@@ -233,18 +234,6 @@ export const ProjectModalV2: React.FC<ProjectModalV2Props> = ({
             </div>
           </section>
           
-          {/* 05 Deep Dive */}
-          <section className="w-full flex flex-col md:flex-row gap-8 items-start reveal">
-            <div className="md:w-1/3 flex-shrink-0">
-              </div>
-             <div className="md:w-2/3 bg-white/5 border border-white/10 p-8 rounded-xl space-y-6 hover:bg-white/10 transition-colors duration-500">
-              <h4 className="text-white/100 text-xl tracking-wider uppercase border-b border-white/10 pb-4 mb-4">{sections.deepDive.title}</h4>
-              <div className="text-white/80 font-light leading-relaxed text-sm space-y-4">
-                 {sections.deepDive.content}
-              </div>
-            </div>
-          </section>
-
           {/* 06 Optimization */}
           {sections.optimization && (
           <section className="w-full flex flex-col md:flex-row-reverse gap-8 items-start reveal">
@@ -291,6 +280,8 @@ export const ProjectModalV2: React.FC<ProjectModalV2Props> = ({
           <img 
             src={zoomedImage.src} 
             alt={zoomedImage.alt}
+            loading="lazy"
+            decoding="async"
             className="max-w-full max-h-full object-contain rounded-lg shadow-2xl border border-white/10"
           />
           {zoomedImage.caption && (
