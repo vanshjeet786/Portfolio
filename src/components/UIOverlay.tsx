@@ -141,12 +141,10 @@ export const UIOverlay = () => {
 
   // Compass Modal Animation Effect
   useEffect(() => {
-    if (displayedScene !== 1) return;
+    if (displayedScene !== 1 || !triggerRef.current) return;
     if (isCompassOpen) {
       gsap.to(triggerRef.current, { opacity: 0, x: -20, duration: 0.4, ease: "power2.in" });
-     
     } else {
-     
       gsap.fromTo(triggerRef.current,
         { opacity: 0, x: -20 },
         { opacity: 1, x: 0, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -156,12 +154,10 @@ export const UIOverlay = () => {
 
   // Skillometer Modal Animation Effect
   useEffect(() => {
-    if (displayedScene !== 3) return;
+    if (displayedScene !== 3 || !skillometerTriggerRef.current) return;
     if (isSkillometerOpen) {
       gsap.to(skillometerTriggerRef.current, { opacity: 0, y: -20, duration: 0.4, ease: "power2.in" });
-     
     } else {
-     
       gsap.fromTo(skillometerTriggerRef.current,
         { opacity: 0, y: -20 },
         { opacity: 1, y: 0, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -171,12 +167,10 @@ export const UIOverlay = () => {
 
   // Stance Modal Animation Effect
   useEffect(() => {
-    if (displayedScene !== 7) return;
+    if (displayedScene !== 5 || !stanceTriggerRef.current) return;
     if (isStanceOpen) {
       gsap.to(stanceTriggerRef.current, { opacity: 0, scale: 0.8, duration: 0.7, ease: "power2.in" });
-     
     } else {
-     
       gsap.fromTo(stanceTriggerRef.current,
         { opacity: 0, scale: 0.8 },
         { opacity: 1, scale: 1, duration: 0.8, ease: "expo.out", delay: 0.3 }
@@ -186,7 +180,7 @@ export const UIOverlay = () => {
 
   // Terminal Trigger Animation Effect
   useEffect(() => {
-    if (displayedScene !== 9) return;
+    if (displayedScene !== 9 || !terminalTriggerRef.current) return;
     if (isTerminalOpen) {
       gsap.to(terminalTriggerRef.current, { opacity: 0, scale: 0.9, duration: 0.4, ease: "power2.in" });
     } else {
