@@ -8,7 +8,7 @@ import { GlassCard } from './GlassCard';
 import { TrueFocus } from './TrueFocus';
 import { GlassCardEventStream } from './GlassCardEventStream';
 
-type ProjectType = 'exiles' | 'leaderboard' | null;
+type ProjectType = 'chat' | 'leaderboard' | null;
 
 interface TransformBase {
   x: number;
@@ -20,11 +20,11 @@ interface TransformBase {
   opacity: number;
 }
 
-const EXILES_BASE: TransformBase = { x: 0, y: 0, z: 0, rotateX: 4, rotateY: -6, scale: 0.82, opacity: 0.95 };
+const CHAT_BASE: TransformBase = { x: 0, y: 0, z: 0, rotateX: 4, rotateY: -6, scale: 0.82, opacity: 0.95 };
 const LEADERBOARD_BASE: TransformBase = { x: 0, y: 0, z: 0, rotateX: 4, rotateY: -6, scale: 0.82, opacity: 0.95 };
 
 interface ProjectPaneProps {
-  type: 'exiles' | 'leaderboard';
+  type: 'chat' | 'leaderboard';
   isActive: boolean;
   onActivate: () => void;
   onCloseCard: () => void;
@@ -39,7 +39,7 @@ interface ProjectPaneProps {
 }
 
 const PROJECT_PROOF = {
-  exiles: {
+  chat: {
     outcome: 'Realtime room presence, ordered delivery, and resilient reconnects for distributed chat surfaces.',
     role: 'Realtime architecture, idempotent message flow, delivery guarantees',
     stack: ['Supabase Realtime', 'PostgreSQL', 'React'],
@@ -54,7 +54,7 @@ const PROJECT_PROOF = {
 };
 
 const ProjectPane = ({ type, isActive, onActivate, onCloseCard, onOpenModal, isHovered, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
-  const isExiles = type === 'exiles';
+  const isChat = type === 'chat';
   const proof = PROJECT_PROOF[type];
   const paneRef = useRef<HTMLDivElement>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
@@ -141,7 +141,7 @@ const ProjectPane = ({ type, isActive, onActivate, onCloseCard, onOpenModal, isH
             ref={textRef}
             className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
           >
-              <TrueFocus text={isExiles ? 'EXILES' : 'LEADERBOARD'} className="text-3xl font-light tracking-[0.25em] text-white/80 uppercase" splitBy="word" animationSpeed={1.5} />
+              <TrueFocus text={isChat ? 'CHAT' : 'LEADERBOARD'} className="text-3xl font-light tracking-[0.25em] text-white/80 uppercase" splitBy="word" animationSpeed={1.5} />
           
           </div>
 
@@ -151,10 +151,10 @@ const ProjectPane = ({ type, isActive, onActivate, onCloseCard, onOpenModal, isH
             <div className={`flex justify-between items-start mb-8 w-full transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
               <div>
                 <span className="text-[10px] uppercase tracking-[0.5em] text-white/40 font-mono">
-                  {isExiles ? 'Realtime Messaging' : 'Ranking Engine'}
+                  {isChat ? 'Realtime Messaging' : 'Ranking Engine'}
                 </span>
                 <h2 className="text-4xl font-light mt-3 text-white/95 tracking-widest uppercase">
-                  {isExiles ? 'Exiles' : 'Leaderboard'}
+                  {isChat ? 'Chat' : 'Leaderboard'}
                 </h2>
               </div>
               <button
@@ -180,8 +180,8 @@ const ProjectPane = ({ type, isActive, onActivate, onCloseCard, onOpenModal, isH
               Architectural Synopsis
             </h3>
             <p className="text-[15px] text-white/60 leading-relaxed font-light mb-10 opacity-0 tracking-wide">
-              {isExiles
-                ? 'Exiles is a highly-available, realtime messaging fabric built for strict idempotency and guaranteed delivery. It eliminates race conditions across distributed nodes by establishing a single source of chronological truth. The architecture ensures that no matter the latency or distance, the signal remains persistent and properly ordered.'
+              {isChat
+                ? 'Chat is a highly-available, realtime messaging fabric built for strict idempotency and guaranteed delivery. It eliminates race conditions across distributed nodes by establishing a single source of chronological truth. The architecture ensures that no matter the latency or distance, the signal remains persistent and properly ordered.'
                 : 'The Leaderboard module is a high-throughput ranking engine engineered to ingest and sort thousands of concurrent score mutations per second. Built on event-sourcing principles, it treats every change as an immutable record, providing near-instantaneous global rankings while maintaining perfect chronological reconstruction capabilities.'}
             </p>
 
@@ -218,9 +218,9 @@ const ProjectPane = ({ type, isActive, onActivate, onCloseCard, onOpenModal, isH
                     <div className="w-1 h-1 bg-white/40 rounded-full" />
                     <span className="text-[10px] uppercase tracking-[0.4em] text-white/50 font-mono">Core Feature</span>
                 </div>
-                <span className="text-sm text-white/90 font-light tracking-wide block mb-1">{isExiles ? 'Strict Idempotency' : 'Event Sourcing'}</span>
+                <span className="text-sm text-white/90 font-light tracking-wide block mb-1">{isChat ? 'Strict Idempotency' : 'Event Sourcing'}</span>
                 <p className="text-[11px] text-white/40 leading-relaxed">
-                  {isExiles
+                  {isChat
                     ? 'Guaranteed message delivery order and deduplication across all nodes.'
                     : 'State is never mutated directly. Every change is an appended event.'}
                 </p>
@@ -264,7 +264,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
   const [mouseRotX, setMouseRotX] = useState(0);
   const [mouseRotY, setMouseRotY] = useState(0);
 
-  const exilesRef = useRef<HTMLDivElement>(null);
+  const chatRef = useRef<HTMLDivElement>(null);
   const leaderboardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -288,14 +288,14 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
 
   // Mount/Unmount
   useEffect(() => {
-    if (!containerRef.current || !exilesRef.current || !leaderboardRef.current) return;
+    if (!containerRef.current || !chatRef.current || !leaderboardRef.current) return;
     
     if (isActive) {
       gsap.to(containerRef.current, { opacity: 1, duration: 1.5, ease: 'power2.out', display: 'flex' });
 
-      gsap.fromTo(exilesRef.current,
-        { ...EXILES_BASE, y: 100, opacity: 0 },
-        { ...EXILES_BASE, duration: 1.5, ease: 'power3.out', delay: 0.2 }
+      gsap.fromTo(chatRef.current,
+        { ...CHAT_BASE, y: 100, opacity: 0 },
+        { ...CHAT_BASE, duration: 1.5, ease: 'power3.out', delay: 0.2 }
       );
       
       gsap.fromTo(leaderboardRef.current,
@@ -330,33 +330,33 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
 
   // Parallax & Hover orchestrator
   useEffect(() => {
-     if (activeProject || !exilesRef.current || !leaderboardRef.current) return;
+     if (activeProject || !chatRef.current || !leaderboardRef.current) return;
 
-     if (hoveredProject === 'exiles') {
-        gsap.to(exilesRef.current, { rotateX: mouseRotX, rotateY: EXILES_BASE.rotateY + mouseRotY, z: 50, scale: 1, opacity: 1, duration: 0.6, ease: 'power3.out' });
+     if (hoveredProject === 'chat') {
+        gsap.to(chatRef.current, { rotateX: mouseRotX, rotateY: CHAT_BASE.rotateY + mouseRotY, z: 50, scale: 1, opacity: 1, duration: 0.6, ease: 'power3.out' });
         gsap.to(leaderboardRef.current, { rotateX: mouseRotX, rotateY: LEADERBOARD_BASE.rotateY + mouseRotY, z: -200, scale: 0.8, opacity: 0.3, filter: 'blur(8px)', duration: 0.6, ease: 'power3.out' });
      } else if (hoveredProject === 'leaderboard') {
         gsap.to(leaderboardRef.current, { rotateX: mouseRotX, rotateY: LEADERBOARD_BASE.rotateY + mouseRotY, z: 50, scale: 1, opacity: 1, duration: 0.6, ease: 'power3.out' });
-        gsap.to(exilesRef.current, { rotateX: mouseRotX, rotateY: EXILES_BASE.rotateY + mouseRotY, z: -200, scale: 0.8, opacity: 0.3, filter: 'blur(8px)', duration: 0.6, ease: 'power3.out' });
+        gsap.to(chatRef.current, { rotateX: mouseRotX, rotateY: CHAT_BASE.rotateY + mouseRotY, z: -200, scale: 0.8, opacity: 0.3, filter: 'blur(8px)', duration: 0.6, ease: 'power3.out' });
      } else {
-        gsap.to(exilesRef.current, { rotateX: mouseRotX, rotateY: EXILES_BASE.rotateY + mouseRotY, x: EXILES_BASE.x, y: EXILES_BASE.y, z: EXILES_BASE.z, scale: EXILES_BASE.scale, opacity: EXILES_BASE.opacity, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' });
+        gsap.to(chatRef.current, { rotateX: mouseRotX, rotateY: CHAT_BASE.rotateY + mouseRotY, x: CHAT_BASE.x, y: CHAT_BASE.y, z: CHAT_BASE.z, scale: CHAT_BASE.scale, opacity: CHAT_BASE.opacity, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' });
         gsap.to(leaderboardRef.current, { rotateX: mouseRotX, rotateY: LEADERBOARD_BASE.rotateY + mouseRotY, x: LEADERBOARD_BASE.x, y: LEADERBOARD_BASE.y, z: LEADERBOARD_BASE.z, scale: LEADERBOARD_BASE.scale, opacity: LEADERBOARD_BASE.opacity, filter: 'blur(0px)', duration: 0.8, ease: 'power2.out' });
      }
   }, [mouseRotX, mouseRotY, hoveredProject, activeProject]);
 
   // Click orchestrator
   useEffect(() => {
-    if (!exilesRef.current || !leaderboardRef.current) return;
+    if (!chatRef.current || !leaderboardRef.current) return;
 
-    if (activeProject === 'exiles') {
-      gsap.to(exilesRef.current, { x: 220, y: 110, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+    if (activeProject === 'chat') {
+      gsap.to(chatRef.current, { x: 220, y: 110, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
       gsap.to(leaderboardRef.current, { x: 400, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
     } else if (activeProject === 'leaderboard') {
       gsap.to(leaderboardRef.current, { x: -160, y: 110, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
-      gsap.to(exilesRef.current, { x: -400, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(chatRef.current, { x: -400, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
     } else if (isActive) {
       // return to base
-      gsap.to(exilesRef.current, { ...EXILES_BASE, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(chatRef.current, { ...CHAT_BASE, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
       gsap.to(leaderboardRef.current, { ...LEADERBOARD_BASE, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
     }
   }, [activeProject, isActive]);
@@ -374,22 +374,22 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
 
       <div className="relative w-full h-full flex items-start justify-start p-6 md:p-12 transform-style-3d">
         <div className="absolute top-6 left-6 md:left-12 text-left pointer-events-none z-10">
-          <div className="text-[10px] uppercase tracking-[0.45em] text-[#aa9e6d] font-lato">Exiles & Leaderboard</div>
+          <div className="text-[10px] uppercase tracking-[0.45em] text-[#aa9e6d] font-lato">Chat & Leaderboard</div>
         </div>
 
-        {/* EXILES PANE - TOP LEFT */}
-        <div ref={exilesRef} className="absolute left-6 md:left-12 top-20 md:top-24" style={{ transformStyle: 'preserve-3d' }}>
+        {/* CHAT PANE - TOP LEFT */}
+        <div ref={chatRef} className="absolute left-6 md:left-12 top-20 md:top-24" style={{ transformStyle: 'preserve-3d' }}>
            <ProjectPane
-             type="exiles"
-             isActive={activeProject === 'exiles'}
+             type="chat"
+             isActive={activeProject === 'chat'}
              hasActiveProject={activeProject !== null}
-             onActivate={() => setActiveProject('exiles')}
+             onActivate={() => setActiveProject('chat')}
              onCloseCard={() => setActiveProject(null)}
-             onOpenModal={() => setActiveModalProject('exiles')}
-             isHovered={hoveredProject === 'exiles'}
-             onHover={() => { SoundEngine.playHover(); setHoveredProject('exiles'); }}
+             onOpenModal={() => setActiveModalProject('chat')}
+             isHovered={hoveredProject === 'chat'}
+             onHover={() => { SoundEngine.playHover(); setHoveredProject('chat'); }}
              onLeave={() => setHoveredProject(null)}
-             baseTransform={EXILES_BASE}
+             baseTransform={CHAT_BASE}
              mouseRotX={mouseRotX}
              mouseRotY={mouseRotY}
            />
@@ -416,15 +416,15 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
       </div>
     
       <ProjectModalV2 
-        isOpen={activeModalProject === 'exiles'}
+        isOpen={activeModalProject === 'chat'}
         onClose={handleCloseModal}
-        title="Exiles"
+        title="Chat"
         tagline="A Real-Time Messaging Fabric"
         meta={{
           role: "Lead Engineer",
           timeline: "2024",
           context: "Company Project",
-          about: "I designed Exiles as a chat application and real-time messaging fabric for a company project. The priority was database design and strict idempotency. I built the architecture to guarantee delivery order and eliminate race conditions across distributed nodes, establishing a single source of chronological truth."
+          about: "I designed Chat as a chat application and real-time messaging fabric for a company project. The priority was database design and strict idempotency. I built the architecture to guarantee delivery order and eliminate race conditions across distributed nodes, establishing a single source of chronological truth."
         }}
         sections={{
           foundation: {
@@ -451,13 +451,13 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
           },
           showcase: {
             primaryImage: {
-              src: "/src/assets/images/exiles-chat.webp",
-              alt: "Exiles Chat Interface",
+              src: "/src/assets/images/chat-chat.webp",
+              alt: "Chat Chat Interface",
             },
             gallery: [
               {
-                src: "/src/assets/images/exiles-chat.webp",
-                alt: "Exiles Chat Interface",
+                src: "/src/assets/images/chat-chat.webp",
+                alt: "Chat Chat Interface",
                 caption: "Realtime Chat"
               }
             ]

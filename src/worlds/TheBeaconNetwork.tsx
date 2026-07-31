@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 /**
  * TheBeaconNetwork
- * Hero Object for Exiles — "The Signal City"
+ * Hero Object for Chat — "The Signal City"
  *
  * Physical First Concept:
  * This is not a chat UI. This is a signal relay installation — the kind

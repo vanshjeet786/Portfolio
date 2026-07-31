@@ -3,7 +3,7 @@ import * as THREE from 'three';
 
 /**
  * SignalCityEnvironment
- * The 3D architectural volume for the Exiles World.
+ * The 3D architectural volume for the Chat World.
  *
  * Physical First Concept:
  * Imagine a vast, abandoned signal relay city — massive graphite towers

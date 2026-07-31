@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { ArrivalWorld } from '@/worlds/ArrivalWorld';
 import { CareerCompassWorld } from '@/worlds/CareerCompassWorld';
 import { SkillometerWorld } from '@/worlds/SkillometerWorld';
-import { ExilesWorld } from '@/worlds/ExilesWorld';
+import { ChatWorld } from '@/worlds/ChatWorld';
 import { LeaderboardWorld } from '@/worlds/LeaderboardWorld';
 import { StanceWorld } from '@/worlds/StanceWorld';
 
@@ -185,7 +185,7 @@ export const RenderCanvas: React.FC = () => {
           </group>
 
           <group position={[0, 0, -120]}>
-            <ExilesWorld />
+            <ChatWorld />
           </group>
 
           <group position={[0, 0, -160]}>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 interface GlassCardOrbitalCoreProps {
-  type: 'exiles' | 'leaderboard';
+  type: 'chat' | 'leaderboard';
   isHovered: boolean;
   isActive: boolean;
 }
@@ -39,7 +39,7 @@ export const GlassCardOrbitalCore: React.FC<GlassCardOrbitalCoreProps> = ({ type
     let width = (canvas.width = canvas.parentElement?.clientWidth || 340);
     let height = (canvas.height = canvas.parentElement?.clientHeight || 460);
 
-    const isExiles = type === 'exiles';
+    const isChat = type === 'chat';
 
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -54,14 +54,14 @@ export const GlassCardOrbitalCore: React.FC<GlassCardOrbitalCoreProps> = ({ type
     }
 
     // Colors
-    const primaryColor = isExiles ? 'rgba(0, 240, 255, 0.85)' : 'rgba(245, 158, 11, 0.85)';
-    const secondaryColor = isExiles ? 'rgba(147, 51, 234, 0.75)' : 'rgba(234, 179, 8, 0.75)';
-    const accentColor = isExiles ? 'rgba(59, 130, 246, 0.8)' : 'rgba(239, 68, 68, 0.8)';
+    const primaryColor = isChat ? 'rgba(0, 240, 255, 0.85)' : 'rgba(245, 158, 11, 0.85)';
+    const secondaryColor = isChat ? 'rgba(147, 51, 234, 0.75)' : 'rgba(234, 179, 8, 0.75)';
+    const accentColor = isChat ? 'rgba(59, 130, 246, 0.8)' : 'rgba(239, 68, 68, 0.8)';
 
-    const exilesLabels = ['WS', 'SYNC', 'PING', 'ACK', 'ROOM', 'IDEM', 'DATA', 'STREAM'];
+    const chatLabels = ['WS', 'SYNC', 'PING', 'ACK', 'ROOM', 'IDEM', 'DATA', 'STREAM'];
     const lbLabels = ['#01', '99.4k', '#02', 'RANK', '#03', 'TOP 1%', 'LIVE', 'MUTATE'];
 
-    const labels = isExiles ? exilesLabels : lbLabels;
+    const labels = isChat ? chatLabels : lbLabels;
 
     // Create 3D Orbiting Nodes
     const particleCount = 10;
@@ -71,7 +71,7 @@ export const GlassCardOrbitalCore: React.FC<GlassCardOrbitalCoreProps> = ({ type
       speed: (0.012 + Math.random() * 0.015) * (i % 2 === 0 ? 1 : -1),
       tiltX: (Math.PI / 6) + (Math.random() - 0.5) * 0.4,
       tiltY: (i % 2 === 0 ? 1 : -1) * (Math.PI / 8 + Math.random() * 0.3),
-      size: isExiles ? 5 + Math.random() * 6 : 7 + Math.random() * 5,
+      size: isChat ? 5 + Math.random() * 6 : 7 + Math.random() * 5,
       color: i % 3 === 0 ? primaryColor : i % 3 === 1 ? secondaryColor : accentColor,
       label: labels[i % labels.length],
       pulsePhase: Math.random() * Math.PI * 2,
@@ -283,8 +283,8 @@ export const GlassCardOrbitalCore: React.FC<GlassCardOrbitalCoreProps> = ({ type
         ctx.save();
         ctx.translate(p.projX, p.projY);
 
-        if (isExiles) {
-          // --- Exiles Glass Node ---
+        if (isChat) {
+          // --- Chat Glass Node ---
           ctx.shadowColor = p.color;
           ctx.shadowBlur = 12 * p.scale;
 

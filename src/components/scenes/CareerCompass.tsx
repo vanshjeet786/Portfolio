@@ -1,9 +1,15 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useLoadStore } from '@/stores/useLoadStore';
 
 export const CareerCompass = ({ position = [0, 0, 0] }: { position?: [number, number, number] }) => {
   const groupRef = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    // Register loaded state
+    useLoadStore.getState().setCompassLoaded(true);
+  }, []);
   const needleRef = useRef<THREE.Mesh>(null);
   const outerRingRef = useRef<THREE.Mesh>(null);
   const innerRingRef = useRef<THREE.Mesh>(null);

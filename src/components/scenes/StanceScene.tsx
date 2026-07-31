@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useStore } from '../../../stores/useStore';
+import { useStore } from '../../stores/useStore';
 import { SpineModel } from './models/SpineModel';
 import { PelvicModel } from './models/PelvicModel';
 import { KneeModel } from './models/KneeModel';
@@ -13,7 +13,7 @@ export const StanceScene = ({ position = [0, 0, 0] }: { position?: [number, numb
   // Stance is scene 5 out of 10.
   // The progress interval for Stance is roughly 0.5 to 0.6
   const localProgress = Math.max(0, Math.min(1, (progress - 0.5) * 10));
-  const isExploded = localProgress > 0.5;
+
 
   useFrame((state) => {
     const time = state.clock.elapsedTime;
@@ -39,7 +39,6 @@ export const StanceScene = ({ position = [0, 0, 0] }: { position?: [number, numb
       <group position={[-4, -0.5, 0]}>
         <SpineModel 
           isVisible={true} 
-          isExploded={isExploded} 
           isDark={true} 
           scrollProgress={localProgress}
         />

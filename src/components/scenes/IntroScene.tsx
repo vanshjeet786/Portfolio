@@ -1,9 +1,15 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useLoadStore } from '@/stores/useLoadStore';
 
 export const IntroScene = ({ position = [0, 0, 0] }: { position?: [number, number, number] }) => {
   const pointsRef = useRef<THREE.Points>(null);
+
+  useEffect(() => {
+    // Register loaded state
+    useLoadStore.getState().setIntroLoaded(true);
+  }, []);
 
   // Generate particles
   const particlesCount = 2000;

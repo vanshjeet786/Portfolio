@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { SoundEngine } from '@/utils/SoundEngine';
-import { LayoutGallery } from './LayoutGallery';
 import { LayoutDynamicGrid } from './LayoutDynamicGrid';
 
 interface ConnectModalProps {
@@ -10,37 +9,7 @@ interface ConnectModalProps {
 }
 
 export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) => {
-  const [activeLayoutIndex, setActiveLayoutIndex] = useState(0);
   const modalRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  const layouts = [
-    LayoutGallery,
-    LayoutDynamicGrid
-  ];
-
-  const handleNextLayout = () => {
-    SoundEngine.playClick();
-
-    // Animate out current layout
-    if (contentRef.current) {
-      gsap.to(contentRef.current, {
-        opacity: 0,
-        duration: 0.4,
-        ease: 'power2.inOut',
-        onComplete: () => {
-          setActiveLayoutIndex((prev) => (prev + 1) % layouts.length);
-          // Animate in new layout
-          gsap.fromTo(contentRef.current,
-            { opacity: 0 },
-            { opacity: 1, duration: 0.8, ease: 'power2.out' }
-          );
-        }
-      });
-    } else {
-      setActiveLayoutIndex((prev) => (prev + 1) % layouts.length);
-    }
-  };
 
   useEffect(() => {
     if (isOpen) {
@@ -58,8 +27,6 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
     }
   }, [isOpen]);
 
-  const ActiveLayout = layouts[activeLayoutIndex];
-
   return (
     <div
       ref={modalRef}
@@ -76,7 +43,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
         <button
           onMouseEnter={() => SoundEngine.playHover()}
           onClick={() => { SoundEngine.playClick(); onClose(); }}
-          className="absolute top-8 right-8 z-[100] group w-12 h-12 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all duration-300 mix-blend-difference"
+          className="absolute top-8 right-8 z-[100] group w-12 h-12 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all duration-300 mix-blend-difference cursor-pointer"
           aria-label="Close"
         >
           <div className="relative w-4 h-4">
@@ -86,8 +53,8 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
         </button>
 
         {/* Dynamic Content Area */}
-        <div ref={contentRef} className="flex-1 relative overflow-hidden w-full h-full rounded-sm">
-          <ActiveLayout onSwitchLayout={handleNextLayout} />
+        <div className="flex-1 relative overflow-hidden w-full h-full rounded-sm">
+          <LayoutDynamicGrid />
         </div>
 
       </div>

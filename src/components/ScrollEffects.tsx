@@ -36,7 +36,9 @@ export const ScrollEffects = () => {
     <EffectComposer>
       <Bloom luminanceThreshold={0.2} luminanceSmoothing={0.9} height={300} />
       <ChromaticAberration
-        ref={aberrationRef}
+        ref={(instance: any) => {
+          aberrationRef.current = instance;
+        }}
         offset={offset as any} // eslint-disable-line @typescript-eslint/no-explicit-any
         radialModulation={false}
         modulationOffset={0}

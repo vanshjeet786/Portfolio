@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test('check for errors while scrolling', async ({ page }) => {
   const errors: string[] = [];

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 interface GlassCardEventStreamProps {
-  type: 'exiles' | 'leaderboard';
+  type: 'chat' | 'leaderboard';
   isHovered: boolean;
   isActive: boolean;
 }
@@ -40,6 +40,7 @@ export const GlassCardEventStream: React.FC<GlassCardEventStreamProps> = ({
     if (!ctx) return;
 
     let animId: number;
+    let frameCount = 0;
     const parent = canvas.parentElement;
 
     let width = 340;
@@ -64,18 +65,18 @@ export const GlassCardEventStream: React.FC<GlassCardEventStreamProps> = ({
     });
     if (parent) resizeObserver.observe(parent);
 
-    const isExiles = type === 'exiles';
+    const isChat = type === 'chat';
 
     // Color definitions
-    const exilesPrimary = 'rgba(0, 240, 255, 0.9)';
-    const exilesSecondary = 'rgba(59, 130, 246, 0.75)';
-    const exilesAccent = 'rgba(16, 185, 129, 0.85)';
+    const chatPrimary = 'rgba(0, 240, 255, 0.9)';
+    const chatSecondary = 'rgba(59, 130, 246, 0.75)';
+    const chatAccent = 'rgba(16, 185, 129, 0.85)';
 
     const lbPrimary = 'rgba(245, 158, 11, 0.9)';
     const lbSecondary = 'rgba(234, 179, 8, 0.8)';
     const lbAccent = 'rgba(168, 85, 247, 0.85)';
 
-    const exilesBadges = [
+    const chatBadges = [
       '👋 HEY!',
       'WANNA PLAY?',
       '🎮 GG',
@@ -97,7 +98,7 @@ export const GlassCardEventStream: React.FC<GlassCardEventStreamProps> = ({
       '🎯 HIGH SCORE',
     ];
 
-    const badges = isExiles ? exilesBadges : lbBadges;
+    const badges = isChat ? chatBadges : lbBadges;
     const streamCount = 14;
 
     // Create Stream Columns
@@ -106,12 +107,12 @@ export const GlassCardEventStream: React.FC<GlassCardEventStreamProps> = ({
       const isPrimary = i % 3 === 0;
       const isSecondary = i % 3 === 1;
 
-      const streamColor = isExiles
+      const streamColor = isChat
         ? isPrimary
-          ? exilesPrimary
+          ? chatPrimary
           : isSecondary
-          ? exilesSecondary
-          : exilesAccent
+          ? chatSecondary
+          : chatAccent
         : isPrimary
         ? lbPrimary
         : isSecondary
@@ -159,13 +160,20 @@ export const GlassCardEventStream: React.FC<GlassCardEventStreamProps> = ({
 
     // Animation Loop
     const render = () => {
+      frameCount++;
       ctx.clearRect(0, 0, width, height);
+
+      // Pause rendering entirely when not visible to save rAF budget
+      if (!isActive && !isHovered) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
 
       const mouse = mousePosRef.current;
       const hoverSpeedBoost = isHovered ? 1.5 : 1.0;
 
       // Draw subtle horizontal grid scanning lines
-      ctx.strokeStyle = isExiles ? 'rgba(0, 240, 255, 0.04)' : 'rgba(245, 158, 11, 0.04)';
+      ctx.strokeStyle = isChat ? 'rgba(0, 240, 255, 0.04)' : 'rgba(245, 158, 11, 0.04)';
       ctx.lineWidth = 1;
       const gridStep = 40;
       for (let gy = gridStep; gy < height; gy += gridStep) {
@@ -176,23 +184,26 @@ export const GlassCardEventStream: React.FC<GlassCardEventStreamProps> = ({
       }
 
       // Check for horizontal signal connections between passing stream heads
-      ctx.lineWidth = 0.8;
-      for (let i = 0; i < streams.length; i++) {
-        for (let j = i + 1; j < streams.length; j++) {
-          const s1 = streams[i];
-          const s2 = streams[j];
-          const dy = Math.abs(s1.y - s2.y);
-          const dx = Math.abs(s1.x - s2.x);
+      // Throttled: only run every 2nd frame to halve the O(n²) cost
+      if (frameCount % 2 === 0) {
+        ctx.lineWidth = 0.8;
+        for (let i = 0; i < streams.length; i++) {
+          for (let j = i + 1; j < streams.length; j++) {
+            const s1 = streams[i];
+            const s2 = streams[j];
+            const dy = Math.abs(s1.y - s2.y);
+            const dx = Math.abs(s1.x - s2.x);
 
-          if (dy < 12 && dx < 65 && s1.y > 0 && s1.y < height) {
-            const opacity = (1 - dy / 12) * (1 - dx / 65) * 0.5;
-            ctx.strokeStyle = isExiles
-              ? `rgba(0, 240, 255, ${opacity})`
-              : `rgba(245, 158, 11, ${opacity})`;
-            ctx.beginPath();
-            ctx.moveTo(s1.x, s1.y);
-            ctx.lineTo(s2.x, s2.y);
-            ctx.stroke();
+            if (dy < 12 && dx < 65 && s1.y > 0 && s1.y < height) {
+              const opacity = (1 - dy / 12) * (1 - dx / 65) * 0.5;
+              ctx.strokeStyle = isChat
+                ? `rgba(0, 240, 255, ${opacity})`
+                : `rgba(245, 158, 11, ${opacity})`;
+              ctx.beginPath();
+              ctx.moveTo(s1.x, s1.y);
+              ctx.lineTo(s2.x, s2.y);
+              ctx.stroke();
+            }
           }
         }
       }
