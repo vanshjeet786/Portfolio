@@ -348,7 +348,7 @@ export const UIOverlay = () => {
                 },
                 engineering: {
                   title: "Technical Architecture",
-                  content: "The Vite/React frontend serves as a single-page application (SPA) interfacing securely with a PostgreSQL backend. Authentication and Row-Level Security (RLS) are implemented to protect user data."
+                  content: "The Vite/React frontend serves as a single-page application (SPA) interfacing securely with a PostgreSQL backend. Authentication and Row-Level Security (RLS) are implemented to protect user data.                                                                Real-time counseling is powered by the Groq API, synthesizing historical BackgroundInfo and scored data."
                 },
                 showcase: {
                   primaryImage: {
@@ -401,17 +401,17 @@ export const UIOverlay = () => {
               tagline="A Soft Skills Assessment Platform"
               meta={{
                 role: "Lead Product Engineer and Creative Technologist",
-                timeline: "2024",
-                context: "Freelance Concept",
-                about: "I built Skillometer as a 4-layer soft skills assessment platform. The objective was to be highly accurate in identifying the thinking patterns of a person. It dynamically models candidate signals and alignment scores, avoiding traditional rigid dashboards in favor of organic, graph-based visualizations."
+                timeline: "Feb 2026 - May 2026",
+                context: "Full-time project for Skitre.ai",
+                about: "I built Skillometer for Skitre.ai. A 4-layer soft skills assessment platform. The objective was to be highly accurate in identifying the thinking patterns of a person. It dynamically models candidate signals and alignment scores, avoiding traditional rigid dashboards in favor of graph-based visualizations."
               }}
               sections={{
                 foundation: {
-                  title: "Tech Stack & Tooling",
+                  title: "Tech Stack",
                   content: (
                     <div className="flex flex-col gap-2">
-                      <span>Frontend: React, TypeScript, Three.js, R3F, GSAP</span>
-                      <span>Backend: Supabase, PostgreSQL</span>
+                      <span>Frontend: React 18, TypeScript, Vite</span>
+                      <span>Backend: Supabase (Deno), Node.js</span>
                     </div>
                   )
                 },
@@ -419,14 +419,15 @@ export const UIOverlay = () => {
                   title: "UI/UX Design Process",
                   content: (
                     <div className="flex flex-col gap-2">
-                      <span>Designed an organic, node-based visual system avoiding standard grid dashboards.</span>
-                      <span>Emphasized fluid capability matrices and real-time graph visualization.</span>
+                      <span>Aesthetic: Strict "dark terminal aesthetic" maintained via CSS(Radix UI).
+</span>
+                      <span>Components: shadcn/ui for accessible primitives and lucide-react for consistent iconography.</span>
                     </div>
                   )
                 },
                 engineering: {
                   title: "Technical Architecture",
-                  content: "The system utilizes a dynamic relational schema to construct real-time relationship graphs. I implemented graph matching vectors using cosine similarity to evaluate role alignment."
+                  content: "A structured 10-stage execution pipeline designed to secure platform AI capabilities. It incorporates JWT session validation and organization-scoped access to resolve ASVF-002 security findings."
                 },
                 showcase: {
                   primaryImage: {
@@ -437,7 +438,7 @@ export const UIOverlay = () => {
                     {
                       src: "/src/assets/images/skillometer..webp",
                       alt: "Skillometer Interface",
-                      caption: "Capability Matrix"
+                      caption: "Assessment Page"
                     },
                     {
                       src: "/src/assets/images/skillometer.skitre.ai daf09edb8776.webp",
@@ -472,16 +473,16 @@ export const UIOverlay = () => {
               isOpen={isStanceOpen}
               onClose={() => { setIsStanceOpen(false); setModalOpen(false); }}
               title="Stance"
-              tagline="A Data-Driven Physiotherapy Platform"
+              tagline="Set of frontend pages to improve SEO"
               meta={{
-                role: "Lead Product Engineer and Three.js Developer",
-                timeline: "2024",
+                role: "UI/UX developer",
+                timeline: "2026",
                 context: "Freelance Project",
-                about: "I designed and developed website pages for Stance Health. The priority was SEO and creating a calm, trustworthy digital sanctuary. I utilized abstract, soft, physically grounded 3D elements to focus on movement and recovery without relying on typical healthcare tropes."
+                about: "I designed and developed website pages for Stance Health. The priority was SEO. I utilized abstract, soft, physically grounded 3D elements to focus on movement and recovery without relying on typical healthcare tropes."
               }}
               sections={{
                 foundation: {
-                  title: "Tech Stack & Tooling",
+                  title: "Tech Stack",
                   content: (
                     <div className="flex flex-col gap-2">
                       <span>Frontend: React, TypeScript, Tailwind CSS, Framer Motion</span>
@@ -493,14 +494,14 @@ export const UIOverlay = () => {
                   title: "UI/UX Design Process",
                   content: (
                     <div className="flex flex-col gap-2">
-                      <span>Structured the layout to give the 3D models breathing room.</span>
-                      <span>Used a muted care palette and fine-tuned scroll resistance to reveal content gradually, ensuring the SEO context arrives naturally.</span>
+                      <span>Structured the layout to give the 3D models and the content breathing room.</span>
+                      <span>I focused on creating a cinematic, product-like experience rather than a traditional recovery website. The interface uses 3D anatomy, smooth transitions, progressive disclosure, motion-driven interactions, and modular layouts to guide users naturally through conditions, assessments, recovery journeys, and booking while keeping the experience clean.</span>
                     </div>
                   )
                 },
                 engineering: {
                   title: "Technical Architecture",
-                  content: "I developed a highly optimized GSAP scroll-driven pipeline to manage the Three.js canvas state alongside DOM elements without layout thrashing. Custom physical materials were created for the translucent glass forms."
+                  content: "I built the application using React, Next.js, TypeScript, and Three.js with React Three Fiber for interactive 3D rendering. Animations are powered by GSAP and Framer Motion, while reusable components, modular page architecture, dynamic anatomy scenes, and shared UI systems keep the codebase scalable and maintainable across multiple rehabilitation journeys and booking flows. Custom physical materials were created for the translucent glass forms."
                 },
                 showcase: {
                   primaryImage: {

@@ -1,7 +1,7 @@
-import { CanvasContainer } from '@/components/v2/CanvasContainer';
-import { UIOverlay } from '@/components/v2/UIOverlay';
-import { ScrollManager } from '@/components/v2/ScrollManager';
-import { CustomCursor } from '@/components/v2/ui/CustomCursor';
+import { CanvasContainer } from '@/components/CanvasContainer';
+import { UIOverlay } from '@/components/UIOverlay';
+import { ScrollManager } from '@/components/ScrollManager';
+import { CustomCursor } from '@/components/ui/CustomCursor';
 
 export function App() {
   return (
