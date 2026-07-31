@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useStore, SCENE_COUNT } from '@/stores/useStore';
+import { useLoadStore } from '@/stores/useLoadStore';
 import { SoundEngine } from '@/utils/SoundEngine';
 
 export const ScrollManager = () => {
@@ -15,7 +16,7 @@ export const ScrollManager = () => {
     let isScrolling = false;
     
     const handleWheel = (e: WheelEvent) => {
-      if (useStore.getState().isModalOpen) return;
+      if (useStore.getState().isModalOpen || !useLoadStore.getState().isFirstTwoScenesLoaded) return;
 
       // Calculate dynamic friction based on proximity to nearest scene center
       const totalScenes = SCENE_COUNT;

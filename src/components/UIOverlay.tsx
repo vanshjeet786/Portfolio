@@ -1,12 +1,12 @@
 import { ProjectModalV2 } from './ui/ProjectModalV2/ProjectModalV2';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense, lazy } from 'react';
 import { useStore } from '@/stores/useStore';
 import gsap from 'gsap';
 import { TrueFocus } from './ui/TrueFocus';
-import { EtherealNetwork } from './ui/EtherealNetwork';
-import { ConnectModal } from "./ui/ConnectModal/ConnectModal";
-// import { SVGNoise } from './ui/SVGNoise';
 import { SoundEngine } from '@/utils/SoundEngine';
+
+const EtherealNetwork = lazy(() => import('./ui/EtherealNetwork').then(m => ({ default: m.EtherealNetwork })));
+const ConnectModal = lazy(() => import('./ui/ConnectModal/ConnectModal').then(m => ({ default: m.ConnectModal })));
 
 
 const NARRATIVE_TEXTS_1 = [
@@ -457,7 +457,9 @@ export const UIOverlay = () => {
 
         {/* SCENE 7: ETHEREAL NETWORK (Exiles + Leaderboard) */}
         {/* We keep this mounted when displayedScene is 7 */}
-        <EtherealNetwork isActive={displayedScene === 7} />
+        <Suspense fallback={null}>
+          <EtherealNetwork isActive={displayedScene === 7} />
+        </Suspense>
 
         {/* SCENE 6: NARRATIVE VOID 3 */}
         {displayedScene === 6 && <div className="w-full h-full" />}
@@ -580,7 +582,9 @@ export const UIOverlay = () => {
               </div>
             </button>
 
-            <ConnectModal isOpen={isTerminalOpen} onClose={() => { setIsTerminalOpen(false); setModalOpen(false); }} />
+            <Suspense fallback={null}>
+              <ConnectModal isOpen={isTerminalOpen} onClose={() => { setIsTerminalOpen(false); setModalOpen(false); }} />
+            </Suspense>
           </div>
         )}
 

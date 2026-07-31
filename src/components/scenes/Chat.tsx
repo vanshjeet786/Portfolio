@@ -19,7 +19,7 @@ const shardsData = Array.from({ length: shardCount }).map(() => ({
   speed: 0.2 + Math.random() * 0.5
 }));
 
-export const Exiles = ({ position = [0, 0, 0] }: { position?: [number, number, number] }) => {
+export const Chat = ({ position = [0, 0, 0] }: { position?: [number, number, number] }) => {
   const groupRef = useRef<THREE.Group>(null);
   const shardRefs = useRef<(THREE.Mesh | null)[]>([]);
 
@@ -78,7 +78,7 @@ export const Exiles = ({ position = [0, 0, 0] }: { position?: [number, number, n
         />
       </mesh>
 
-      {/* The Exiles (Glass Shards) */}
+      {/* The Chat (Glass Shards) */}
       {shardsData.map((shard, i) => (
         <mesh
           key={i}

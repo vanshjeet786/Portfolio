@@ -40,7 +40,7 @@ export const ExperienceProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           skillometer: 'understanding',
           leaderboard: 'precision',
           stance: 'calm',
-          exiles: 'connection',
+          chat: 'connection',
           creator: 'trust',
         };
         const stage = emotionalStages[worldName] || 'discovery';

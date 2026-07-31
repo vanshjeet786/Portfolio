@@ -1,10 +1,11 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense } from 'react';
+import { Suspense, lazy } from 'react';
 import { IntroScene } from './scenes/IntroScene';
 import { CareerCompass } from './scenes/CareerCompass';
-import { Skillometer } from './scenes/Skillometer';
-import { StanceScene } from './scenes/StanceScene';
-import { OutroScene } from './scenes/OutroScene';
+
+const Skillometer = lazy(() => import('./scenes/Skillometer').then(m => ({ default: m.Skillometer })));
+const StanceScene = lazy(() => import('./scenes/StanceScene').then(m => ({ default: m.StanceScene })));
+const OutroScene = lazy(() => import('./scenes/OutroScene').then(m => ({ default: m.OutroScene })));
 import { CinematicCamera } from './CinematicCamera';
 import { CursorRefraction } from './CursorRefraction';
 import { ScrollEffects } from './ScrollEffects';

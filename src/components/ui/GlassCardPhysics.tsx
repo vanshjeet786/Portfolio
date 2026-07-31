@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 interface GlassCardPhysicsProps {
-  type: 'exiles' | 'leaderboard';
+  type: 'chat' | 'leaderboard';
   isHovered: boolean;
   isActive: boolean;
 }
@@ -45,7 +45,7 @@ export const GlassCardPhysics: React.FC<GlassCardPhysicsProps> = ({ type, isHove
     let width = (canvas.width = canvas.parentElement?.clientWidth || 340);
     let height = (canvas.height = canvas.parentElement?.clientHeight || 460);
 
-    const isExiles = type === 'exiles';
+    const isChat = type === 'chat';
 
     // Resize listener
     const resizeObserver = new ResizeObserver((entries) => {
@@ -60,8 +60,8 @@ export const GlassCardPhysics: React.FC<GlassCardPhysicsProps> = ({ type, isHove
       resizeObserver.observe(canvas.parentElement);
     }
 
-    // Initialize Exiles Orbs
-    const exilesColors = [
+    // Initialize Chat Orbs
+    const chatColors = [
       'rgba(0, 240, 255, 0.7)',
       'rgba(59, 130, 246, 0.7)',
       'rgba(6, 182, 212, 0.7)',
@@ -77,7 +77,7 @@ export const GlassCardPhysics: React.FC<GlassCardPhysicsProps> = ({ type, isHove
       vx: (Math.random() - 0.5) * 1.5,
       vy: 1 + Math.random() * 2,
       radius: 12 + Math.random() * 12,
-      color: exilesColors[i % exilesColors.length],
+      color: chatColors[i % chatColors.length],
       label: labels[i % labels.length],
       pulsePhase: Math.random() * Math.PI * 2,
     }));
@@ -145,8 +145,8 @@ export const GlassCardPhysics: React.FC<GlassCardPhysicsProps> = ({ type, isHove
 
       const mouse = mousePosRef.current;
 
-      if (isExiles) {
-        // --- Render Exiles Glass Orbs ---
+      if (isChat) {
+        // --- Render Chat Glass Orbs ---
         // Render signal connection lines between nearby orbs
         ctx.lineWidth = 1;
         for (let i = 0; i < orbs.length; i++) {
