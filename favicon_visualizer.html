@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Favicon Visualizer</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #111;
+            color: #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 { font-weight: 300; letter-spacing: 1px; color: #ccc; }
+        .demo-container {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .large-preview {
+            width: 128px;
+            height: 128px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a1a;
+        }
+        .large-preview svg { width: 64px; height: 64px; }
+        .instructions { max-width: 600px; text-align: center; color: #888; line-height: 1.6; }
+        .favicon-link { color: #f0c080; text-decoration: none; border-bottom: 1px solid #f0c080; padding-bottom: 2px;}
+    </style>
+    <link id="dynamic-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+</head>
+<body>
+
+    <h1>Animatable Favicon Concept</h1>
+    <div class="instructions">
+        <p>This page demonstrates the <strong>Dynamic Base64 Rendering</strong> technique. Watch the browser tab up top. The favicon is animating dynamically via JavaScript updating the <code>href</code> of the <code>&lt;link rel="icon"&gt;</code> tag.</p>
+        <p>We are drawing the Phosphor-inspired isometric cube, aligning with the monolithic 3D theme of the portfolio.</p>
+    </div>
+
+    <div class="demo-container">
+        <p style="font-size: 0.9rem; color: #555; text-transform: uppercase; letter-spacing: 2px;">Large Preview</p>
+        <div class="large-preview" id="preview-container">
+            <!-- Injected SVG goes here -->
+        </div>
+    </div>
+
+    <script>
+        const faviconLink = document.getElementById('dynamic-favicon');
+        const previewContainer = document.getElementById('preview-container');
+
+        // The Cube Path
+        const pathData = "M21 16.02V7.98a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 7.98v8.04a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16.02z M3.27 6.96L12 12.01l8.73-5.05 M12 22.08V12";
+
+        // Calculate path length for stroke animation (approximate for simplicity here)
+        const pathLength = 100;
+
+        let offset = pathLength;
+        let direction = -1;
+
+        function updateFavicon() {
+            offset += direction * 2;
+            if (offset <= 0) {
+                offset = 0;
+                direction = 1;
+            } else if (offset >= pathLength) {
+                offset = pathLength;
+                direction = -1;
+            }
+
+            const svgString = `
+            <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='64' height='64'>
+                <path d='${pathData}' fill='none' stroke='%23f0c080' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='${pathLength}' stroke-dashoffset='${offset}'/>
+            </svg>
+            `.trim().replace(/\s+/g, ' ');
+
+            const dataUri = `data:image/svg+xml;charset=utf-8,${svgString}`;
+            faviconLink.href = dataUri;
+
+            // Also update the large preview on the page
+            previewContainer.innerHTML = decodeURIComponent(svgString);
+
+            requestAnimationFrame(updateFavicon);
+        }
+
+        // Start the animation loop
+        requestAnimationFrame(updateFavicon);
+    </script>
+</body>
+</html>
