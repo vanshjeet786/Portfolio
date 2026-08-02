@@ -107,7 +107,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
                       {activeBlock === 'profile' ? CONNECT_DATA.profile.name : 'Identity'}
                     </h1>
                     {activeBlock === 'profile' && (
-                      <p className="text-sm md:text-base font-mono text-white/60 tracking-widest uppercase">
+                      <p className="text-lg md:text-base font-lexend text-white/60 tracking-widest uppercase">
                         {CONNECT_DATA.profile.title}
                       </p>
                     )}
@@ -132,15 +132,15 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
                   >
                     {!activeBlock.includes('about') && (
                       <h2 className="text-2xl md:text-3xl font-jost uppercase text-white/40 group-hover:text-white/80 transition-colors">
-                        Story
+                        About
                       </h2>
                     )}
 
                     {activeBlock === 'about' && (
                       <div className="animate-fade-in-up flex flex-col justify-center w-full py-4">
                         <div className="flex items-center gap-3 mb-6">
-                          <span className="text-xs uppercase tracking-[0.3em] font-mono text-[#c8a68a]">
-                            Story &amp; Philosophy
+                          <span className="text-s uppercase tracking-[0.3em] font-china text-[#c8a68a]">
+                            About
                           </span>
                           <div className="h-[1px] flex-1 bg-gradient-to-r from-white/20 to-transparent" />
                         </div>
@@ -154,17 +154,19 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
                             </p>
                           ))}
                         </div>
-                        <div className="flex flex-wrap gap-3 pt-6 border-t border-white/10">
-                          {CONNECT_DATA.about.tags.map((t, i) => (
-                            <div
-                              key={i}
-                              className="flex items-center gap-2.5 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-white/60 uppercase tracking-widest"
-                            >
-                              <t.icon className="w-3.5 h-3.5 text-[#c8a68a] flex-shrink-0" />
-                              <span>{t.label}</span>
-                            </div>
-                          ))}
-                        </div>
+                        {'tags' in CONNECT_DATA.about && Array.isArray((CONNECT_DATA.about as { tags?: Array<{ label: string; icon: React.ComponentType<{ className?: string }> }> }).tags) && (
+                          <div className="flex flex-wrap gap-3 pt-6 border-t border-white/10">
+                            {(CONNECT_DATA.about as { tags: Array<{ label: string; icon: React.ComponentType<{ className?: string }> }> }).tags.map((t, i) => (
+                              <div
+                                key={i}
+                                className="flex items-center gap-2.5 px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-mono text-white/60 uppercase tracking-widest"
+                              >
+                                <t.icon className="w-3.5 h-3.5 text-[#c8a68a] flex-shrink-0" />
+                                <span>{t.label}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -183,11 +185,11 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
                     `}
                   >
                     <div
-                      className={`absolute inset-0 flex flex-col ${activeBlock === 'crafts' ? 'p-12 md:p-16' : 'p-8 md:p-12 justify-end'}`}
+                      className={`absolute inset-0 flex flex-col ${activeBlock === 'crafts' ? 'p-8 md:p-16' : 'p-6 sm:p-8 justify-end items-start'}`}
                     >
                       {!activeBlock.includes('crafts') && (
-                        <h2 className="text-xl md:text-2xl font-jost uppercase text-white/40 group-hover:text-white/80 transition-colors">
-                          Crafts
+                        <h2 className="text-lg sm:text-l md:text-2xl font-lato uppercase text-white/40 group-hover:text-white/80 transition-colors tracking-wider whitespace-nowrap">
+                          Interests
                         </h2>
                       )}
 
@@ -197,7 +199,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
                             {CONNECT_DATA.hobbies.items.map((h, i) => (
                               <div key={i} className="flex flex-col">
                                 <h.icon className="w-6 h-6 text-white/80 mb-4" strokeWidth={1} />
-                                <h3 className="text-xl text-white uppercase tracking-wider font-jost mb-3">{h.title}</h3>
+                                <h3 className="text-xl text-white uppercase tracking-wider font-lato mb-3">{h.title}</h3>
                                 <p className="text-base text-white/50 font-light leading-relaxed">{h.desc}</p>
                               </div>
                             ))}
@@ -216,10 +218,10 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
                     `}
                   >
                     <div
-                      className={`absolute inset-0 flex flex-col ${activeBlock === 'links' ? 'p-12 md:p-16' : 'p-8 md:p-12 justify-end'}`}
+                      className={`absolute inset-0 flex flex-col ${activeBlock === 'links' ? 'p-10 md:p-16' : 'p-6 sm:p-8 justify-end items-start'}`}
                     >
                       {!activeBlock.includes('links') && (
-                        <h2 className="text-xl md:text-2xl font-jost uppercase text-white/40 group-hover:text-white/80 transition-colors">
+                        <h2 className="text-lg sm:text-xl md:text-2xl font-jost uppercase text-white/40 group-hover:text-white/80 transition-colors tracking-wider whitespace-nowrap">
                           Network
                         </h2>
                       )}
@@ -234,9 +236,14 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
                               rel="noreferrer"
                               className="group/link flex items-center justify-between border-b border-white/10 pb-4 hover:border-white/50 transition-colors"
                             >
-                              <span className="text-2xl font-light font-jost text-white group-hover/link:translate-x-2 transition-transform duration-500 ease-out">
-                                {l.name}
-                              </span>
+                              <div className="flex items-center gap-4 group-hover/link:translate-x-2 transition-transform duration-500 ease-out">
+                                <div className={`relative flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 ${l.hoverBg || 'group-hover/link:bg-white/15 group-hover/link:border-white/40 group-hover/link:scale-110'} transition-all duration-300 ease-out shadow-lg flex-shrink-0`}>
+                                  <l.icon size={20} className={`w-5 h-5 text-white/80 ${l.hoverIcon || 'group-hover/link:text-white group-hover/link:scale-110'} transition-all duration-300 flex-shrink-0`} />
+                                </div>
+                                <span className="text-2xl font-light font-jost text-white">
+                                  {l.name}
+                                </span>
+                              </div>
                               <ExternalLink className="w-5 h-5 text-white/30 group-hover/link:text-white group-hover/link:-translate-y-1 group-hover/link:translate-x-1 transition-all duration-500" />
                             </a>
                           ))}

@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "type": "module",
   "overrides": {
-    "react-router": "7.11.0"
+    "brace-expansion": "5.0.8",
+    "react-router": "7.18.2"
   },
   "scripts": {
     "dev": "vite",
@@ -18,16 +19,18 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@icons-pack/react-simple-icons": "^13.11.1",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "@react-three/postprocessing": "^3.0.4",
     "animejs": "^3.2.2",
     "gsap": "^3.12.5",
     "lenis": "^1.1.20",
-    "lucide-react": "^0.475.0",
+    "lucide-react": "^1.28.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.2",
+    "react-icons": "^5.7.0",
+    "react-router-dom": "7.11.0",
     "three": "^0.185.1",
     "three-stdlib": "^2.36.1",
     "zustand": "^5.0.14"

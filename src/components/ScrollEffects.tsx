@@ -4,8 +4,12 @@ import { EffectComposer, Bloom, ChromaticAberration } from '@react-three/postpro
 import { useStore } from '@/stores/useStore';
 import * as THREE from 'three';
 
+interface ChromaticAberrationEffectRef {
+  offset: THREE.Vector2;
+}
+
 export const ScrollEffects = () => {
-  const aberrationRef = useRef<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
+  const aberrationRef = useRef<ChromaticAberrationEffectRef | null>(null);
   const previousProgress = useRef(useStore.getState().progress);
   const currentVelocity = useRef(0);
   const offset = useMemo(() => new THREE.Vector2(0, 0), []);
@@ -36,10 +40,10 @@ export const ScrollEffects = () => {
     <EffectComposer>
       <Bloom luminanceThreshold={0.2} luminanceSmoothing={0.9} height={300} />
       <ChromaticAberration
-        ref={(instance: any) => {
+        ref={(instance: ChromaticAberrationEffectRef | null) => {
           aberrationRef.current = instance;
         }}
-        offset={offset as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+        offset={offset}
         radialModulation={false}
         modulationOffset={0}
       />
