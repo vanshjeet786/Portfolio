@@ -3,7 +3,7 @@ import { CanvasContainer } from '@/components/CanvasContainer';
 import { UIOverlay } from '@/components/UIOverlay';
 import { ScrollManager } from '@/components/ScrollManager';
 import { CustomCursor } from '@/components/ui/CustomCursor';
-import { Preloader } from '@/components/ui/Preloader';
+import { TopographicLoader } from '@/components/ui/TopographicLoader';
 import { useLoadStore } from '@/stores/useLoadStore';
 import { preloadRemainingChunks } from '@/utils/preloadHelper';
 
@@ -35,7 +35,7 @@ export function App() {
 
   return (
     <div id="app-root" className="w-full h-screen bg-black overflow-hidden relative" style={{ cursor: 'none' }}>
-      <Preloader />
+      <TopographicLoader />
       <CustomCursor />
       <ScrollManager />
       <CanvasContainer />
