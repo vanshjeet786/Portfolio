@@ -50,7 +50,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
       <div
         className="absolute inset-0 bg-black/80 backdrop-blur-xl"
         onClick={() => {
-          SoundEngine.playClick();
+          SoundEngine.playClose();
           onClose();
         }}
       />
@@ -61,7 +61,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
         <button
           onMouseEnter={() => SoundEngine.playHover()}
           onClick={() => {
-            SoundEngine.playClick();
+            SoundEngine.playClose();
             onClose();
           }}
           className="absolute top-8 right-8 z-[100] group w-12 h-12 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all duration-300 mix-blend-difference cursor-pointer"

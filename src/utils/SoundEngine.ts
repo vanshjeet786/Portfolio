@@ -3,6 +3,10 @@ class SoundEngineClass {
   private ambientOscillator: OscillatorNode | null = null;
   private ambientGain: GainNode | null = null;
   private isAmbientPlaying: boolean = false;
+  private hoverSound: HTMLAudioElement | null = null;
+  private openSound: HTMLAudioElement | null = null;
+  private readonly hoverVolume = 0.225;
+  private readonly openVolume = 0.14;
 
   private init() {
     if (!this.ctx) {
@@ -10,6 +14,32 @@ class SoundEngineClass {
     }
     if (this.ctx.state === 'suspended') {
       this.ctx.resume();
+    }
+    if (typeof Audio !== 'undefined') {
+      if (!this.hoverSound) {
+        this.hoverSound = new Audio('/ui-hover.mp3');
+        this.hoverSound.preload = 'auto';
+        this.hoverSound.volume = this.hoverVolume;
+      }
+      if (!this.openSound) {
+        this.openSound = new Audio('/ui-open.mp3');
+        this.openSound.preload = 'auto';
+        this.openSound.volume = this.openVolume;
+      }
+    }
+  }
+
+  private playExternalSound(sound: HTMLAudioElement | null, volume: number) {
+    if (!sound) return;
+
+    try {
+      const instance = sound.cloneNode(true) as HTMLAudioElement;
+      instance.volume = volume;
+      void instance.play().catch(() => {
+        // Ignore autoplay or decode failures
+      });
+    } catch {
+      // Ignore
     }
   }
 
@@ -87,58 +117,85 @@ class SoundEngineClass {
 
   // --- UI Sound Effects --- //
 
-  // A very short, high-frequency tick simulating tapping on thick glass
   public playHover = () => {
     try {
       this.init();
-      if (!this.ctx) return;
-      
-      const osc = this.ctx.createOscillator();
-      const gainNode = this.ctx.createGain();
-      
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, this.ctx.currentTime); // High pitch
-      osc.frequency.exponentialRampToValueAtTime(1200, this.ctx.currentTime + 0.05);
-      
-      gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.05, this.ctx.currentTime + 0.01);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
-      
-      osc.connect(gainNode);
-      gainNode.connect(this.ctx.destination);
-      
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.05);
+      this.playExternalSound(this.hoverSound, this.hoverVolume);
     } catch {
       // Audio context might be blocked by browser policy, ignore silently
     }
   };
 
-  // A hollow, resonant block sound (triangle wave with fast decay)
   public playClick = () => {
+    try {
+      this.init();
+      this.playExternalSound(this.openSound, this.openVolume);
+      
+      // Attempt to start ambient drone on first user interaction if not already playing
+      this.startAmbientDrone();
+    } catch {
+      // Ignore
+    }
+  };
+
+  public playClose = () => {
     try {
       this.init();
       if (!this.ctx) return;
 
-      const osc = this.ctx.createOscillator();
-      const gainNode = this.ctx.createGain();
-      
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(400, this.ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.15);
-      
-      gainNode.gain.setValueAtTime(0, this.ctx.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.15, this.ctx.currentTime + 0.02);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.15);
-      
-      osc.connect(gainNode);
-      gainNode.connect(this.ctx.destination);
-      
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.15);
-      
-      // Attempt to start ambient drone on first user interaction if not already playing
-      this.startAmbientDrone();
+      const now = this.ctx.currentTime;
+      const airDuration = 0.22;
+      const airBufferSize = Math.floor(this.ctx.sampleRate * airDuration);
+      const airBuffer = this.ctx.createBuffer(1, airBufferSize, this.ctx.sampleRate);
+      const channelData = airBuffer.getChannelData(0);
+
+      for (let i = 0; i < airBufferSize; i++) {
+        const t = i / airBufferSize;
+        const envelope = Math.pow(1 - t, 3.2);
+        channelData[i] = (Math.random() * 2 - 1) * envelope * 0.1;
+      }
+
+      const airSource = this.ctx.createBufferSource();
+      airSource.buffer = airBuffer;
+
+      const airFilter = this.ctx.createBiquadFilter();
+      airFilter.type = 'bandpass';
+      airFilter.frequency.setValueAtTime(1600, now);
+      airFilter.frequency.exponentialRampToValueAtTime(700, now + airDuration);
+      airFilter.Q.value = 0.9;
+
+      const airGain = this.ctx.createGain();
+      airGain.gain.setValueAtTime(0.0001, now);
+      airGain.gain.exponentialRampToValueAtTime(0.028, now + 0.018);
+      airGain.gain.exponentialRampToValueAtTime(0.0001, now + airDuration);
+
+      airSource.connect(airFilter);
+      airFilter.connect(airGain);
+      airGain.connect(this.ctx.destination);
+
+      const knockOsc = this.ctx.createOscillator();
+      knockOsc.type = 'triangle';
+      knockOsc.frequency.setValueAtTime(260, now);
+      knockOsc.frequency.exponentialRampToValueAtTime(120, now + 0.1);
+
+      const knockFilter = this.ctx.createBiquadFilter();
+      knockFilter.type = 'lowpass';
+      knockFilter.frequency.setValueAtTime(1050, now);
+      knockFilter.Q.value = 0.7;
+
+      const knockGain = this.ctx.createGain();
+      knockGain.gain.setValueAtTime(0.0001, now);
+      knockGain.gain.exponentialRampToValueAtTime(0.05, now + 0.008);
+      knockGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.125);
+
+      knockOsc.connect(knockFilter);
+      knockFilter.connect(knockGain);
+      knockGain.connect(this.ctx.destination);
+
+      airSource.start(now);
+      airSource.stop(now + airDuration);
+      knockOsc.start(now);
+      knockOsc.stop(now + 0.125);
     } catch {
       // Ignore
     }

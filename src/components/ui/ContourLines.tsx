@@ -32,7 +32,7 @@ export const ContourLines = ({ isFracturing }: ContourLinesProps) => {
       const height = canvas.height;
 
       // Clear canvas with very slight transparency to leave trails when fracturing
-      ctx.fillStyle = isFracturing ? 'rgba(21, 22, 24, 0.8)' : '#151618';
+      ctx.fillStyle = isFracturing ? 'rgba(21, 22, 24, 0.8)' : '#363131';
       ctx.fillRect(0, 0, width, height);
 
       const scale = isFracturing ? 0.005 : 0.003; // Harsher scaling on fracture

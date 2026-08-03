@@ -27,8 +27,6 @@ export const useLoadStore = create<LoadStoreState>((set) => ({
       return {
         introLoaded: loaded,
         isFirstTwoScenesLoaded,
-        progress: isFirstTwoScenesLoaded ? 100 : Math.max(state.progress, 50),
-        statusText: isFirstTwoScenesLoaded ? 'System synchronized.' : 'Compiling anatomical matrix...',
       };
     }),
   setCompassLoaded: (loaded) =>
@@ -37,8 +35,6 @@ export const useLoadStore = create<LoadStoreState>((set) => ({
       return {
         compassLoaded: loaded,
         isFirstTwoScenesLoaded,
-        progress: isFirstTwoScenesLoaded ? 100 : Math.max(state.progress, 80),
-        statusText: isFirstTwoScenesLoaded ? 'System synchronized.' : 'Mapping career compass nodes...',
       };
     }),
   setPreloadingStarted: (preloadingStarted) => set({ preloadingStarted }),

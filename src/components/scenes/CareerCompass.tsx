@@ -59,7 +59,7 @@ export const CareerCompass = ({ position = [0, 0, 0] }: { position?: [number, nu
       <mesh ref={outerRingRef}>
         <torusGeometry args={[2.5, 0.15, 32, 100]} />
         <meshPhysicalMaterial 
-          color="#111111"
+          color="#b58614"
           metalness={1}
           roughness={0.15}
           clearcoat={1}
@@ -71,7 +71,7 @@ export const CareerCompass = ({ position = [0, 0, 0] }: { position?: [number, nu
       <mesh ref={innerRingRef}>
         <torusGeometry args={[2.0, 0.08, 32, 100]} />
         <meshPhysicalMaterial 
-          color="#222222"
+          color="#886767"
           metalness={0.9}
           roughness={0.3}
         />
@@ -81,8 +81,8 @@ export const CareerCompass = ({ position = [0, 0, 0] }: { position?: [number, nu
       <mesh ref={coreRef}>
         <sphereGeometry args={[0.3, 32, 32]} />
         <meshStandardMaterial 
-          color="#00f0ff"
-          emissive="#00f0ff"
+          color="#4a662f"
+          emissive="#fad6ac"
           emissiveIntensity={2}
           toneMapped={false}
         />

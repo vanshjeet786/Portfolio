@@ -25,6 +25,20 @@ export const ScrollManager = () => {
       const nearestProgress = nearestIndex * segmentSize;
 
       const distanceToNearest = Math.abs(targetProgress - nearestProgress);
+      // Career Compass (Scene 1) slowdown (reduced by an additional 15%)
+      const compassProgress = 1 / (totalScenes - 1);
+      const distCompass = Math.abs(targetProgress - compassProgress);
+      const compassSlowdown = distCompass < segmentSize * 0.85
+        ? (0.48 + 0.52 * (distCompass / (segmentSize * 0.85))) * 0.85
+        : 1;
+
+      // Skillometer (Scene 3) slowdown (reduced by an additional 15%)
+      const skillometerProgress = 3 / (totalScenes - 1);
+      const distSkillometer = Math.abs(targetProgress - skillometerProgress);
+      const skillometerSlowdown = distSkillometer < segmentSize * 0.85
+        ? (0.48 + 0.52 * (distSkillometer / (segmentSize * 0.85))) * 0.85
+        : 1;
+
       const stanceProgress = 5 / (totalScenes - 1);
       const distanceToStance = Math.abs(targetProgress - stanceProgress);
       const stanceRange = segmentSize * 0.72;
@@ -39,7 +53,7 @@ export const ScrollManager = () => {
         ? 0.42 + 0.58 * (distanceToEthereal / etherealRange)
         : 1;
 
-      // Slow down scroll in Narrative Void scenes (2, 4, 6, 8) so text reading is smooth and unhurried
+      // Slow down scroll in Narrative Void scenes (2, 4, 6, 8) by an additional 15% (total 0.6375 factor)
       const voidScenes = [2, 4, 6, 8];
       let minVoidSlowdown = 1;
       for (const vIndex of voidScenes) {
@@ -47,13 +61,13 @@ export const ScrollManager = () => {
         const dist = Math.abs(targetProgress - vProgress);
         const vRange = segmentSize * 0.85;
         if (dist < vRange) {
-          const slowdown = 0.38 + 0.62 * (dist / vRange);
+          const slowdown = (0.38 + 0.62 * (dist / vRange)) * 0.6375;
           if (slowdown < minVoidSlowdown) minVoidSlowdown = slowdown;
         }
       }
 
-      // Normalize wheel delta and slow down near Stance, Ethereal & Narrative Voids
-      const baseDelta = e.deltaY * 0.000105 * stanceSlowdown * etherealSlowdown * minVoidSlowdown;
+      // Normalize wheel delta and slow down near Compass, Skillometer, Stance, Ethereal & Narrative Voids
+      const baseDelta = e.deltaY * 0.000105 * compassSlowdown * skillometerSlowdown * stanceSlowdown * etherealSlowdown * minVoidSlowdown;
 
       // If we are within 20% of a segment to the center, apply friction
       const frictionThreshold = segmentSize * 0.2;
