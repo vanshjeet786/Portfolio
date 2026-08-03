@@ -59,12 +59,13 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({ isOpen, onClose }) =
       <div className="relative w-full h-full max-w-[1600px] bg-transparent rounded-sm overflow-hidden flex flex-col shadow-2xl">
         {/* Global Minimal Close Button */}
         <button
+          type="button"
           onMouseEnter={() => SoundEngine.playHover()}
           onClick={() => {
             SoundEngine.playClose();
             onClose();
           }}
-          className="absolute top-8 right-8 z-[100] group w-12 h-12 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all duration-300 mix-blend-difference cursor-pointer"
+          className="absolute top-4 right-4 md:top-8 md:right-8 z-[100] group w-12 h-12 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all duration-300 mix-blend-difference cursor-pointer"
           aria-label="Close"
         >
           <div className="relative w-4 h-4">

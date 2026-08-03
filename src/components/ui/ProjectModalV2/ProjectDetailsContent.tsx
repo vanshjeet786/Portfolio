@@ -180,7 +180,7 @@ export const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
                   className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105"
                   src={sections.showcase.primaryImage.src}
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/40 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <div className="flex items-center gap-2 bg-[#0a0a0a]/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
                     <ZoomIn className="w-4 h-4 text-[#c8a68a]" />
                     <span className="text-xs text-white uppercase tracking-widest font-lexend">Expand</span>
@@ -194,8 +194,8 @@ export const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
                     {sections.showcase.gallery.map((img, idx) => (
                       <div key={idx} className="flex-shrink-0 w-64 space-y-2 cursor-pointer group" onClick={() => setZoomedImage(img)}>
                         <div className="aspect-video bg-black/50 rounded-lg border border-white/10 overflow-hidden relative">
-                          <img loading="lazy" decoding="async" alt={img.alt} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" src={img.src} />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <img loading="lazy" decoding="async" alt={img.alt} className="w-full h-full object-cover opacity-90 md:opacity-80 md:group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" src={img.src} />
+                          <div className="absolute inset-0 bg-black/40 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                             <ZoomIn className="w-4 h-4 text-white/80" />
                           </div>
                         </div>

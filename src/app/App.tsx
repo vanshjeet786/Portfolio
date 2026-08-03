@@ -48,7 +48,7 @@ export function App() {
   }, [isFirstTwoScenesLoaded, setPreloadingStarted]);
 
   return (
-    <div id="app-root" className="w-full h-screen bg-black overflow-hidden relative" style={{ cursor: 'none' }}>
+    <div id="app-root" className="w-full h-dvh bg-black overflow-hidden relative" style={{ cursor: 'none' }}>
       <TopographicLoader />
       <CustomCursor />
       <ScrollManager />

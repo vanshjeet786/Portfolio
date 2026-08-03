@@ -26,12 +26,14 @@ export const StanceScene = ({ position = [0, 0, 0] }: { position?: [number, numb
     }
   });
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   return (
     <group position={position} ref={groupRef} scale={[1.2, 1.2, 1.2]}>
       {/* High-contrast, warm lighting matching Career Compass / Skillometer vibes, 
           but adapted to flatter the imported models. */}
       <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 5, 5]} intensity={2.5} color="#ffffff" castShadow />
+      <directionalLight position={[5, 5, 5]} intensity={2.5} color="#ffffff" castShadow={!isMobile} />
       <directionalLight position={[-5, 5, 2]} intensity={1.5} color="#f59e0b" />
       <pointLight position={[0, 0, 0]} intensity={3} color="#f59e0b" distance={10} />
 
