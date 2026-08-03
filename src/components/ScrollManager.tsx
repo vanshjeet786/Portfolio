@@ -100,7 +100,28 @@ export const ScrollManager = () => {
       setProgress(targetProgress);
     };
 
+    let touchStartY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 1) {
+        touchStartY = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (useStore.getState().isModalOpen || !useLoadStore.getState().isFirstTwoScenesLoaded) return;
+      if (e.touches.length !== 1) return;
+
+      const touchY = e.touches[0].clientY;
+      const deltaY = (touchStartY - touchY) * 1.8;
+      touchStartY = touchY;
+
+      handleWheel({ deltaY } as WheelEvent);
+    };
+
     window.addEventListener('wheel', handleWheel, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('portfolio:jump-to-scene', handleSceneJump);
     
     // Also try to start on click just in case
@@ -160,6 +181,8 @@ export const ScrollManager = () => {
 
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('portfolio:jump-to-scene', handleSceneJump);
       window.removeEventListener('click', handleClick);
       cancelAnimationFrame(animationFrameId);

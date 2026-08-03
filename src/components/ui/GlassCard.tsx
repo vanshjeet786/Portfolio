@@ -6,13 +6,15 @@ interface GlassCardProps {
 }
 
 export const GlassCard: FC<GlassCardProps> = ({ children, className = '' }) => {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   return (
     <div 
       className={`relative overflow-hidden rounded-2xl ${className}`}
       style={{
-        background: 'rgba(255, 255, 255, 0.02)',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
+        background: isMobile ? 'rgba(10, 10, 10, 0.92)' : 'rgba(255, 255, 255, 0.02)',
+        backdropFilter: isMobile ? 'blur(8px)' : 'blur(16px)',
+        WebkitBackdropFilter: isMobile ? 'blur(8px)' : 'blur(16px)',
         border: '1px solid rgba(255, 255, 255, 0.08)',
         boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.3)',
       }}

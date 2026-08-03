@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { Suspense, lazy } from 'react';
+import { AdaptiveDpr, AdaptiveEvents } from '@react-three/drei';
 import { IntroScene } from './scenes/IntroScene';
 import { CareerCompass } from './scenes/CareerCompass';
 
@@ -14,15 +15,22 @@ import { CullableScene } from './CullableScene';
 export const SCENE_SPACING = 30; // Distance between scenes on Z axis
 
 export const CanvasContainer = () => {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   return (
     <div id="canvas-container" className="fixed top-0 left-0 w-full h-full z-0 pointer-events-none">
-      <Canvas>
+      <Canvas
+        dpr={[1, isMobile ? 1.25 : 1.5]}
+        gl={{ powerPreference: 'high-performance', antialias: !isMobile }}
+      >
         <color attach="background" args={['#050505']} />
         <fog attach="fog" args={['#050505', 5, 25]} />
+        <AdaptiveDpr pixelated />
+        <AdaptiveEvents />
         
         <Suspense fallback={null}>
           <CinematicCamera />
-          <CursorRefraction />
+          {!isMobile && <CursorRefraction />}
           
           <CullableScene position={[0, 0, 0]}>
             <IntroScene position={[0, 0, 0]} />
