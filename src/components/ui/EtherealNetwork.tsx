@@ -22,6 +22,9 @@ interface TransformBase {
 const CHAT_BASE: TransformBase = { x: 0, y: 0, z: 0, rotateX: 4, rotateY: -6, scale: 0.82, opacity: 0.95 };
 const LEADERBOARD_BASE: TransformBase = { x: 0, y: 0, z: 0, rotateX: 4, rotateY: -6, scale: 0.82, opacity: 0.95 };
 
+import chatWebp from '@/assets/images/chat-chat.webp';
+import leaderboardWebp from '@/assets/images/leaderboard.webp';
+
 interface ProjectPaneProps {
   type: 'chat' | 'leaderboard';
   isActive: boolean;
@@ -70,12 +73,12 @@ const PROJECT_DETAILS: Record<'chat' | 'leaderboard', ProjectDetailsData> = {
       },
       showcase: {
         primaryImage: {
-          src: '/src/assets/images/chat-chat.webp',
+          src: chatWebp,
           alt: 'Chat Chat Interface',
         },
         gallery: [
           {
-            src: '/src/assets/images/chat-chat.webp',
+            src: chatWebp,
             alt: 'Chat Chat Interface',
             caption: 'Realtime Chat',
           },
@@ -117,12 +120,12 @@ const PROJECT_DETAILS: Record<'chat' | 'leaderboard', ProjectDetailsData> = {
       },
       showcase: {
         primaryImage: {
-          src: '/src/assets/images/leaderboard.webp',
+          src: leaderboardWebp,
           alt: 'Leaderboard UI',
         },
         gallery: [
           {
-            src: '/src/assets/images/leaderboard.webp',
+            src: leaderboardWebp,
             alt: 'Leaderboard UI',
             caption: 'Global Rankings',
           },

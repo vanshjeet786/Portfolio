@@ -6,6 +6,13 @@ import gsap from 'gsap';
 import { TrueFocus } from './ui/TrueFocus';
 import { SoundEngine } from '@/utils/SoundEngine';
 
+import careerCompassWebp from '@/assets/images/careercompass.webp';
+import careerCompassResultsWebp from '@/assets/images/career-compass-results.webp';
+import skillometerWebp from '@/assets/images/skillometer..webp';
+import skillometerResultsWebp from '@/assets/images/skillometer.skitre.ai daf09edb8776.webp';
+import stanceBackWebp from '@/assets/images/stance-back.webp';
+import stanceWomensWebp from '@/assets/images/stance-womens.webp';
+
 const EtherealNetwork = lazy(() => import('./ui/EtherealNetwork').then(m => ({ default: m.EtherealNetwork })));
 const ConnectModal = lazy(() => import('./ui/ConnectModal/ConnectModal').then(m => ({ default: m.ConnectModal })));
 
@@ -357,17 +364,17 @@ export const UIOverlay = () => {
                 },
                 showcase: {
                   primaryImage: {
-                    src: "/src/assets/images/careercompass.webp",
+                    src: careerCompassWebp,
                     alt: "Career Compass Primary Showcase",
                   },
                   gallery: [
                     {
-                      src: "/src/assets/images/careercompass.webp",
+                      src: careerCompassWebp,
                       alt: "Dashboard Overview",
                       caption: "Dashboard Overview"
                     },
                     {
-                      src: "/src/assets/images/career-compass-results.webp",
+                      src: careerCompassResultsWebp,
                       alt: "Assessment Flow and Personalized Results",
                       caption: "Personalized Results"
                     }
@@ -440,17 +447,17 @@ export const UIOverlay = () => {
                 },
                 showcase: {
                   primaryImage: {
-                    src: "/src/assets/images/skillometer..webp",
+                    src: skillometerWebp,
                     alt: "Skillometer Interface",
                   },
                   gallery: [
                     {
-                      src: "/src/assets/images/skillometer..webp",
+                      src: skillometerWebp,
                       alt: "Skillometer Interface",
                       caption: "Assessment Page"
                     },
                     {
-                      src: "/src/assets/images/skillometer.skitre.ai daf09edb8776.webp",
+                      src: skillometerResultsWebp,
                       alt: "Skillometer Results",
                       caption: "Assessment Analytics"
                     }
@@ -516,17 +523,17 @@ export const UIOverlay = () => {
                 },
                 showcase: {
                   primaryImage: {
-                    src: "/src/assets/images/stance-back.webp",
+                    src: stanceBackWebp,
                     alt: "Stance Health Overview",
                   },
                   gallery: [
                     {
-                      src: "/src/assets/images/stance-back.webp",
+                      src: stanceBackWebp,
                       alt: "Stance Health",
                       caption: "Organic Structure"
                     },
                     {
-                      src: "/src/assets/images/stance-womens.webp",
+                      src: stanceWomensWebp,
                       alt: "Stance Details",
                       caption: "Abstract Sanctuary"
                     }
