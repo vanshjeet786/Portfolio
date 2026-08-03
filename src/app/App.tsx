@@ -11,17 +11,31 @@ export function App() {
   const { setProgress, setStatusText, isFirstTwoScenesLoaded, setPreloadingStarted } = useLoadStore();
 
   useEffect(() => {
-    // Initial system startup simulation
     let current = 0;
     const interval = setInterval(() => {
-      current += Math.floor(Math.random() * 8) + 4;
-      if (current >= 45) {
-        current = 45;
-        clearInterval(interval);
-        setStatusText('Awaiting canvas renderer...');
+      const isLoaded = useLoadStore.getState().isFirstTwoScenesLoaded;
+
+      if (isLoaded) {
+        current += Math.floor(Math.random() * 7) + 5;
+        if (current >= 100) {
+          current = 100;
+          clearInterval(interval);
+          setStatusText('System synchronized.');
+        } else {
+          setStatusText('Synchronizing anatomical matrix...');
+        }
+      } else {
+        if (current < 45) {
+          current += Math.floor(Math.random() * 8) + 4;
+          if (current >= 45) current = 45;
+          setStatusText('Compiling anatomical matrix...');
+        } else {
+          setStatusText('Awaiting canvas renderer...');
+        }
       }
+
       setProgress(current);
-    }, 60);
+    }, 50);
 
     return () => clearInterval(interval);
   }, [setProgress, setStatusText]);

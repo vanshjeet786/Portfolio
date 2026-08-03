@@ -1,5 +1,6 @@
 import { ProjectModalV2 } from './ui/ProjectModalV2/ProjectModalV2';
 import { useEffect, useRef, useState, Suspense, lazy } from 'react';
+import { WatsonxData } from '@carbon/icons-react';
 import { useStore } from '@/stores/useStore';
 import gsap from 'gsap';
 import { TrueFocus } from './ui/TrueFocus';
@@ -195,6 +196,10 @@ export const UIOverlay = () => {
   useEffect(() => {
     const closeActiveModal = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
+      const hasOpenModal = isCompassOpen || isSkillometerOpen || isStanceOpen || isTerminalOpen;
+      if (hasOpenModal) {
+        SoundEngine.playClose();
+      }
       if (isCompassOpen) setIsCompassOpen(false);
       if (isSkillometerOpen) setIsSkillometerOpen(false);
       if (isStanceOpen) setIsStanceOpen(false);
@@ -237,7 +242,7 @@ export const UIOverlay = () => {
       calculateNarrativeState(0.15, 0.29, NARRATIVE_TEXTS_1) ||
       calculateNarrativeState(0.37, 0.51, NARRATIVE_TEXTS_2) ||
       calculateNarrativeState(0.59, 0.73, NARRATIVE_TEXTS_3) ||
-      calculateNarrativeState(0.81, 0.93, NARRATIVE_TEXTS_4) ||
+      calculateNarrativeState(0.85, 0.94, NARRATIVE_TEXTS_4) ||
       calculateNarrativeState(0.93, 0.99, NARRATIVE_TEXTS_5);
 
     if (!active) {
@@ -296,10 +301,16 @@ export const UIOverlay = () => {
               onClick={() => { SoundEngine.playClick(); setIsCompassOpen(true); setModalOpen(true); }}
               className="absolute left-36 top-1/4 -translate-y-1/2 group flex items-center gap-6 cursor-none"
             >
-              <div className="relative w-12 h-12 flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity duration-500">
-                <div className="absolute w-full h-[1px] bg-white/40 group-hover:scale-x-150 transition-transform duration-500" />
-                <div className="absolute w-[1px] h-full bg-white/40 group-hover:scale-y-150 transition-transform duration-500" />
-                <div className="w-2 h-2 bg-[#e8c1a9] rounded-full shadow-[0_0_15px_#00f0ff] group-hover:scale-150 transition-transform duration-500" />
+              <div className="relative flex h-12 w-12 items-center justify-center opacity-70 transition-opacity duration-500 group-hover:opacity-100">
+                <div className="absolute inset-0 rounded-full border border-white/10 group-hover:border-[#e8c1a9]/30 transition-colors duration-500" />
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  className="h-7 w-7 text-[#e8c1a9] drop-shadow-[0_0_10px_rgba(0,240,255,0.28)] transition-all duration-500 group-hover:scale-110 group-hover:text-[#f5ead7]"
+                  fill="currentColor"
+                >
+                  <path d="m0.939 14.973 10.97 6.4V24L0.94 17.6v-2.626zm22.123 0v2.626l-10.971 6.4v-2.626l10.97 -6.401ZM0.939 10.66l10.97 6.4v2.627l-7.223 -4.214 -1.068 0.622 -2.253 -1.313 1.07 -0.623 -1.496 -0.873V10.66zm22.123 0v2.626l-1.496 0.873 1.07 0.624 -2.253 1.313 -1.07 -0.623 -7.224 4.214V17.06l10.972 -6.4ZM0.939 6.347l10.97 6.4v2.627l-3.525 -2.057 -1.067 0.622 -2.252 -1.314 1.067 -0.622 -1.429 -0.833 -1.066 0.622 -2.253 -1.314 1.068 -0.622 -1.514 -0.883Zm22.123 0v2.626l-1.514 0.883 1.07 0.622 -2.254 1.315 -1.068 -0.623 -1.428 0.833 1.068 0.622 -2.252 1.314 -1.07 -0.622 -3.525 2.057v-2.627l10.972 -6.4ZM12 8.584l3.236 1.885 -2.252 1.314 -0.983 -0.573 -0.982 0.573 -2.252 -1.314 3.235 -1.885Zm0 -4.293 6.916 4.03 -2.252 1.315L12 6.918 7.338 9.635 5.085 8.321ZM12 0l10.597 6.175 -2.252 1.314L12 2.627 3.657 7.489 1.405 6.175 12 0Z" />
+                </svg>
               </div>
               <div className="flex flex-col text-left">
                 <span className="text-[10px] tracking-[0.3em] uppercase text-white/50 font-lexend mb-1">ABOUT PROJECT</span>
@@ -381,8 +392,12 @@ export const UIOverlay = () => {
               className="absolute right-16 top-16 group flex flex-col items-center gap-4 cursor-none"
             >
               <div className="w-[1px] h-16 bg-gradient-to-b from-transparent to-white/50 group-hover:h-24 transition-all duration-500" />
-              <div className="w-8 h-8 rounded-full border border-[#f8f7da]/50 flex items-center justify-center group-hover:border-[#f8f7da] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
-                <div className="w-1.5 h-1.5 bg-[#f8f7da] rounded-full group-hover:scale-150 transition-transform duration-300" />
+              <div className="w-10 h-10 rounded-full border border-[#f8f7da]/50 flex items-center justify-center text-[#f8f7da]/80 group-hover:text-[#f8f7da] group-hover:border-[#f8f7da] group-hover:shadow-[0_0_20px_rgba(245,158,11,0.4)] transition-all duration-500">
+                <WatsonxData
+                  size={20}
+                  className="transition-transform duration-300 group-hover:scale-110"
+                  aria-hidden="true"
+                />
               </div>
               <span className="text-[12px] tracking-[0.4em] uppercase text-white/50 font-lato mt-2 group-hover:text-[#f8f7da] transition-colors duration-500" style={{ writingMode: 'vertical-rl' }}>
                 SKILLOMETER
@@ -603,13 +618,13 @@ export const UIOverlay = () => {
         }}
       />
 
-      {/* Global Scroll Indicator */}
+      {/* Global Scroll Indicator (Disabled / Hidden at End Section scene 8 & 9) */}
       <div 
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center transition-opacity duration-500 z-10"
-        style={{ opacity: (isCompassOpen || isSkillometerOpen || isStanceOpen || isTerminalOpen || activeNarrativeText !== "") ? 0 : 0.3 }}
+        style={{ opacity: (isCompassOpen || isSkillometerOpen || isStanceOpen || isTerminalOpen || activeNarrativeText !== "" || displayedScene >= 8 || activeScene >= 8) ? 0 : 0.3 }}
       >
-        <span className="text-[9px] uppercase tracking-[0.4em] mb-4 font-mono text-white">Scroll</span>
-        <div className="w-[1px] h-16 bg-gradient-to-b from-white to-transparent"></div>
+        <span className="text-[10px] uppercase tracking-[0.4em] mb-4 font-Chelsea text-white">Scroll</span>
+        <div className="w-[1px] h-10 bg-gradient-to-b from-white to-transparent"></div>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ export const CONNECT_DATA = {
     name: "Vanshjeet Singh",
     title: "Technical Product Engineer & Architect",
     location: "Bengaluru",
-    image: "/Vansh.jpeg"
+    image: "/Vansh.webp"
   },
   about: {
     header: "About Me",

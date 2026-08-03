@@ -1,5 +1,3 @@
-import { ProjectModalV2 } from './ProjectModalV2/ProjectModalV2';
-
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { SoundEngine } from '@/utils/SoundEngine';
@@ -7,6 +5,7 @@ import { useStore } from '@/stores/useStore';
 import { GlassCard } from './GlassCard';
 import { TrueFocus } from './TrueFocus';
 import { GlassCardEventStream } from './GlassCardEventStream';
+import { ProjectDetailsContent, type ProjectDetailsData } from './ProjectModalV2/ProjectDetailsContent';
 
 type ProjectType = 'chat' | 'leaderboard' | null;
 
@@ -28,34 +27,113 @@ interface ProjectPaneProps {
   isActive: boolean;
   onActivate: () => void;
   onCloseCard: () => void;
-  onOpenModal: () => void;
   isHovered: boolean;
   onHover: () => void;
   onLeave: () => void;
-  baseTransform: TransformBase;
-  mouseRotX: number;
-  mouseRotY: number;
   hasActiveProject: boolean;
+  details: ProjectDetailsData;
+  onImageZoomChange: (isOpen: boolean) => void;
 }
 
-const PROJECT_PROOF = {
+const PROJECT_DETAILS: Record<'chat' | 'leaderboard', ProjectDetailsData> = {
   chat: {
-    outcome: 'Realtime room presence, ordered delivery, and resilient reconnects for distributed chat surfaces.',
-    role: 'Realtime architecture, idempotent message flow, delivery guarantees',
-    stack: ['Supabase Realtime', 'PostgreSQL', 'React'],
-    signal: 'Built for low-latency conversations without duplicate or out-of-order events.',
+    title: 'Chat',
+    tagline: 'A Real-Time Messaging Fabric',
+    meta: {
+      role: 'Lead Engineer',
+      timeline: '2024',
+      context: 'Company Project',
+      about: 'I designed Chat as a chat application and real-time messaging fabric for a company project. The priority was database design and strict idempotency. I built the architecture to guarantee delivery order and eliminate race conditions across distributed nodes, establishing a single source of chronological truth.',
+    },
+    sections: {
+      foundation: {
+        title: 'Tech Stack & Tooling',
+        content: (
+          <div className="flex flex-col gap-2">
+            <span>Frontend: React, TypeScript, Lucide React, date-fns</span>
+            <span>Backend: Supabase Realtime, PostgreSQL</span>
+          </div>
+        ),
+      },
+      design: {
+        title: 'System Architecture Focus',
+        content: (
+          <div className="flex flex-col gap-2">
+            <span>Designed the real-time channel architecture, presence tracking, and attachment schema on Supabase.</span>
+            <span>Implemented UUID-based idempotency keys enforced at the PostgreSQL RPC layer.</span>
+          </div>
+        ),
+      },
+      engineering: {
+        title: 'Technical Architecture',
+        content: 'Configured Supabase Realtime channels with subscriptions for insertion, edits, and deletions. I set up multi-layer chronological ordering via sequence IDs to deterministically resolve simultaneous message conflicts.',
+      },
+      showcase: {
+        primaryImage: {
+          src: '/src/assets/images/chat-chat.webp',
+          alt: 'Chat Chat Interface',
+        },
+        gallery: [
+          {
+            src: '/src/assets/images/chat-chat.webp',
+            alt: 'Chat Chat Interface',
+            caption: 'Realtime Chat',
+          },
+        ],
+      },
+    },
   },
   leaderboard: {
-    outcome: 'High-throughput score ingestion with reconstructable ranking history.',
-    role: 'Ranking engine design, event stream modeling, data contracts',
-    stack: ['Supabase Edge Functions', 'PostgreSQL', 'Three.js'],
-    signal: 'Optimized for clear ranking state under concurrent score mutations.',
+    title: 'Leaderboard',
+    tagline: 'A High-Throughput Ranking Engine',
+    meta: {
+      role: 'Lead Product Engineer and Three.js Developer',
+      timeline: '2024',
+      context: 'Company Project',
+      about: 'As part of the same company project, I engineered the Leaderboard platform as a high-throughput ranking engine capable of ingesting and sorting thousands of concurrent score mutations per second. Built on event-sourcing principles, the system treats every change as an immutable record, ensuring perfect chronological reconstruction.',
+    },
+    sections: {
+      foundation: {
+        title: 'Tech Stack & Tooling',
+        content: (
+          <div className="flex flex-col gap-2">
+            <span>Frontend: React, TypeScript, Three.js, R3F</span>
+            <span>Backend: Supabase Edge Functions, PostgreSQL</span>
+          </div>
+        ),
+      },
+      design: {
+        title: 'System Architecture Focus',
+        content: (
+          <div className="flex flex-col gap-2">
+            <span>Built the core ranking engine, deduplication API, and Supabase Edge Functions.</span>
+            <span>Created a kinetic 3D monolith architecture for the front-end visualization.</span>
+          </div>
+        ),
+      },
+      engineering: {
+        title: 'Technical Architecture',
+        content: 'Developed an optimized SQL ranking engine that broadcasts immediate updates via PostgreSQL changes. Designed a score submission API running on Edge Functions to deduplicate and validate incoming game events.',
+      },
+      showcase: {
+        primaryImage: {
+          src: '/src/assets/images/leaderboard.webp',
+          alt: 'Leaderboard UI',
+        },
+        gallery: [
+          {
+            src: '/src/assets/images/leaderboard.webp',
+            alt: 'Leaderboard UI',
+            caption: 'Global Rankings',
+          },
+        ],
+      },
+    },
   },
 };
 
-const ProjectPane = ({ type, isActive, onActivate, onCloseCard, onOpenModal, isHovered, onHover, onLeave, hasActiveProject }: ProjectPaneProps) => {
+const ProjectPane = ({ type, isActive, onActivate, onCloseCard, isHovered, onHover, onLeave, hasActiveProject, details, onImageZoomChange }: ProjectPaneProps) => {
   const isChat = type === 'chat';
-  const proof = PROJECT_PROOF[type];
   const paneRef = useRef<HTMLDivElement>(null);
   const surfaceRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -150,12 +228,7 @@ const ProjectPane = ({ type, isActive, onActivate, onCloseCard, onOpenModal, isH
             {/* Header & Close */}
             <div className={`flex justify-between items-start mb-8 w-full transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
               <div>
-                <span className="text-[10px] uppercase tracking-[0.5em] text-white/40 font-mono">
-                  {isChat ? 'Realtime Messaging' : 'Ranking Engine'}
-                </span>
-                <h2 className="text-4xl font-light mt-3 text-white/95 tracking-widest uppercase">
-                  {isChat ? 'Chat' : 'Leaderboard'}
-                </h2>
+                <span className="text-[10px] uppercase tracking-[0.5em] text-white/40 font-mono">Project Details</span>
               </div>
               <button
                 type="button"
@@ -173,74 +246,18 @@ const ProjectPane = ({ type, isActive, onActivate, onCloseCard, onOpenModal, isH
               </button>
             </div>
 
-            <div className="w-full h-[1px] bg-gradient-to-r from-white/20 via-white/5 to-transparent mb-8 opacity-0" />
-
-            {/* Synopsis */}
-            <h3 className="text-[10px] tracking-[0.3em] text-white/30 uppercase font-mono mb-4 opacity-0">
-              Architectural Synopsis
-            </h3>
-            <p className="text-[15px] text-white/60 leading-relaxed font-light mb-10 opacity-0 tracking-wide">
-              {isChat
-                ? 'Chat is a highly-available, realtime messaging fabric built for strict idempotency and guaranteed delivery. It eliminates race conditions across distributed nodes by establishing a single source of chronological truth. The architecture ensures that no matter the latency or distance, the signal remains persistent and properly ordered.'
-                : 'The Leaderboard module is a high-throughput ranking engine engineered to ingest and sort thousands of concurrent score mutations per second. Built on event-sourcing principles, it treats every change as an immutable record, providing near-instantaneous global rankings while maintaining perfect chronological reconstruction capabilities.'}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8 opacity-0">
-              <div className="border border-white/[0.06] bg-white/[0.025] p-4 rounded-xl">
-                <span className="block text-[9px] uppercase tracking-[0.35em] text-white/35 font-mono mb-2">Outcome</span>
-                <p className="text-xs text-white/70 leading-relaxed">{proof.outcome}</p>
-              </div>
-              <div className="border border-white/[0.06] bg-white/[0.025] p-4 rounded-xl">
-                <span className="block text-[9px] uppercase tracking-[0.35em] text-white/35 font-mono mb-2">My Role</span>
-                <p className="text-xs text-white/70 leading-relaxed">{proof.role}</p>
-              </div>
-              <div className="border border-white/[0.06] bg-white/[0.025] p-4 rounded-xl">
-                <span className="block text-[9px] uppercase tracking-[0.35em] text-white/35 font-mono mb-2">Signal</span>
-                <p className="text-xs text-white/70 leading-relaxed">{proof.signal}</p>
-              </div>
-            </div>
-
-            {/* Specs Grid */}
-            <div className="grid grid-cols-1 gap-4 w-full mt-auto opacity-0">
-              <div className="bg-white/[0.02] border border-white/[0.05] p-5 rounded-xl transition-colors hover:bg-white/[0.04]">
-                <div className="flex items-center gap-4 mb-3">
-                    <div className="w-1 h-1 bg-white/40 rounded-full" />
-                    <span className="text-[10px] uppercase tracking-[0.4em] text-white/50 font-mono">Stack Environment</span>
-                </div>
-                <div className="flex gap-4">
-                    {proof.stack.map((item) => (
-                      <span key={item} className="text-xs text-white/70 font-light tracking-wide py-1 px-3 bg-white/5 rounded-full">{item}</span>
-                    ))}
-                </div>
-              </div>
-              <div className="bg-white/[0.02] border border-white/[0.05] p-5 rounded-xl transition-colors hover:bg-white/[0.04]">
-                <div className="flex items-center gap-4 mb-3">
-                    <div className="w-1 h-1 bg-white/40 rounded-full" />
-                    <span className="text-[10px] uppercase tracking-[0.4em] text-white/50 font-mono">Core Feature</span>
-                </div>
-                <span className="text-sm text-white/90 font-light tracking-wide block mb-1">{isChat ? 'Strict Idempotency' : 'Event Sourcing'}</span>
-                <p className="text-[11px] text-white/40 leading-relaxed">
-                  {isChat
-                    ? 'Guaranteed message delivery order and deduplication across all nodes.'
-                    : 'State is never mutated directly. Every change is an appended event.'}
-                </p>
-              </div>
-
-              {/* View Full Modal Trigger Button */}
-              <button
-                type="button"
-                onMouseEnter={() => SoundEngine.playHover()}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  SoundEngine.playClick();
-                  onOpenModal();
-                }}
-                className="mt-2 w-full py-3 px-4 bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 rounded-xl text-xs font-mono tracking-widest text-white uppercase transition-all duration-300 flex items-center justify-center gap-2 group/modalbtn cursor-pointer"
-              >
-                <span>View Specification</span>
-                <span className="group-hover/modalbtn:translate-x-1 transition-transform">&rarr;</span>
-              </button>
-            </div>
+            <ProjectDetailsContent
+              title={details.title}
+              tagline={details.tagline}
+              meta={details.meta}
+              sections={details.sections}
+              contentClassName="space-y-10"
+              sectionSurfaceClassName="w-full bg-white/[0.04] border border-white/10 p-6 rounded-xl space-y-6 hover:bg-white/[0.06] transition-colors duration-500"
+              footerClassName="pb-10"
+              revealClassName=""
+              showSpacers={false}
+              onZoomStateChange={onImageZoomChange}
+            />
           </div>
         </GlassCard>
       </div>
@@ -253,12 +270,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [activeProject, setActiveProject] = useState<ProjectType>(null);
-  const [activeModalProject, setActiveModalProject] = useState<ProjectType>(null);
-
-  const handleCloseModal = () => {
-    setActiveModalProject(null);
-  };
-
+  const [isImageZoomOpen, setIsImageZoomOpen] = useState(false);
   const [hoveredProject, setHoveredProject] = useState<ProjectType>(null);
 
   const [mouseRotX, setMouseRotX] = useState(0);
@@ -268,15 +280,13 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
   const leaderboardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setModalOpen(activeModalProject !== null);
-  }, [activeModalProject, setModalOpen]);
+    setModalOpen(activeProject !== null || isImageZoomOpen);
+  }, [activeProject, isImageZoomOpen, setModalOpen]);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        if (activeModalProject) {
-          setActiveModalProject(null);
-        } else if (activeProject) {
+        if (!isImageZoomOpen && activeProject) {
           setActiveProject(null);
         }
       }
@@ -284,7 +294,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
 
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
-  }, [activeModalProject, activeProject]);
+  }, [activeProject, isImageZoomOpen]);
 
   // Mount/Unmount
   useEffect(() => {
@@ -308,8 +318,8 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
         onComplete: () => {
           if (containerRef.current) containerRef.current.style.display = 'none';
           setActiveProject(null);
-          setActiveModalProject(null);
           setHoveredProject(null);
+          setIsImageZoomOpen(false);
           setModalOpen(false);
         }
       });
@@ -349,10 +359,10 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
     if (!chatRef.current || !leaderboardRef.current) return;
 
     if (activeProject === 'chat') {
-      gsap.to(chatRef.current, { x: 220, y: 110, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(chatRef.current, { x: 220, y: 110, z: 0, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
       gsap.to(leaderboardRef.current, { x: 400, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
     } else if (activeProject === 'leaderboard') {
-      gsap.to(leaderboardRef.current, { x: -160, y: 110, z: 200, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
+      gsap.to(leaderboardRef.current, { x: -160, y: 110, z: 0, rotateX: 0, rotateY: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1, ease: 'expo.inOut' });
       gsap.to(chatRef.current, { x: -400, z: -500, opacity: 0, filter: 'blur(20px)', duration: 1, ease: 'expo.inOut' });
     } else if (isActive) {
       // return to base
@@ -366,7 +376,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
     <div 
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      onClick={() => activeProject && !activeModalProject && setActiveProject(null)}
+      onClick={() => activeProject && !isImageZoomOpen && setActiveProject(null)}
       style={{ display: 'none', perspective: '1200px' }}
       className={`absolute inset-0 w-full h-full z-20 items-start justify-start overflow-hidden ${isActive ? 'pointer-events-auto' : 'pointer-events-none'}`}
     >
@@ -374,7 +384,7 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
 
       <div className="relative w-full h-full flex items-start justify-start p-6 md:p-12 transform-style-3d">
         <div className="absolute top-6 left-6 md:left-12 text-left pointer-events-none z-10">
-          <div className="text-[10px] uppercase tracking-[0.45em] text-[#aa9e6d] font-lato">Chat & Leaderboard</div>
+          <div className="text-[13px] uppercase tracking-[0.4em] text-[#aa9e6d] font-lexend">Chat & Leaderboard</div>
         </div>
 
         {/* CHAT PANE - TOP LEFT */}
@@ -385,13 +395,11 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
              hasActiveProject={activeProject !== null}
              onActivate={() => setActiveProject('chat')}
              onCloseCard={() => setActiveProject(null)}
-             onOpenModal={() => setActiveModalProject('chat')}
              isHovered={hoveredProject === 'chat'}
              onHover={() => { SoundEngine.playHover(); setHoveredProject('chat'); }}
              onLeave={() => setHoveredProject(null)}
-             baseTransform={CHAT_BASE}
-             mouseRotX={mouseRotX}
-             mouseRotY={mouseRotY}
+             details={PROJECT_DETAILS.chat}
+             onImageZoomChange={setIsImageZoomOpen}
            />
         </div>
 
@@ -403,116 +411,15 @@ export const EtherealNetwork = ({ isActive }: { isActive: boolean }) => {
              hasActiveProject={activeProject !== null}
              onActivate={() => setActiveProject('leaderboard')}
              onCloseCard={() => setActiveProject(null)}
-             onOpenModal={() => setActiveModalProject('leaderboard')}
              isHovered={hoveredProject === 'leaderboard'}
              onHover={() => { SoundEngine.playHover(); setHoveredProject('leaderboard'); }}
              onLeave={() => setHoveredProject(null)}
-             baseTransform={LEADERBOARD_BASE}
-             mouseRotX={mouseRotX}
-             mouseRotY={mouseRotY}
+             details={PROJECT_DETAILS.leaderboard}
+             onImageZoomChange={setIsImageZoomOpen}
            />
         </div>
 
       </div>
-    
-      <ProjectModalV2 
-        isOpen={activeModalProject === 'chat'}
-        onClose={handleCloseModal}
-        title="Chat"
-        tagline="A Real-Time Messaging Fabric"
-        meta={{
-          role: "Lead Engineer",
-          timeline: "2024",
-          context: "Company Project",
-          about: "I designed Chat as a chat application and real-time messaging fabric for a company project. The priority was database design and strict idempotency. I built the architecture to guarantee delivery order and eliminate race conditions across distributed nodes, establishing a single source of chronological truth."
-        }}
-        sections={{
-          foundation: {
-            title: "Tech Stack & Tooling",
-            content: (
-              <div className="flex flex-col gap-2">
-                <span>Frontend: React, TypeScript, Lucide React, date-fns</span>
-                <span>Backend: Supabase Realtime, PostgreSQL</span>
-              </div>
-            )
-          },
-          design: {
-            title: "System Architecture Focus",
-            content: (
-              <div className="flex flex-col gap-2">
-                <span>Designed the real-time channel architecture, presence tracking, and attachment schema on Supabase.</span>
-                <span>Implemented UUID-based idempotency keys enforced at the PostgreSQL RPC layer.</span>
-              </div>
-            )
-          },
-          engineering: {
-            title: "Technical Architecture",
-            content: "Configured Supabase Realtime channels with subscriptions for insertion, edits, and deletions. I set up multi-layer chronological ordering via sequence IDs to deterministically resolve simultaneous message conflicts."
-          },
-          showcase: {
-            primaryImage: {
-              src: "/src/assets/images/chat-chat.webp",
-              alt: "Chat Chat Interface",
-            },
-            gallery: [
-              {
-                src: "/src/assets/images/chat-chat.webp",
-                alt: "Chat Chat Interface",
-                caption: "Realtime Chat"
-              }
-            ]
-          }
-        }}
-      />
-      <ProjectModalV2 
-        isOpen={activeModalProject === 'leaderboard'}
-        onClose={handleCloseModal}
-        title="Leaderboard"
-        tagline="A High-Throughput Ranking Engine"
-        meta={{
-          role: "Lead Product Engineer and Three.js Developer",
-          timeline: "2024",
-          context: "Company Project",
-          about: "As part of the same company project, I engineered the Leaderboard platform as a high-throughput ranking engine capable of ingesting and sorting thousands of concurrent score mutations per second. Built on event-sourcing principles, the system treats every change as an immutable record, ensuring perfect chronological reconstruction."
-        }}
-        sections={{
-          foundation: {
-            title: "Tech Stack & Tooling",
-            content: (
-              <div className="flex flex-col gap-2">
-                <span>Frontend: React, TypeScript, Three.js, R3F</span>
-                <span>Backend: Supabase Edge Functions, PostgreSQL</span>
-              </div>
-            )
-          },
-          design: {
-            title: "System Architecture Focus",
-            content: (
-              <div className="flex flex-col gap-2">
-                <span>Built the core ranking engine, deduplication API, and Supabase Edge Functions.</span>
-                <span>Created a kinetic 3D monolith architecture for the front-end visualization.</span>
-              </div>
-            )
-          },
-          engineering: {
-            title: "Technical Architecture",
-            content: "Developed an optimized SQL ranking engine that broadcasts immediate updates via PostgreSQL changes. Designed a score submission API running on Edge Functions to deduplicate and validate incoming game events."
-          },
-          showcase: {
-            primaryImage: {
-              src: "/src/assets/images/leaderboard.webp",
-              alt: "Leaderboard UI",
-            },
-            gallery: [
-              {
-                src: "/src/assets/images/leaderboard.webp",
-                alt: "Leaderboard UI",
-                caption: "Global Rankings"
-              }
-            ]
-          }
-        }}
-      />
 </div>
   );
 };
